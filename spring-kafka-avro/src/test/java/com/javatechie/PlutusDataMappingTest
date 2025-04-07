@@ -1,0 +1,29 @@
+package com.javatechie.consumer;
+
+import com.javatechie.dto.PlutusFinacleData;
+import com.javatechie.entity.PlutusFinacleDataEntity;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PlutusDataMappingTest {
+
+    @Test
+    void shouldMapAllFieldsCorrectly() {
+        PlutusFinacleData dto = new PlutusFinacleData();
+        dto.setTranId("TX123");
+        dto.setAcctName("John Doe");
+        dto.setTranAmt(1000.0);
+        dto.setCrncyCode("INR");
+        // Set more fields...
+
+        PlutusFinacleDataConsumer consumer = new PlutusFinacleDataConsumer();
+        PlutusFinacleDataEntity entity = consumer.convertToEntity(dto);
+
+        assertEquals(dto.getTranId(), entity.getTranId());
+        assertEquals(dto.getAcctName(), entity.getAcctName());
+        assertEquals(dto.getTranAmt(), entity.getTranAmt());
+        assertEquals(dto.getCrncyCode(), entity.getCrncyCode());
+        // Add more assertions as needed
+    }
+}
