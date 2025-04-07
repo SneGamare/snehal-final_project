@@ -1,0 +1,5 @@
+public class PlutusFinacleDataDeserializer extends PlutusAvroDeserializer<PlutusFinacleData> {
+    public PlutusFinacleDataDeserializer() {
+        super(PlutusFinacleData.class);
+    }
+}
