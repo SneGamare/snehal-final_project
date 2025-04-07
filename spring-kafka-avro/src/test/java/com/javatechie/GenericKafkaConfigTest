@@ -1,0 +1,71 @@
+package com.javatechie.config;
+
+import com.javatechie.dto.PlutusFinacleData;
+import com.javatechie.serializer.PlutusFinacleDataDeserializer;
+import com.javatechie.serializer.PlutusFinacleDataSerializer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.*;
+
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GenericKafkaConfigTest {
+
+    private GenericKafkaConfig config;
+
+    @BeforeEach
+    void setUp() {
+        config = new GenericKafkaConfig();
+    }
+
+    @Test
+    void testProducerFactoryCreation() {
+        ProducerFactory<String, PlutusFinacleData> factory =
+                config.producerFactory(PlutusFinacleDataSerializer.class);
+
+        assertNotNull(factory);
+        assertTrue(factory instanceof DefaultKafkaProducerFactory);
+
+        Map<String, Object> configProps = ((DefaultKafkaProducerFactory<String, PlutusFinacleData>) factory).getConfigurationProperties();
+        assertEquals(StringSerializer.class, configProps.get(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG));
+        assertEquals(PlutusFinacleDataSerializer.class, configProps.get(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG));
+    }
+
+    @Test
+    void testKafkaTemplateCreation() {
+        KafkaTemplate<String, PlutusFinacleData> template =
+                config.kafkaTemplate(PlutusFinacleDataSerializer.class);
+
+        assertNotNull(template);
+    }
+
+    @Test
+    void testConsumerFactoryCreation() {
+        ConsumerFactory<String, PlutusFinacleData> factory =
+                config.consumerFactory("test-group", PlutusFinacleDataDeserializer.class);
+
+        assertNotNull(factory);
+        assertTrue(factory instanceof DefaultKafkaConsumerFactory);
+
+        Map<String, Object> configProps = ((DefaultKafkaConsumerFactory<String, PlutusFinacleData>) factory).getConfigurationProperties();
+        assertEquals(StringDeserializer.class, configProps.get(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG));
+        assertEquals(PlutusFinacleDataDeserializer.class, configProps.get(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG));
+        assertEquals("test-group", configProps.get(ConsumerConfig.GROUP_ID_CONFIG));
+    }
+
+    @Test
+    void testListenerContainerFactoryCreation() {
+        ConcurrentKafkaListenerContainerFactory<String, PlutusFinacleData> factory =
+                config.listenerContainerFactory("test-group", PlutusFinacleDataDeserializer.class);
+
+        assertNotNull(factory);
+        assertNotNull(factory.getConsumerFactory());
+    }
+}
