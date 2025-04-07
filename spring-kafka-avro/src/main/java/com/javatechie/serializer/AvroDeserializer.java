@@ -10,11 +10,11 @@ import org.apache.kafka.common.serialization.Deserializer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class AvroDeserializer<T extends SpecificRecord> implements Deserializer<T> {
+public abstract class AvroDeserializer<T extends SpecificRecord> implements Deserializer<T> {
 
     private final Class<T> targetType;
 
-    public AvroDeserializer(Class<T> targetType) {
+    protected AvroDeserializer(Class<T> targetType) {
         this.targetType = targetType;
     }
 
@@ -24,13 +24,12 @@ public class AvroDeserializer<T extends SpecificRecord> implements Deserializer<
             return null;
         }
 
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
             BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(inputStream, null);
             DatumReader<T> reader = new SpecificDatumReader<>(targetType);
             return reader.read(null, decoder);
         } catch (IOException e) {
-            throw new RuntimeException("Error deserializing Avro message", e);
+            throw new RuntimeException("Error deserializing " + targetType.getSimpleName(), e);
         }
     }
-} 
+}
