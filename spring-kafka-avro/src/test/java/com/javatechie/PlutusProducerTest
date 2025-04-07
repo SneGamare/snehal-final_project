@@ -1,0 +1,28 @@
+package com.javatechie.producer;
+
+import com.javatechie.dto.PlutusFinacleData;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import static org.mockito.Mockito.*;
+
+public class PlutusProducerTest {
+
+    @Mock
+    private KafkaTemplate<String, PlutusFinacleData> kafkaTemplate;
+
+    @InjectMocks
+    private PlutusProducer producer;
+
+    @Test
+    void shouldSendMessageToKafka() {
+        PlutusFinacleData data = new PlutusFinacleData();
+        data.setTranId("TX001");
+
+        producer.send(data);
+
+        verify(kafkaTemplate, times(1)).send(anyString(), eq(data));
+    }
+}
