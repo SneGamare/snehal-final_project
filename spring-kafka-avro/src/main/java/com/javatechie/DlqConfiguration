@@ -1,0 +1,14 @@
+package com.javatechie.config;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.kafka.common.serialization.Serializer;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DlqConfiguration<T> {
+    private String dlqTopic;
+    private Class<? extends Serializer<T>> valueSerializer;
+}
