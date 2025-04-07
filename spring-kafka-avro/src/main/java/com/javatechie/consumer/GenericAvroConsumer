@@ -1,0 +1,25 @@
+package com.plutus.kafka.consumer;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+
+@Slf4j
+public abstract class GenericAvroConsumer<T> {
+
+    public void consume(ConsumerRecord<String, T> record) {
+        if (record == null || record.value() == null) {
+            log.warn("Received null record or value.");
+            return;
+        }
+
+        log.info("Received record for topic '{}': {}", record.topic(), record.value());
+
+        try {
+            handleMessage(record.value(), record);
+        } catch (Exception ex) {
+            log.error("Error processing record: {}", ex.getMessage(), ex);
+        }
+    }
+
+    protected abstract void handleMessage(T data, ConsumerRecord<String, T> record);
+}
