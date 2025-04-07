@@ -28,10 +28,37 @@ public class PlutusFinacleDataConsumerTest {
     @Test
     void shouldSavePlutusFinacleDataToDatabase() {
         PlutusFinacleData data = new PlutusFinacleData();
-        data.setTranId("TX123");
+      data.setTranId("TX12345");
+        data.setForacid("AC123456789");
         data.setAcctName("John Doe");
-        data.setTranAmt(5000.0);
-        // Set other fields...
+        data.setLastTranDateCr("2024-03-15");
+        data.setTranDate("2024-04-07");
+        data.setPartTranSrlNum("001");
+        data.setDelFlg("N");
+        data.setTranType("CR");
+        data.setTranSubType("TRF");
+        data.setPartTranType("CASH");
+        data.setGlSubHeadCode("123");
+        data.setAcid("AC123");
+        data.setValueDate("2024-04-07");
+        data.setTranAmt(10000.50);
+        data.setTranParticular("Salary Credit");
+        data.setEntryDate("2024-04-07");
+        data.setPstdDate("2024-04-07");
+        data.setRefNum("REF123456");
+        data.setInstrmntType("CHQ");
+        data.setInstrmntDate("2024-04-06");
+        data.setInstrmntNum("CHQ123");
+        data.setTranRmks("Monthly salary");
+        data.setCustId("CUST001");
+        data.setBrCode("001");
+        data.setCrncyCode("INR");
+        data.setTranCrncyCode("INR");
+        data.setRefAmt(10000.50);
+        data.setSolId("SOL001");
+        data.setBankCode("BANK123");
+        data.setTreaRefNum("TREA123");
+        data.setReversalDate("2024-04-07");
 
         ConsumerRecord<String, PlutusFinacleData> record = new ConsumerRecord<>("plutus-finacle-topic", 0, 0, "key", data);
         consumer.consume(record);
