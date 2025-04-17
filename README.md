@@ -6,22 +6,24 @@ Then saved db in H2   row data we need to manage in JSON   only finacle_
 
 
  
-ACID   	Description
-ID	    Plutus_ID
-pp_ID	  UPILIVE.tbl_cbs_tranlog.ID
-TRAN_DATE	DTD
-TRAN_ID	DTD
-ACID	DTD
-TRAN_AMT	DTD
-FORACID	GAM
-REF_NUM	DTD
-PP_cr_dt	UPILIVE.tbl_cbs_tranlog
-Raw_Data	Blob/Json data type
-PP_cr_dt	UPILIVE.tbl_cbs_tranlog
-Create_date	Plutus
-Modified_date	Plutus
-Created_by	Plutus
-Modified_by	Plutus
-SourceSystem	 
-PP_txn_dt	 
+
+ACID
+ID
+pp_ID
+TRAN_DATE
+TRAN_ID
+ACID
+TRAN_AMT
+FORACID
+REF_NUM
+PP_cr_dt
+Raw_Data
+PP_cr_dt
+Create_date
+Modified_date
+Created_by
+Modified_by
+SourceSystem
+PP_txn_dt![image](https://github.com/user-attachments/assets/02ae98ca-fcfd-40e3-972c-9f20da6a3126)
+
  
