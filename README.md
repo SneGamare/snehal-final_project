@@ -21,6 +21,44 @@ Raw_Data
 PP_cr_dt
 Create_date
 Modified_date
+
+
+
+
+entity.setTranId(toStr(data.getTranId()));
+        entity.setTranDate(toStr(data.getTranDate()));
+        entity.setTranAmt(data.getTranAmt());
+        entity.setAcid(toStr(data.getAcid()));
+        entity.setForacid(toStr(data.getForacid()));
+        entity.setRefNum(toStr(data.getRefNum()));
+
+        // Other fields
+        entity.setAcctName(toStr(data.getAcctName()));
+        entity.setLastTranDateCr(toStr(data.getLastTranDateCr()));
+        entity.setPartTranSrlNum(toStr(data.getPartTranSrlNum()));
+        entity.setDelFlg(toStr(data.getDelFlg()));
+        entity.setTranType(toStr(data.getTranType()));
+        entity.setTranSubType(toStr(data.getTranSubType()));
+        entity.setPartTranType(toStr(data.getPartTranType()));
+        entity.setGlSubHeadCode(toStr(data.getGlSubHeadCode()));
+        entity.setValueDate(toStr(data.getValueDate()));
+        entity.setTranParticular(toStr(data.getTranParticular()));
+        entity.setEntryDate(toStr(data.getEntryDate()));
+        entity.setPstdDate(toStr(data.getPstdDate()));
+        entity.setInstrmntType(toStr(data.getInstrmntType()));
+        entity.setInstrmntDate(toStr(data.getInstrmntDate()));
+        entity.setInstrmntNum(toStr(data.getInstrmntNum()));
+        entity.setTranRmks(toStr(data.getTranRmks()));
+        entity.setCustId(toStr(data.getCustId()));
+        entity.setBrCode(toStr(data.getBrCode()));
+        entity.setCrncyCode(toStr(data.getCrncyCode()));
+        entity.setTranCrncyCode(toStr(data.getTranCrncyCode()));
+        entity.setRefAmt(data.getRefAmt());
+        entity.setSolId(toStr(data.getSolId()));
+        entity.setBankCode(toStr(data.getBankCode()));
+        entity.setTreaRefNum(toStr(data.getTreaRefNum()));
+        entity.setReversalDate(toStr(data.getReversalDate()));
+        entity.setReceivedAt(LocalDateTime.now());
 Created_by
 Modified_by
 SourceSystem
