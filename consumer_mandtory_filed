@@ -1,0 +1,91 @@
+package com.kotak.orchestrator.orchestrator.consumer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kotak.orchestrator.orchestrator.dto.PlutusFinacleData;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
+import com.kotak.orchestrator.orchestrator.validator.PlutusDataValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class PlutusFinacleDataConsumer extends GenericAvroConsumer<PlutusFinacleData> {
+
+    private final PlutusFinacleDataRepository repository;
+    private final PlutusDataValidator plutusDataValidator;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @KafkaListener(topics = "${topic.plutus-finacle:plutus-finacle-topic}", groupId = "plutus-finacle-group")
+    public void listen(ConsumerRecord<String, PlutusFinacleData> record) {
+        consume(record);
+    }
+
+    @Override
+    protected void handleMessage(PlutusFinacleData data, ConsumerRecord<String, PlutusFinacleData> record) {
+        try {
+            // Validate mandatory fields
+            plutusDataValidator.validate(data);
+
+            PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+            entity.setTranId(toStr(data.getTranId()));
+            entity.setTranDate(toStr(data.getTranDate()));
+            entity.setTranAmt(data.getTranAmt());
+            entity.setAcid(toStr(data.getAcid()));
+            entity.setForacid(toStr(data.getForacid()));
+            entity.setRefNum(toStr(data.getRefNum()));
+            entity.setReceivedAt(LocalDateTime.now());
+
+            // Build rawData with all remaining fields (except the 6 already used above)
+            Map<String, Object> rawMap = new HashMap<>();
+
+            rawMap.put("acctName", toStr(data.getAcctName()));
+            rawMap.put("lastTranDateCr", toStr(data.getLastTranDateCr()));
+            rawMap.put("partTranSrlNum", toStr(data.getPartTranSrlNum()));
+            rawMap.put("delFlg", toStr(data.getDelFlg()));
+            rawMap.put("tranType", toStr(data.getTranType()));
+            rawMap.put("tranSubType", toStr(data.getTranSubType()));
+            rawMap.put("partTranType", toStr(data.getPartTranType()));
+            rawMap.put("glSubHeadCode", toStr(data.getGlSubHeadCode()));
+            rawMap.put("valueDate", toStr(data.getValueDate()));
+            rawMap.put("tranParticular", toStr(data.getTranParticular()));
+            rawMap.put("entryDate", toStr(data.getEntryDate()));
+            rawMap.put("pstdDate", toStr(data.getPstdDate()));
+            rawMap.put("instrmntType", toStr(data.getInstrmntType()));
+            rawMap.put("instrmntDate", toStr(data.getInstrmntDate()));
+            rawMap.put("instrmntNum", toStr(data.getInstrmntNum()));
+            rawMap.put("tranRmks", toStr(data.getTranRmks()));
+            rawMap.put("custId", toStr(data.getCustId()));
+            rawMap.put("brCode", toStr(data.getBrCode()));
+            rawMap.put("crncyCode", toStr(data.getCrncyCode()));
+            rawMap.put("tranCrncyCode", toStr(data.getTranCrncyCode()));
+            rawMap.put("refAmt", data.getRefAmt());
+            rawMap.put("solId", toStr(data.getSolId()));
+            rawMap.put("bankCode", toStr(data.getBankCode()));
+            rawMap.put("treaRefNum", toStr(data.getTreaRefNum()));
+            rawMap.put("reversalDate", toStr(data.getReversalDate()));
+
+            entity.setRawData(objectMapper.writeValueAsString(rawMap));
+
+            repository.save(entity);
+            log.info("✅ Saved PlutusFinacleData to DB, tranId: {}", entity.getTranId());
+
+        } catch (IllegalArgumentException e) {
+            log.warn("❌ Validation failed: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("❌ Error saving record: {}", e.getMessage(), e);
+        }
+    }
+
+    private String toStr(CharSequence input) {
+        return input != null ? input.toString() : null;
+    }
+}
