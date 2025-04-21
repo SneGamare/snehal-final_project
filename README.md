@@ -1,130 +1,152 @@
-Validation , transformation , saved    transformation ->   before saving the data we need to validate the data mandatory fileds   transform into plates format   Enrichment -> virtual apache table  h2 DB mai table create then   connection with REF_NUM 
-
-Then saved db in H2   row data we need to manage in JSON   only finacle_upi we need to store 
-  UPI _data store -> DTO we need to discuss     
-
-
-
- 
-
-ACID
-ID
-pp_ID
-TRAN_DATE
-TRAN_ID
-ACID
-TRAN_AMT
-FORACID
-REF_NUM
-PP_cr_dt
-Raw_Data
-PP_cr_dt
-Create_date
-Modified_date
-
-
-
-
-entity.setTranId(toStr(data.getTranId()));
-        entity.setTranDate(toStr(data.getTranDate()));
-        entity.setTranAmt(data.getTranAmt());
-        entity.setAcid(toStr(data.getAcid()));
-        entity.setForacid(toStr(data.getForacid()));
-        entity.setRefNum(toStr(data.getRefNum()));
-
-        // Other fields
-        entity.setAcctName(toStr(data.getAcctName()));
-        entity.setLastTranDateCr(toStr(data.getLastTranDateCr()));
-        entity.setPartTranSrlNum(toStr(data.getPartTranSrlNum()));
-        entity.setDelFlg(toStr(data.getDelFlg()));
-        entity.setTranType(toStr(data.getTranType()));
-        entity.setTranSubType(toStr(data.getTranSubType()));
-        entity.setPartTranType(toStr(data.getPartTranType()));
-        entity.setGlSubHeadCode(toStr(data.getGlSubHeadCode()));
-        entity.setValueDate(toStr(data.getValueDate()));
-        entity.setTranParticular(toStr(data.getTranParticular()));
-        entity.setEntryDate(toStr(data.getEntryDate()));
-        entity.setPstdDate(toStr(data.getPstdDate()));
-        entity.setInstrmntType(toStr(data.getInstrmntType()));
-        entity.setInstrmntDate(toStr(data.getInstrmntDate()));
-        entity.setInstrmntNum(toStr(data.getInstrmntNum()));
-        entity.setTranRmks(toStr(data.getTranRmks()));
-        entity.setCustId(toStr(data.getCustId()));
-        entity.setBrCode(toStr(data.getBrCode()));
-        entity.setCrncyCode(toStr(data.getCrncyCode()));
-        entity.setTranCrncyCode(toStr(data.getTranCrncyCode()));
-        entity.setRefAmt(data.getRefAmt());
-        entity.setSolId(toStr(data.getSolId()));
-        entity.setBankCode(toStr(data.getBankCode()));
-        entity.setTreaRefNum(toStr(data.getTreaRefNum()));
-        entity.setReversalDate(toStr(data.getReversalDate()));
-        entity.setReceivedAt(LocalDateTime.now());
-Created_by
-Modified_by
-SourceSystem
-PP_txn_dt![image](https://github.com/user-attachments/assets/02ae98ca-fcfd-40e3-972c-9f20da6a3126)
+CREATE TABLE KOTAKTCI.VIRTUAL_APAC_TABLE
+(
+  TXN_DATE              DATE,
+  TXN_REF_NO            VARCHAR2(1000 BYTE)     NOT NULL,
+  E_COLL_ACC_NO         VARCHAR2(1000 BYTE),
+  MASTER_ACC_NO         VARCHAR2(1000 BYTE),
+  DEALER_NAME           VARCHAR2(1000 BYTE),
+  AMOUNT                NUMBER(20,4),
+  BENE_CUST_ACNAME      VARCHAR2(1000 BYTE),
+  SEND_CUST_ACNAME      VARCHAR2(1000 BYTE),
+  REMITT_INFO           VARCHAR2(1000 BYTE),
+  SENDER_ADDRESS        VARCHAR2(1000 BYTE),
+  REF1                  VARCHAR2(1000 BYTE),
+  REF2                  VARCHAR2(1000 BYTE),
+  REF3                  VARCHAR2(1000 BYTE),
+  PROCESSED_FLAG        CHAR(1 BYTE)            DEFAULT 'N',
+  CREATED_DATE          DATE,
+  MODIFIED_DATE         DATE,
+  IDEA_TXN_REF_NO       VARCHAR2(1000 BYTE),
+  INITIAL_AVAIL_BAL     NUMBER(20,4),
+  INITIAL_CUR_BAL       NUMBER(20,4),
+  UPDATED_AVAIL_BAL     NUMBER(20,4),
+  UPDATED_CUR_BAL       NUMBER(20,4),
+  PROC_REMARKS          VARCHAR2(4000 BYTE),
+  REMIT_AC_NMBR         VARCHAR2(1000 BYTE),
+  PAY_MODE              VARCHAR2(1000 BYTE),
+  CMS_TRAN_API_STATUS   VARCHAR2(1 BYTE),
+  CMS_TRAN_API_REMARKS  VARCHAR2(1000 BYTE),
+  CMS_CREATED_DATE      DATE,
+  CMS_REV_API_STATUS    VARCHAR2(1 BYTE),
+  CMS_REV_API_REMARKS   VARCHAR2(1000 BYTE),
+  CMS_REV_CREATED_DATE  DATE,
+  SUPPLEMENTAL LOG GROUP GGS_208324 (TXN_REF_NO) ALWAYS,
+  SUPPLEMENTAL LOG DATA (PRIMARY KEY) COLUMNS,
+  SUPPLEMENTAL LOG DATA (UNIQUE) COLUMNS,
+  SUPPLEMENTAL LOG DATA (FOREIGN KEY) COLUMNS,
+  SUPPLEMENTAL LOG DATA (ALL) COLUMNS
+)
+TABLESPACE CT_CI_DUMMY_PRD
+RESULT_CACHE (MODE DEFAULT)
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+            FLASH_CACHE      DEFAULT
+            CELL_FLASH_CACHE DEFAULT
+           )
+LOGGING 
+NOCOMPRESS 
+NOCACHE
+NOPARALLEL
+MONITORING;
 
 
+CREATE INDEX KOTAKTCI.IDX_REF3 ON KOTAKTCI.VIRTUAL_APAC_TABLE
+(REF3)
+LOGGING
+TABLESPACE CT_CI_DUMMY_PRD
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+            FLASH_CACHE      DEFAULT
+            CELL_FLASH_CACHE DEFAULT
+           )
+NOPARALLEL;
 
 
+CREATE INDEX KOTAKTCI.INDX_VIRTUAL_APAC ON KOTAKTCI.VIRTUAL_APAC_TABLE
+(MASTER_ACC_NO, PROCESSED_FLAG)
+LOGGING
+TABLESPACE CT_CI_DUMMY_PRD
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+            FLASH_CACHE      DEFAULT
+            CELL_FLASH_CACHE DEFAULT
+           )
+NOPARALLEL;
 
 
+CREATE UNIQUE INDEX KOTAKTCI.PK_PRIMARY_KEY ON KOTAKTCI.VIRTUAL_APAC_TABLE
+(TXN_REF_NO)
+LOGGING
+TABLESPACE CT_CI_DUMMY_PRD
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+            FLASH_CACHE      DEFAULT
+            CELL_FLASH_CACHE DEFAULT
+           )
+NOPARALLEL;
 
 
-
-error :
-
+CREATE OR REPLACE SYNONYM SYS.VIRTUAL_APAC_TABLE FOR KOTAKTCI.VIRTUAL_APAC_TABLE;
 
 
+ALTER TABLE KOTAKTCI.VIRTUAL_APAC_TABLE ADD (
+  CONSTRAINT CHK_PROCESS_FLAG
+  CHECK (processed_flag in ('N','Y','P','E','X'))
+  ENABLE VALIDATE,
+  CONSTRAINT PK_PRIMARY_KEY
+  PRIMARY KEY
+  (TXN_REF_NO)
+  USING INDEX KOTAKTCI.PK_PRIMARY_KEY
+  ENABLE VALIDATE);
 
-error saving record:Not an array: {"type":"record","name":"PlutusFinacleData","namespace":"com.kotak.orchestrator.orchestrator.dto","fields":[{"name":"foracid","type":["null","string"],"default":null},{"name":"acctName","type":["null","string"],"default":null},{"name":"lastTranDateCr","type":["null","string"],"default":null},{"name":"tranDate","type":["null","string"],"default":null},{"name":"tranId","type":["null","string"],"default":null},{"name":"partTranSrlNum","type":["null","string"],"default":null},{"name":"delFlg","type":["null","string"],"default":null},{"name":"tranType","type":["null","string"],"default":null},{"name":"tranSubType","type":["null","string"],"default":null},{"name":"partTranType","type":["null","string"],"default":null},{"name":"glSubHeadCode","type":["null","string"],"default":null},{"name":"acid","type":["null","string"],"default":null},{"name":"valueDate","type":["null","string"],"default":null},{"name":"tranAmt","type":["null","double"],"default":null},{"name":"tranParticular","type":["null","string"],"default":null},{"name":"entryDate","type":["null","string"],"default":null},{"name":"pstdDate","type":["null","string"],"default":null},{"name":"refNum","type":["null","string"],"default":null},{"name":"instrmntType","type":["null","string"],"default":null},{"name":"instrmntDate","type":["null","string"],"default":null},{"name":"instrmntNum","type":["null","string"],"default":null},{"name":"tranRmks","type":["null","string"],"default":null},{"name":"custId","type":["null","string"],"default":null},{"name":"brCode","type":["null","string"],"default":null},{"name":"crncyCode","type":["null","string"],"default":null},{"name":"tranCrncyCode","type":["null","string"],"default":null},{"name":"refAmt","type":["null","double"],"default":null},{"name":"solId","type":["null","string"],"default":null},{"name":"bankCode","type":["null","string"],"default":null},{"name":"treaRefNum","type":["null","string"],"default":null},{"name":"reversalDate","type":["null","string"],"default":null}]} (through reference chain: com.kotak.orchestrator.orchestrator.dto.PlutusFinacleData["schema"]->org.apache.avro.Schema$RecordSchema["elementType"])
+GRANT SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO BOREPORT;
 
-com.fasterxml.jackson.databind.JsonMappingException: Not an array: {"type":"record","name":"PlutusFinacleData","namespace":"com.kotak.orchestrator.orchestrator.dto","fields":[{"name":"foracid","type":["null","string"],"default":null},{"name":"acctName","type":["null","string"],"default":null},{"name":"lastTranDateCr","type":["null","string"],"default":null},{"name":"tranDate","type":["null","string"],"default":null},{"name":"tranId","type":["null","string"],"default":null},{"name":"partTranSrlNum","type":["null","string"],"default":null},{"name":"delFlg","type":["null","string"],"default":null},{"name":"tranType","type":["null","string"],"default":null},{"name":"tranSubType","type":["null","string"],"default":null},{"name":"partTranType","type":["null","string"],"default":null},{"name":"glSubHeadCode","type":["null","string"],"default":null},{"name":"acid","type":["null","string"],"default":null},{"name":"valueDate","type":["null","string"],"default":null},{"name":"tranAmt","type":["null","double"],"default":null},{"name":"tranParticular","type":["null","string"],"default":null},{"name":"entryDate","type":["null","string"],"default":null},{"name":"pstdDate","type":["null","string"],"default":null},{"name":"refNum","type":["null","string"],"default":null},{"name":"instrmntType","type":["null","string"],"default":null},{"name":"instrmntDate","type":["null","string"],"default":null},{"name":"instrmntNum","type":["null","string"],"default":null},{"name":"tranRmks","type":["null","string"],"default":null},{"name":"custId","type":["null","string"],"default":null},{"name":"brCode","type":["null","string"],"default":null},{"name":"crncyCode","type":["null","string"],"default":null},{"name":"tranCrncyCode","type":["null","string"],"default":null},{"name":"refAmt","type":["null","double"],"default":null},{"name":"solId","type":["null","string"],"default":null},{"name":"bankCode","type":["null","string"],"default":null},{"name":"treaRefNum","type":["null","string"],"default":null},{"name":"reversalDate","type":["null","string"],"default":null}]} (through reference chain: com.kotak.orchestrator.orchestrator.dto.PlutusFinacleData["schema"]->org.apache.avro.Schema$RecordSchema["elementType"])
-	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:402) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:361) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.std.StdSerializer.wrapAndThrow(StdSerializer.java:323) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:780) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:772) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:479) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:318) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4719) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:3964) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.kotak.orchestrator.orchestrator.consumer.PlutusFinacleDataConsumer.handleMessage(PlutusFinacleDataConsumer.java:117) ~[classes/:na]
-	at com.kotak.orchestrator.orchestrator.consumer.PlutusFinacleDataConsumer.handleMessage(PlutusFinacleDataConsumer.java:20) ~[classes/:na]
-	at com.kotak.orchestrator.orchestrator.consumer.GenericAvroConsumer.consume(GenericAvroConsumer.java:18) ~[classes/:na]
-	at com.kotak.orchestrator.orchestrator.consumer.PlutusFinacleDataConsumer.listen(PlutusFinacleDataConsumer.java:36) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:169) ~[spring-messaging-6.1.2.jar:6.1.2]
-	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:119) ~[spring-messaging-6.1.2.jar:6.1.2]
-	at org.springframework.kafka.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:56) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:376) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.adapter.RecordMessagingMessageListenerAdapter.onMessage(RecordMessagingMessageListenerAdapter.java:92) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.adapter.RecordMessagingMessageListenerAdapter.onMessage(RecordMessagingMessageListenerAdapter.java:53) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.doInvokeOnMessage(KafkaMessageListenerContainer.java:2848) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.invokeOnMessage(KafkaMessageListenerContainer.java:2826) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.lambda$doInvokeRecordListener$56(KafkaMessageListenerContainer.java:2744) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at io.micrometer.observation.Observation.observe(Observation.java:565) ~[micrometer-observation-1.12.1.jar:1.12.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.doInvokeRecordListener(KafkaMessageListenerContainer.java:2742) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.doInvokeWithRecords(KafkaMessageListenerContainer.java:2595) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.invokeRecordListener(KafkaMessageListenerContainer.java:2481) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.invokeListener(KafkaMessageListenerContainer.java:2123) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.invokeIfHaveRecords(KafkaMessageListenerContainer.java:1478) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.pollAndInvoke(KafkaMessageListenerContainer.java:1442) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.run(KafkaMessageListenerContainer.java:1313) ~[spring-kafka-3.1.1.jar:3.1.1]
-	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[na:na]
-	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
-Caused by: org.apache.avro.AvroRuntimeException: Not an array: {"type":"record","name":"PlutusFinacleData","namespace":"com.kotak.orchestrator.orchestrator.dto","fields":[{"name":"foracid","type":["null","string"],"default":null},{"name":"acctName","type":["null","string"],"default":null},{"name":"lastTranDateCr","type":["null","string"],"default":null},{"name":"tranDate","type":["null","string"],"default":null},{"name":"tranId","type":["null","string"],"default":null},{"name":"partTranSrlNum","type":["null","string"],"default":null},{"name":"delFlg","type":["null","string"],"default":null},{"name":"tranType","type":["null","string"],"default":null},{"name":"tranSubType","type":["null","string"],"default":null},{"name":"partTranType","type":["null","string"],"default":null},{"name":"glSubHeadCode","type":["null","string"],"default":null},{"name":"acid","type":["null","string"],"default":null},{"name":"valueDate","type":["null","string"],"default":null},{"name":"tranAmt","type":["null","double"],"default":null},{"name":"tranParticular","type":["null","string"],"default":null},{"name":"entryDate","type":["null","string"],"default":null},{"name":"pstdDate","type":["null","string"],"default":null},{"name":"refNum","type":["null","string"],"default":null},{"name":"instrmntType","type":["null","string"],"default":null},{"name":"instrmntDate","type":["null","string"],"default":null},{"name":"instrmntNum","type":["null","string"],"default":null},{"name":"tranRmks","type":["null","string"],"default":null},{"name":"custId","type":["null","string"],"default":null},{"name":"brCode","type":["null","string"],"default":null},{"name":"crncyCode","type":["null","string"],"default":null},{"name":"tranCrncyCode","type":["null","string"],"default":null},{"name":"refAmt","type":["null","double"],"default":null},{"name":"solId","type":["null","string"],"default":null},{"name":"bankCode","type":["null","string"],"default":null},{"name":"treaRefNum","type":["null","string"],"default":null},{"name":"reversalDate","type":["null","string"],"default":null}]}
-	at org.apache.avro.Schema.getElementType(Schema.java:363) ~[avro-1.11.0.jar:1.11.0]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:688) ~[jackson-databind-2.15.3.jar:2.15.3]
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:772) ~[jackson-databind-2.15.3.jar:2.15.3]
-	... 33 common frames omitted
+GRANT READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO CASHMIG;
 
+GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO CASHSSRS;
 
+GRANT SELECT, UPDATE ON KOTAKTCI.VIRTUAL_APAC_TABLE TO DPATCH;
 
- 
+GRANT SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO EDW;
+
+GRANT ALTER, SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO GGUSER;
+
+GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO MSAREP;
+
+GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO MSAREP1;
+
+GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO SUPPORT;
+
