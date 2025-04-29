@@ -44,6 +44,13 @@ spring.sql.init.schema-locations=classpath:schema.sql
 #management.endpoints.web.base-path=/
 #server.servlet.context-path=/api/plutus-consumer
 
+
+
+
+
+
+b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098
+
 logging.level.org.apache.kafka=DEBUG
 logging.level.org.apache.kafka.clients=DEBUG
 
