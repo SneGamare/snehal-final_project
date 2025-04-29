@@ -1,10 +1,8 @@
-package com.javatechie.config;
+package com.kotak.orchestrator.orchestrator.config;
 
-import com.javatechie.dto.Employee;
-import com.javatechie.dto.PlutusFinacleData;
-import com.javatechie.serializer.PlutusFinacleDataDeserializer;
-import com.javatechie.serializer.PlutusFinacleDataSerializer;
-import org.apache.kafka.common.serialization.StringSerializer;
+import com.kotak.orchestrator.orchestrator.dto.PlutusFinacleData;
+import com.kotak.orchestrator.orchestrator.serializer.PlutusFinacleDeserializer;
+import com.kotak.orchestrator.orchestrator.serializer.PlutusFinacleSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -22,19 +20,19 @@ public class KafkaBeanRegistrar {
     // 🟦 PlutusFinacleData Beans
     @Bean
     public KafkaTemplate<String, PlutusFinacleData> plutusKafkaTemplate() {
-        return genericKafkaConfig.kafkaTemplate(PlutusFinacleDataSerializer.class);
+        return genericKafkaConfig.kafkaTemplate(PlutusFinacleSerializer.class);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, PlutusFinacleData> plutusListenerContainerFactory() {
-        return genericKafkaConfig.listenerContainerFactory("plutus-finacle-group", PlutusFinacleDataDeserializer.class);
+        return genericKafkaConfig.listenerContainerFactory("plutus-finacle-group", PlutusFinacleDeserializer.class);
     }
 
     // 🟨 Employee Beans (assume JSON/String serialization)
-    @Bean
+   /* @Bean
     public KafkaTemplate<String, Employee> employeeKafkaTemplate() {
-        return genericKafkaConfig.kafkaTemplate(StringSerializer.class);
-    }
+        return genericKafkaConfig.kafkaTemplate((Class<? extends org.apache.kafka.common.serialization.Serializer<Employee>>) StringSerializer.class);
+    }*/
 
     // ➕ Add more beans here for other DTOs if needed...
 }
