@@ -8,16 +8,15 @@ public abstract class GenericAvroConsumer<T> {
 
     public void consume(ConsumerRecord<String, T> record) {
         if (record == null || record.value() == null) {
-            log.warn("Received null record or value.");
             return;
         }
 
-        log.info("Received record for topic '{}': {}", record.topic(), record.value());
+        System.out.println("Received record for topic '{}': {}"+ record.topic() +record.value());
 
         try {
             handleMessage(record.value(), record);
         } catch (Exception ex) {
-            log.error("Error processing record: {}", ex.getMessage(), ex);
+            System.out.println("Error processing record: {}"+ ex.getMessage()+ ex);
         }
     }
 
