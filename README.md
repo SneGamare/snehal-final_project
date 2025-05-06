@@ -1,49 +1,42 @@
-package com.kotak.orchestrator.orchestrator.entity;
+package com.kotak.orchestrator.dto;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "VIRTUAL_APAC_TABLE", schema = "KOTAKTCI")
 @Data
-public class VirtualApacEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpiReconciliationDto {
 
-    @Id
-    @Column(name = "TXN_REF_NO", nullable = false)
+    // From Virtual APAC Table
     private String txnRefNo;
-
-    @Column(name = "TXN_DATE")
     private LocalDate txnDate;
-
-    @Column(name = "MASTER_ACC_NO")
     private String masterAccNo;
-
-    @Column(name = "AMOUNT")
     private Double amount;
-
-    @Column(name = "PAY_MODE")
     private String payMode;
-
-    @Column(name = "BENE_CUST_ACNAME")
     private String beneCustAcName;
-
-    @Column(name = "REMIT_AC_NMBR")
     private String remitAcNmbr;
-
-    @Column(name = "PROCESSED_FLAG")
     private String processedFlag;
-
-    @Column(name = "PROC_REMARKS")
     private String procRemarks;
 
-    @Column(name = "CREATED_DATE")
-    private LocalDateTime createdDate;
+    // From Finacle Table
+    private String finacleTranId;
+    private LocalDate valueDate;
+    private String foracid;
+    private String acctName;
+    private Double finacleAmount;
+    private String tranParticular;
+    private String refNum;
 
-    @Column(name = "MODIFIED_DATE")
-    private LocalDateTime modifiedDate;
+    // Metadata
+    private LocalDateTime matchedAt;
+    private boolean isMatched;
+    private String matchReason;
 
-    @Column(name = "RAW_JSON", columnDefinition = "CLOB")
-    private String rawJson;
+    // Optional raw JSONs (if needed for audit/debug)
+    private String apacRawJson;
+    private String finacleRawJson;
 }
