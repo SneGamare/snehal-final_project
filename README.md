@@ -1,42 +1,57 @@
-package com.kotak.orchestrator.dto;
+package com.kotak.orchestrator.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.kotak.orchestrator.dto.UpiReconciliationDto;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.entity.VirtualApacEntity;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpiReconciliationDto {
+@Service
+public class UpiReconciliationService {
 
-    // From Virtual APAC Table
-    private String txnRefNo;
-    private LocalDate txnDate;
-    private String masterAccNo;
-    private Double amount;
-    private String payMode;
-    private String beneCustAcName;
-    private String remitAcNmbr;
-    private String processedFlag;
-    private String procRemarks;
+    public UpiReconciliationDto matchUpiRecords(VirtualApacEntity apac, PlutusFinacleDataEntity finacle) {
+        boolean matched = false;
+        String reason = "";
 
-    // From Finacle Table
-    private String finacleTranId;
-    private LocalDate valueDate;
-    private String foracid;
-    private String acctName;
-    private Double finacleAmount;
-    private String tranParticular;
-    private String refNum;
+        if (apac.getAmount().equals(finacle.getTranAmt()) &&
+            apac.getTxnRefNo().equalsIgnoreCase(finacle.getRefNum())) {
+            matched = true;
+            reason = "Matched by amount and reference number";
+        } else {
+            reason = "Mismatch in amount or reference";
+        }
 
-    // Metadata
-    private LocalDateTime matchedAt;
-    private boolean isMatched;
-    private String matchReason;
+        return new UpiReconciliationDto(
+            apac.getTxnRefNo(),
+            apac.getTxnDate(),
+            apac.getMasterAccNo(),
+            apac.getAmount(),
+            apac.getPayMode(),
+            apac.getBeneCustAcName(),
+            apac.getRemitAcNmbr(),
+            apac.getProcessedFlag(),
+            apac.getProcRemarks(),
 
-    // Optional raw JSONs (if needed for audit/debug)
-    private String apacRawJson;
-    private String finacleRawJson;
+            finacle.getTranId(),
+            parseDate(finacle.getValueDate()),
+            finacle.getForacid(),
+            finacle.getAcctName(),
+            finacle.getTranAmt(),
+            finacle.getTranParticular(),
+            finacle.getRefNum(),
+
+            LocalDateTime.now(),
+            matched,
+            reason,
+
+            apac.getRawJson(),
+            finacle.getRawData()
+        );
+    }
+
+    private LocalDate parseDate(String dateStr) {
+        return LocalDate.parse(dateStr); // Use formatter if format is not ISO
+    }
 }
