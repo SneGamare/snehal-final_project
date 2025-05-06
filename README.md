@@ -1,19 +1,5 @@
-package com.kotak.orchestrator.producer;
-
-import com.kotak.orchestrator.dto.UpiReconciliationDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-
-@Service
-public class UpiReconciliationProducer {
-
-    private static final String TOPIC = "upi-reconciliation-topic";
-
-    @Autowired
-    private KafkaTemplate<String, UpiReconciliationDto> kafkaTemplate;
-
-    public void send(UpiReconciliationDto dto) {
-        kafkaTemplate.send(TOPIC, dto);
-    }
-}
+data collection part  
+plutus dto - 2 class 
+1 plutusFinacleData / plutus_finalce_details
+(from ODS virtual apac table from here we need to take upi data in that we need to match with the finacle data and publish two table in plutus db)
+2 paymentProcessorData //virtual apac table payment_processor_details
