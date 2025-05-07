@@ -1,60 +1,20 @@
-@Service
-public class ReconciliationService {
+import jakarta.persistence.*;
 
-    @Autowired
-    private PlutusFinacleDataRepository finacleRepo;
+@Entity
+@Table(name = "reconciled_transaction")
+public class ReconciledTransaction {
 
-    @Autowired
-    private VirtualApacRepository apacRepo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Autowired
-    private ReconciledTransactionRepository reconciledRepo;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "finacle_tran_id", referencedColumnName = "tranId")
+    private PlutusFinacleDataEntity plutusFinacleDataEntity;
 
-    @Autowired
-    private UnmatchedTransactionRepository unmatchedRepo;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "apac_txn_ref_no", referencedColumnName = "txnRefNo")
+    private VirtualApacEntity virtualApacEntity;
 
-    public void reconcileAndSave() {
-        List<VirtualApacEntity> upiList = apacRepo.findAll();  // Fetch all Virtual APAC data
-
-        for (VirtualApacEntity apac : upiList) {
-            String ref = apac.getRef3();  // UPI reference to match with tranId from Finacle
-
-            // Find matching Finacle transaction
-            Optional<PlutusFinacleDataEntity> matchingFinacle = finacleRepo.findById(ref);  // Match with ref3 (Virtual APAC) and tranId (Finacle)
-
-            if (matchingFinacle.isPresent()) {
-                // If a match is found, save the reconciled data
-                PlutusFinacleDataEntity finacle = matchingFinacle.get();
-
-                ReconciledTransaction reconciled = new ReconciledTransaction();
-                reconciled.setTranId(finacle.getTranId());
-                reconciled.setForacid(finacle.getForacid());
-                reconciled.setTranAmt(finacle.getTranAmt());
-                reconciled.setTranDate(finacle.getTranDate());
-
-                reconciled.setTxnRefNo(apac.getTxnRefNo());
-                reconciled.setAmount(apac.getAmount());
-                reconciled.setECollAccNo(apac.getECollAccNo());
-                reconciled.setRemittInfo(apac.getRemittInfo());
-
-                reconciled.setFinacleRaw(finacle.getRawData());
-                reconciled.setVirtualApacRaw(apac.getRawJson());
-
-                reconciledRepo.save(reconciled);  // Save reconciled transaction
-            } else {
-                // If no match is found, save the unmatched data
-                UnmatchedTransaction unmatched = new UnmatchedTransaction();
-                unmatched.setRef3(apac.getRef3());
-                unmatched.setTxnRefNo(apac.getTxnRefNo());
-                unmatched.setAmount(apac.getAmount());
-                unmatched.setECollAccNo(apac.getECollAccNo());
-                unmatched.setRemittInfo(apac.getRemittInfo());
-
-                unmatched.setVirtualApacRaw(apac.getRawJson());
-                unmatched.setMessage("No matching Finacle data found.");
-
-                unmatchedRepo.save(unmatched);  // Save unmatched transaction
-            }
-        }
-    }
+    // Getters and Setters
 }
