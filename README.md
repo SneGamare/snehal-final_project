@@ -1,33 +1,40 @@
-package com.kotak.orchestrator.orchestrator.entity;
+@Service
+public class ReconciliationService {
 
-import jakarta.persistence.*;
-import lombok.Data;
+    @Autowired
+    private PlutusFinacleDataRepository finacleRepo;
 
-@Entity
-@Table(name = "reconciled_transaction")
-@Data
-public class ReconciledTransaction {
+    @Autowired
+    private VirtualApacRepository apacRepo;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Autowired
+    private ReconciledTransactionRepository reconciledRepo;
 
-    // Finacle fields
-    private String tranId;
-    private String foracid;
-    private Double tranAmt;
-    private String tranDate;
+    public void reconcileAndSave() {
+        List<VirtualApacEntity> upiList = apacRepo.findAll();
 
-    // Virtual APAC fields
-    private String txnRefNo;
-    private Double amount;
-    private String eCollAccNo;
-    private String remittInfo;
+        for (VirtualApacEntity apac : upiList) {
+            String ref = apac.getRef1(); // Assume Ref1 contains tranId or matching key
 
-    // Raw JSONs (optional, for traceability)
-    @Column(columnDefinition = "CLOB")
-    private String finacleRaw;
+            if (ref != null && finacleRepo.existsById(ref)) {
+                PlutusFinacleDataEntity finacle = finacleRepo.findById(ref).get();
 
-    @Column(columnDefinition = "CLOB")
-    private String virtualApacRaw;
+                ReconciledTransaction reconciled = new ReconciledTransaction();
+                reconciled.setTranId(finacle.getTranId());
+                reconciled.setForacid(finacle.getForacid());
+                reconciled.setTranAmt(finacle.getTranAmt());
+                reconciled.setTranDate(finacle.getTranDate());
+
+                reconciled.setTxnRefNo(apac.getTxnRefNo());
+                reconciled.setAmount(apac.getAmount());
+                reconciled.setECollAccNo(apac.getECollAccNo());
+                reconciled.setRemittInfo(apac.getRemittInfo());
+
+                reconciled.setFinacleRaw(finacle.getRawData());
+                reconciled.setVirtualApacRaw(apac.getRawJson());
+
+                reconciledRepo.save(reconciled);
+            }
+        }
+    }
 }
