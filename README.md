@@ -1,322 +1,356 @@
 package com.kotak.orchestrator.orchestrator.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "plutus_finacle_data")
+@Table(name = "VIRTUAL_APAC_TABLE", schema = "KOTAKTCI")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PlutusFinacleDataEntity {
-    
+public class VirtualApacEntity {
+
     @Id
-    private String tranId; // Using tranId as the primary key
-    
-    private String foracid;
-    private String acctName;
-    private String lastTranDateCr;
-    private String tranDate;
-    private String partTranSrlNum;
-    private String delFlg;
-    private String tranType;
-    private String tranSubType;
-    private String partTranType;
-    private String glSubHeadCode;
-    private String acid;
-    private String valueDate;
-    private Double tranAmt;
-    private String tranParticular;
-    private String entryDate;
-    private String pstdDate;
-    private String refNum;
-    private String instrmntType;
-    private String instrmntDate;
-    private String instrmntNum;
-    private String tranRmks;
-    private String custId;
-    private String brCode;
-    private String crncyCode;
-    private String tranCrncyCode;
-    private Double refAmt;
-    private String solId;
-    private String bankCode;
-    private String treaRefNum;
-    private String reversalDate;
+    @Column(name = "TXN_REF_NO", nullable = false)
+    private String txnRefNo;
 
-    public String getTranId() {
-        return tranId;
-    }
+    @Column(name = "TXN_DATE")
+    private LocalDate txnDate;
 
-    public void setTranId(String tranId) {
-        this.tranId = tranId;
-    }
+    @Column(name = "E_COLL_ACC_NO")
+    private String eCollAccNo;
 
-    public String getForacid() {
-        return foracid;
-    }
+    @Column(name = "MASTER_ACC_NO")
+    private String masterAccNo;
 
-    public void setForacid(String foracid) {
-        this.foracid = foracid;
-    }
+    @Column(name = "DEALER_NAME")
+    private String dealerName;
 
-    public String getAcctName() {
-        return acctName;
-    }
+    @Column(name = "AMOUNT")
+    private Double amount;
 
-    public void setAcctName(String acctName) {
-        this.acctName = acctName;
-    }
+    @Column(name = "BENE_CUST_ACNAME")
+    private String beneCustAcName;
+
+    @Column(name = "SEND_CUST_ACNAME")
+    private String sendCustAcName;
+
+    @Column(name = "REMITT_INFO")
+    private String remittInfo;
+
+    @Column(name = "SENDER_ADDRESS")
+    private String senderAddress;
+
+    @Column(name = "REF1")
+    private String ref1;
+
+    @Column(name = "REF2")
+    private String ref2;
+
+    @Column(name = "REF3")
+    private String ref3;
+
+    @Column(name = "PROCESSED_FLAG", nullable = false)
+    private String processedFlag = "N";
+
+    @Column(name = "CREATED_DATE")
+    private LocalDateTime createdDate;
+
+    @Column(name = "MODIFIED_DATE")
+    private LocalDateTime modifiedDate;
+
+    @Column(name = "IDEA_TXN_REF_NO")
+    private String ideaTxnRefNo;
 
-    public String getLastTranDateCr() {
-        return lastTranDateCr;
+    @Column(name = "INITIAL_AVAIL_BAL")
+    private Double initialAvailBal;
+
+    @Column(name = "INITIAL_CUR_BAL")
+    private Double initialCurBal;
+
+    @Column(name = "UPDATED_AVAIL_BAL")
+    private Double updatedAvailBal;
+
+    @Column(name = "UPDATED_CUR_BAL")
+    private Double updatedCurBal;
+
+    @Column(name = "PROC_REMARKS")
+    private String procRemarks;
+
+    @Column(name = "REMIT_AC_NMBR")
+    private String remitAcNmbr;
+
+    @Column(name = "PAY_MODE")
+    private String payMode;
+
+    @Column(name = "CMS_TRAN_API_STATUS")
+    private String cmsTranApiStatus;
+
+    @Column(name = "CMS_TRAN_API_REMARKS")
+    private String cmsTranApiRemarks;
+
+    @Column(name = "CMS_CREATED_DATE")
+    private LocalDateTime cmsCreatedDate;
+
+    @Column(name = "CMS_REV_API_STATUS")
+    private String cmsRevApiStatus;
+
+    @Column(name = "CMS_REV_API_REMARKS")
+    private String cmsRevApiRemarks;
+
+    @Column(name = "CMS_REV_CREATED_DATE")
+    private LocalDateTime cmsRevCreatedDate;
+
+    @Column(name = "RAW_JSON", columnDefinition = "CLOB")
+    private String rawJson;
+
+    public String getTxnRefNo() {
+        return txnRefNo;
     }
 
-    public void setLastTranDateCr(String lastTranDateCr) {
-        this.lastTranDateCr = lastTranDateCr;
+    public void setTxnRefNo(String txnRefNo) {
+        this.txnRefNo = txnRefNo;
     }
 
-    public String getTranDate() {
-        return tranDate;
+    public LocalDate getTxnDate() {
+        return txnDate;
     }
 
-    public void setTranDate(String tranDate) {
-        this.tranDate = tranDate;
+    public void setTxnDate(LocalDate txnDate) {
+        this.txnDate = txnDate;
     }
 
-    public String getPartTranSrlNum() {
-        return partTranSrlNum;
+    public String geteCollAccNo() {
+        return eCollAccNo;
     }
 
-    public void setPartTranSrlNum(String partTranSrlNum) {
-        this.partTranSrlNum = partTranSrlNum;
+    public void seteCollAccNo(String eCollAccNo) {
+        this.eCollAccNo = eCollAccNo;
     }
 
-    public String getDelFlg() {
-        return delFlg;
+    public String getMasterAccNo() {
+        return masterAccNo;
     }
 
-    public void setDelFlg(String delFlg) {
-        this.delFlg = delFlg;
+    public void setMasterAccNo(String masterAccNo) {
+        this.masterAccNo = masterAccNo;
     }
 
-    public String getTranType() {
-        return tranType;
+    public String getDealerName() {
+        return dealerName;
     }
 
-    public void setTranType(String tranType) {
-        this.tranType = tranType;
+    public void setDealerName(String dealerName) {
+        this.dealerName = dealerName;
     }
 
-    public String getTranSubType() {
-        return tranSubType;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setTranSubType(String tranSubType) {
-        this.tranSubType = tranSubType;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public String getPartTranType() {
-        return partTranType;
+    public String getBeneCustAcName() {
+        return beneCustAcName;
     }
 
-    public void setPartTranType(String partTranType) {
-        this.partTranType = partTranType;
+    public void setBeneCustAcName(String beneCustAcName) {
+        this.beneCustAcName = beneCustAcName;
     }
 
-    public String getGlSubHeadCode() {
-        return glSubHeadCode;
+    public String getSendCustAcName() {
+        return sendCustAcName;
     }
 
-    public void setGlSubHeadCode(String glSubHeadCode) {
-        this.glSubHeadCode = glSubHeadCode;
+    public void setSendCustAcName(String sendCustAcName) {
+        this.sendCustAcName = sendCustAcName;
     }
 
-    public String getAcid() {
-        return acid;
+    public String getRemittInfo() {
+        return remittInfo;
     }
 
-    public void setAcid(String acid) {
-        this.acid = acid;
+    public void setRemittInfo(String remittInfo) {
+        this.remittInfo = remittInfo;
     }
 
-    public String getValueDate() {
-        return valueDate;
+    public String getSenderAddress() {
+        return senderAddress;
     }
 
-    public void setValueDate(String valueDate) {
-        this.valueDate = valueDate;
+    public void setSenderAddress(String senderAddress) {
+        this.senderAddress = senderAddress;
     }
 
-    public Double getTranAmt() {
-        return tranAmt;
+    public String getRef1() {
+        return ref1;
     }
 
-    public void setTranAmt(Double tranAmt) {
-        this.tranAmt = tranAmt;
+    public void setRef1(String ref1) {
+        this.ref1 = ref1;
     }
 
-    public String getTranParticular() {
-        return tranParticular;
+    public String getRef2() {
+        return ref2;
     }
 
-    public void setTranParticular(String tranParticular) {
-        this.tranParticular = tranParticular;
+    public void setRef2(String ref2) {
+        this.ref2 = ref2;
     }
 
-    public String getEntryDate() {
-        return entryDate;
+    public String getRef3() {
+        return ref3;
     }
 
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
+    public void setRef3(String ref3) {
+        this.ref3 = ref3;
     }
 
-    public String getPstdDate() {
-        return pstdDate;
+    public String getProcessedFlag() {
+        return processedFlag;
     }
 
-    public void setPstdDate(String pstdDate) {
-        this.pstdDate = pstdDate;
+    public void setProcessedFlag(String processedFlag) {
+        this.processedFlag = processedFlag;
     }
 
-    public String getRefNum() {
-        return refNum;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setRefNum(String refNum) {
-        this.refNum = refNum;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public String getInstrmntType() {
-        return instrmntType;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setInstrmntType(String instrmntType) {
-        this.instrmntType = instrmntType;
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
-    public String getInstrmntDate() {
-        return instrmntDate;
+    public String getIdeaTxnRefNo() {
+        return ideaTxnRefNo;
     }
 
-    public void setInstrmntDate(String instrmntDate) {
-        this.instrmntDate = instrmntDate;
+    public void setIdeaTxnRefNo(String ideaTxnRefNo) {
+        this.ideaTxnRefNo = ideaTxnRefNo;
     }
 
-    public String getInstrmntNum() {
-        return instrmntNum;
+    public Double getInitialAvailBal() {
+        return initialAvailBal;
     }
 
-    public void setInstrmntNum(String instrmntNum) {
-        this.instrmntNum = instrmntNum;
+    public void setInitialAvailBal(Double initialAvailBal) {
+        this.initialAvailBal = initialAvailBal;
     }
 
-    public String getTranRmks() {
-        return tranRmks;
+    public Double getInitialCurBal() {
+        return initialCurBal;
     }
 
-    public void setTranRmks(String tranRmks) {
-        this.tranRmks = tranRmks;
+    public void setInitialCurBal(Double initialCurBal) {
+        this.initialCurBal = initialCurBal;
     }
 
-    public String getCustId() {
-        return custId;
+    public Double getUpdatedAvailBal() {
+        return updatedAvailBal;
     }
 
-    public void setCustId(String custId) {
-        this.custId = custId;
+    public void setUpdatedAvailBal(Double updatedAvailBal) {
+        this.updatedAvailBal = updatedAvailBal;
     }
 
-    public String getBrCode() {
-        return brCode;
+    public Double getUpdatedCurBal() {
+        return updatedCurBal;
     }
 
-    public void setBrCode(String brCode) {
-        this.brCode = brCode;
+    public void setUpdatedCurBal(Double updatedCurBal) {
+        this.updatedCurBal = updatedCurBal;
     }
 
-    public String getCrncyCode() {
-        return crncyCode;
+    public String getProcRemarks() {
+        return procRemarks;
     }
 
-    public void setCrncyCode(String crncyCode) {
-        this.crncyCode = crncyCode;
+    public void setProcRemarks(String procRemarks) {
+        this.procRemarks = procRemarks;
     }
 
-    public String getTranCrncyCode() {
-        return tranCrncyCode;
+    public String getRemitAcNmbr() {
+        return remitAcNmbr;
     }
 
-    public void setTranCrncyCode(String tranCrncyCode) {
-        this.tranCrncyCode = tranCrncyCode;
+    public void setRemitAcNmbr(String remitAcNmbr) {
+        this.remitAcNmbr = remitAcNmbr;
     }
 
-    public Double getRefAmt() {
-        return refAmt;
+    public String getPayMode() {
+        return payMode;
     }
 
-    public void setRefAmt(Double refAmt) {
-        this.refAmt = refAmt;
+    public void setPayMode(String payMode) {
+        this.payMode = payMode;
     }
 
-    public String getSolId() {
-        return solId;
+    public String getCmsTranApiStatus() {
+        return cmsTranApiStatus;
     }
 
-    public void setSolId(String solId) {
-        this.solId = solId;
+    public void setCmsTranApiStatus(String cmsTranApiStatus) {
+        this.cmsTranApiStatus = cmsTranApiStatus;
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public String getCmsTranApiRemarks() {
+        return cmsTranApiRemarks;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
+    public void setCmsTranApiRemarks(String cmsTranApiRemarks) {
+        this.cmsTranApiRemarks = cmsTranApiRemarks;
     }
 
-    public String getTreaRefNum() {
-        return treaRefNum;
+    public LocalDateTime getCmsCreatedDate() {
+        return cmsCreatedDate;
     }
 
-    public void setTreaRefNum(String treaRefNum) {
-        this.treaRefNum = treaRefNum;
+    public void setCmsCreatedDate(LocalDateTime cmsCreatedDate) {
+        this.cmsCreatedDate = cmsCreatedDate;
     }
 
-    public String getReversalDate() {
-        return reversalDate;
+    public String getCmsRevApiStatus() {
+        return cmsRevApiStatus;
     }
 
-    public void setReversalDate(String reversalDate) {
-        this.reversalDate = reversalDate;
+    public void setCmsRevApiStatus(String cmsRevApiStatus) {
+        this.cmsRevApiStatus = cmsRevApiStatus;
     }
 
-    public LocalDateTime getReceivedAt() {
-        return receivedAt;
+    public String getCmsRevApiRemarks() {
+        return cmsRevApiRemarks;
     }
 
-    public void setReceivedAt(LocalDateTime receivedAt) {
-        this.receivedAt = receivedAt;
+    public void setCmsRevApiRemarks(String cmsRevApiRemarks) {
+        this.cmsRevApiRemarks = cmsRevApiRemarks;
     }
 
-    public String getRawData() {
-        return rawData;
+    public LocalDateTime getCmsRevCreatedDate() {
+        return cmsRevCreatedDate;
     }
 
-    public void setRawData(String rawData) {
-        this.rawData = rawData;
+    public void setCmsRevCreatedDate(LocalDateTime cmsRevCreatedDate) {
+        this.cmsRevCreatedDate = cmsRevCreatedDate;
     }
 
+    public String getRawJson() {
+        return rawJson;
+    }
 
+    public void setRawJson(String rawJson) {
+        this.rawJson = rawJson;
+    }
 
-    @Column(name="received_at",nullable = false)
-    private LocalDateTime receivedAt;
 
-    @Column(name = "raw_json",columnDefinition =  "CLOB")
-    private String rawData;
-} 
+}
