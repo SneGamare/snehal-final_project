@@ -1,151 +1,322 @@
-CREATE TABLE KOTAKTCI.VIRTUAL_APAC_TABLE
-(
-  TXN_DATE              DATE,
-  TXN_REF_NO            VARCHAR2(1000 BYTE)     NOT NULL,
-  E_COLL_ACC_NO         VARCHAR2(1000 BYTE),
-  MASTER_ACC_NO         VARCHAR2(1000 BYTE),
-  DEALER_NAME           VARCHAR2(1000 BYTE),
-  AMOUNT                NUMBER(20,4),
-  BENE_CUST_ACNAME      VARCHAR2(1000 BYTE),
-  SEND_CUST_ACNAME      VARCHAR2(1000 BYTE),
-  REMITT_INFO           VARCHAR2(1000 BYTE),
-  SENDER_ADDRESS        VARCHAR2(1000 BYTE),
-  REF1                  VARCHAR2(1000 BYTE),
-  REF2                  VARCHAR2(1000 BYTE),
-  REF3                  VARCHAR2(1000 BYTE),
-  PROCESSED_FLAG        CHAR(1 BYTE)            DEFAULT 'N',
-  CREATED_DATE          DATE,
-  MODIFIED_DATE         DATE,
-  IDEA_TXN_REF_NO       VARCHAR2(1000 BYTE),
-  INITIAL_AVAIL_BAL     NUMBER(20,4),
-  INITIAL_CUR_BAL       NUMBER(20,4),
-  UPDATED_AVAIL_BAL     NUMBER(20,4),
-  UPDATED_CUR_BAL       NUMBER(20,4),
-  PROC_REMARKS          VARCHAR2(4000 BYTE),
-  REMIT_AC_NMBR         VARCHAR2(1000 BYTE),
-  PAY_MODE              VARCHAR2(1000 BYTE),
-  CMS_TRAN_API_STATUS   VARCHAR2(1 BYTE),
-  CMS_TRAN_API_REMARKS  VARCHAR2(1000 BYTE),
-  CMS_CREATED_DATE      DATE,
-  CMS_REV_API_STATUS    VARCHAR2(1 BYTE),
-  CMS_REV_API_REMARKS   VARCHAR2(1000 BYTE),
-  CMS_REV_CREATED_DATE  DATE,
-  SUPPLEMENTAL LOG GROUP GGS_208324 (TXN_REF_NO) ALWAYS,
-  SUPPLEMENTAL LOG DATA (PRIMARY KEY) COLUMNS,
-  SUPPLEMENTAL LOG DATA (UNIQUE) COLUMNS,
-  SUPPLEMENTAL LOG DATA (FOREIGN KEY) COLUMNS,
-  SUPPLEMENTAL LOG DATA (ALL) COLUMNS
-)
-TABLESPACE CT_CI_DUMMY_PRD
-RESULT_CACHE (MODE DEFAULT)
-PCTUSED    0
-PCTFREE    10
-INITRANS   1
-MAXTRANS   255
-STORAGE    (
-            INITIAL          64K
-            NEXT             1M
-            MINEXTENTS       1
-            MAXEXTENTS       UNLIMITED
-            PCTINCREASE      0
-            BUFFER_POOL      DEFAULT
-            FLASH_CACHE      DEFAULT
-            CELL_FLASH_CACHE DEFAULT
-           )
-LOGGING 
-NOCOMPRESS 
-NOCACHE
-NOPARALLEL
-MONITORING;
+package com.kotak.orchestrator.orchestrator.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "plutus_finacle_data")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PlutusFinacleDataEntity {
+    
+    @Id
+    private String tranId; // Using tranId as the primary key
+    
+    private String foracid;
+    private String acctName;
+    private String lastTranDateCr;
+    private String tranDate;
+    private String partTranSrlNum;
+    private String delFlg;
+    private String tranType;
+    private String tranSubType;
+    private String partTranType;
+    private String glSubHeadCode;
+    private String acid;
+    private String valueDate;
+    private Double tranAmt;
+    private String tranParticular;
+    private String entryDate;
+    private String pstdDate;
+    private String refNum;
+    private String instrmntType;
+    private String instrmntDate;
+    private String instrmntNum;
+    private String tranRmks;
+    private String custId;
+    private String brCode;
+    private String crncyCode;
+    private String tranCrncyCode;
+    private Double refAmt;
+    private String solId;
+    private String bankCode;
+    private String treaRefNum;
+    private String reversalDate;
+
+    public String getTranId() {
+        return tranId;
+    }
+
+    public void setTranId(String tranId) {
+        this.tranId = tranId;
+    }
+
+    public String getForacid() {
+        return foracid;
+    }
+
+    public void setForacid(String foracid) {
+        this.foracid = foracid;
+    }
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
+    public String getLastTranDateCr() {
+        return lastTranDateCr;
+    }
+
+    public void setLastTranDateCr(String lastTranDateCr) {
+        this.lastTranDateCr = lastTranDateCr;
+    }
+
+    public String getTranDate() {
+        return tranDate;
+    }
+
+    public void setTranDate(String tranDate) {
+        this.tranDate = tranDate;
+    }
+
+    public String getPartTranSrlNum() {
+        return partTranSrlNum;
+    }
+
+    public void setPartTranSrlNum(String partTranSrlNum) {
+        this.partTranSrlNum = partTranSrlNum;
+    }
+
+    public String getDelFlg() {
+        return delFlg;
+    }
+
+    public void setDelFlg(String delFlg) {
+        this.delFlg = delFlg;
+    }
+
+    public String getTranType() {
+        return tranType;
+    }
+
+    public void setTranType(String tranType) {
+        this.tranType = tranType;
+    }
+
+    public String getTranSubType() {
+        return tranSubType;
+    }
+
+    public void setTranSubType(String tranSubType) {
+        this.tranSubType = tranSubType;
+    }
+
+    public String getPartTranType() {
+        return partTranType;
+    }
+
+    public void setPartTranType(String partTranType) {
+        this.partTranType = partTranType;
+    }
+
+    public String getGlSubHeadCode() {
+        return glSubHeadCode;
+    }
+
+    public void setGlSubHeadCode(String glSubHeadCode) {
+        this.glSubHeadCode = glSubHeadCode;
+    }
+
+    public String getAcid() {
+        return acid;
+    }
+
+    public void setAcid(String acid) {
+        this.acid = acid;
+    }
+
+    public String getValueDate() {
+        return valueDate;
+    }
+
+    public void setValueDate(String valueDate) {
+        this.valueDate = valueDate;
+    }
+
+    public Double getTranAmt() {
+        return tranAmt;
+    }
+
+    public void setTranAmt(Double tranAmt) {
+        this.tranAmt = tranAmt;
+    }
+
+    public String getTranParticular() {
+        return tranParticular;
+    }
+
+    public void setTranParticular(String tranParticular) {
+        this.tranParticular = tranParticular;
+    }
+
+    public String getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public String getPstdDate() {
+        return pstdDate;
+    }
+
+    public void setPstdDate(String pstdDate) {
+        this.pstdDate = pstdDate;
+    }
+
+    public String getRefNum() {
+        return refNum;
+    }
+
+    public void setRefNum(String refNum) {
+        this.refNum = refNum;
+    }
+
+    public String getInstrmntType() {
+        return instrmntType;
+    }
+
+    public void setInstrmntType(String instrmntType) {
+        this.instrmntType = instrmntType;
+    }
+
+    public String getInstrmntDate() {
+        return instrmntDate;
+    }
+
+    public void setInstrmntDate(String instrmntDate) {
+        this.instrmntDate = instrmntDate;
+    }
+
+    public String getInstrmntNum() {
+        return instrmntNum;
+    }
+
+    public void setInstrmntNum(String instrmntNum) {
+        this.instrmntNum = instrmntNum;
+    }
+
+    public String getTranRmks() {
+        return tranRmks;
+    }
+
+    public void setTranRmks(String tranRmks) {
+        this.tranRmks = tranRmks;
+    }
+
+    public String getCustId() {
+        return custId;
+    }
+
+    public void setCustId(String custId) {
+        this.custId = custId;
+    }
+
+    public String getBrCode() {
+        return brCode;
+    }
+
+    public void setBrCode(String brCode) {
+        this.brCode = brCode;
+    }
+
+    public String getCrncyCode() {
+        return crncyCode;
+    }
+
+    public void setCrncyCode(String crncyCode) {
+        this.crncyCode = crncyCode;
+    }
+
+    public String getTranCrncyCode() {
+        return tranCrncyCode;
+    }
+
+    public void setTranCrncyCode(String tranCrncyCode) {
+        this.tranCrncyCode = tranCrncyCode;
+    }
+
+    public Double getRefAmt() {
+        return refAmt;
+    }
+
+    public void setRefAmt(Double refAmt) {
+        this.refAmt = refAmt;
+    }
+
+    public String getSolId() {
+        return solId;
+    }
+
+    public void setSolId(String solId) {
+        this.solId = solId;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getTreaRefNum() {
+        return treaRefNum;
+    }
+
+    public void setTreaRefNum(String treaRefNum) {
+        this.treaRefNum = treaRefNum;
+    }
+
+    public String getReversalDate() {
+        return reversalDate;
+    }
+
+    public void setReversalDate(String reversalDate) {
+        this.reversalDate = reversalDate;
+    }
+
+    public LocalDateTime getReceivedAt() {
+        return receivedAt;
+    }
+
+    public void setReceivedAt(LocalDateTime receivedAt) {
+        this.receivedAt = receivedAt;
+    }
+
+    public String getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(String rawData) {
+        this.rawData = rawData;
+    }
 
 
-CREATE INDEX KOTAKTCI.IDX_REF3 ON KOTAKTCI.VIRTUAL_APAC_TABLE
-(REF3)
-LOGGING
-TABLESPACE CT_CI_DUMMY_PRD
-PCTFREE    10
-INITRANS   2
-MAXTRANS   255
-STORAGE    (
-            INITIAL          64K
-            NEXT             1M
-            MINEXTENTS       1
-            MAXEXTENTS       UNLIMITED
-            PCTINCREASE      0
-            BUFFER_POOL      DEFAULT
-            FLASH_CACHE      DEFAULT
-            CELL_FLASH_CACHE DEFAULT
-           )
-NOPARALLEL;
 
+    @Column(name="received_at",nullable = false)
+    private LocalDateTime receivedAt;
 
-CREATE INDEX KOTAKTCI.INDX_VIRTUAL_APAC ON KOTAKTCI.VIRTUAL_APAC_TABLE
-(MASTER_ACC_NO, PROCESSED_FLAG)
-LOGGING
-TABLESPACE CT_CI_DUMMY_PRD
-PCTFREE    10
-INITRANS   2
-MAXTRANS   255
-STORAGE    (
-            INITIAL          64K
-            NEXT             1M
-            MINEXTENTS       1
-            MAXEXTENTS       UNLIMITED
-            PCTINCREASE      0
-            BUFFER_POOL      DEFAULT
-            FLASH_CACHE      DEFAULT
-            CELL_FLASH_CACHE DEFAULT
-           )
-NOPARALLEL;
-
-
-CREATE UNIQUE INDEX KOTAKTCI.PK_PRIMARY_KEY ON KOTAKTCI.VIRTUAL_APAC_TABLE
-(TXN_REF_NO)
-LOGGING
-TABLESPACE CT_CI_DUMMY_PRD
-PCTFREE    10
-INITRANS   2
-MAXTRANS   255
-STORAGE    (
-            INITIAL          64K
-            NEXT             1M
-            MINEXTENTS       1
-            MAXEXTENTS       UNLIMITED
-            PCTINCREASE      0
-            BUFFER_POOL      DEFAULT
-            FLASH_CACHE      DEFAULT
-            CELL_FLASH_CACHE DEFAULT
-           )
-NOPARALLEL;
-
-
-CREATE OR REPLACE SYNONYM SYS.VIRTUAL_APAC_TABLE FOR KOTAKTCI.VIRTUAL_APAC_TABLE;
-
-
-ALTER TABLE KOTAKTCI.VIRTUAL_APAC_TABLE ADD (
-  CONSTRAINT CHK_PROCESS_FLAG
-  CHECK (processed_flag in ('N','Y','P','E','X'))
-  ENABLE VALIDATE,
-  CONSTRAINT PK_PRIMARY_KEY
-  PRIMARY KEY
-  (TXN_REF_NO)
-  USING INDEX KOTAKTCI.PK_PRIMARY_KEY
-  ENABLE VALIDATE);
-
-GRANT SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO BOREPORT;
-
-GRANT READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO CASHMIG;
-
-GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO CASHSSRS;
-
-GRANT SELECT, UPDATE ON KOTAKTCI.VIRTUAL_APAC_TABLE TO DPATCH;
-
-GRANT SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO EDW;
-
-GRANT ALTER, SELECT ON KOTAKTCI.VIRTUAL_APAC_TABLE TO GGUSER;
-
-GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO MSAREP;
-
-GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO MSAREP1;
-
-GRANT SELECT, READ ON KOTAKTCI.VIRTUAL_APAC_TABLE TO SUPPORT;
+    @Column(name = "raw_json",columnDefinition =  "CLOB")
+    private String rawData;
+} 
