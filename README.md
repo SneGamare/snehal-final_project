@@ -1,14 +1,14 @@
 package com.kotak.smartmessageprocessorservice.smartmessageprocessor.config;
 
 import com.kotak.smartmessageprocessorservice.smartmessageprocessor.model.PlutusFinacleData;
-import com.kotak.smartmessageprocessorservice.smartmessageprocessor.serializer.PlutusFinacleDeserializer;
-import com.kotak.smartmessageprocessorservice.smartmessageprocessor.serializer.PlutusFinacleSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializerWrapper;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Configuration
 public class KafkaBeanRegistrar {
@@ -19,20 +19,20 @@ public class KafkaBeanRegistrar {
         this.genericKafkaConfig = genericKafkaConfig;
     }
 
-    // 🟦 PlutusFinacleData Beans with custom serializer and deserializer
+    // 🟦 PlutusFinacleData Beans - Use JsonSerializer and JsonDeserializer instead of custom serializer
     @Bean
     public KafkaTemplate<String, PlutusFinacleData> plutusKafkaTemplate() {
-        // Use the custom serializer for PlutusFinacleData
-        return genericKafkaConfig.kafkaTemplate(PlutusFinacleSerializer.class);
+        // Using default JsonSerializer for PlutusFinacleData
+        return genericKafkaConfig.kafkaTemplate(JsonSerializer.class);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, PlutusFinacleData> plutusListenerContainerFactory() {
-        // Create a listener factory with the custom deserializer for PlutusFinacleData
-        return genericKafkaConfig.listenerContainerFactory("plutus-finacle-group", PlutusFinacleDeserializer.class);
+        // Use JsonDeserializer for deserializing PlutusFinacleData
+        return genericKafkaConfig.listenerContainerFactory("plutus-finacle-group", JsonDeserializer.class);
     }
 
-    // 🟨 Add other DTO Beans (for example, if you are using JSON or other formats)
+    // 🟨 Add other DTO Beans for JSON (like PlutusDto, etc.)
     @Bean
     public KafkaTemplate<String, Object> jsonKafkaTemplate() {
         // If you're using JSON serialization for other DTOs (like PlutusDto)
@@ -45,5 +45,5 @@ public class KafkaBeanRegistrar {
         return genericKafkaConfig.listenerContainerFactory("json-group", JsonDeserializer.class);
     }
     
-    // ➕ Additional beans for other message types (e.g., Employee) can be added here.
+    // ➕ Additional beans for other message types can be added here, e.g., Employee
 }
