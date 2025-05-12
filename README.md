@@ -37,3 +37,50 @@
     {"name": "reversalDate", "type": ["null", "string"], "default": null}
   ]
 } 
+
+
+
+
+
+
+
+package com.example.dto;
+
+import lombok.Data;
+
+@Data
+public class PlutusFinacleDataDTO {
+
+    private String foracid;
+    private String acctName;
+    private String lastTranDateCr;
+    private String tranDate;
+    private String tranId;
+    private String partTranSrlNum;
+    private String delFlg;
+    private String tranType;
+    private String tranSubType;
+    private String partTranType;
+    private String glSubHeadCode;
+    private String acid;
+    private String valueDate;
+    private Double tranAmt;
+    private String tranParticular;
+    private String entryDate;
+    private String pstdDate;
+    private String refNum;
+    private String instrmntType;
+    private String instrmntDate;
+    private String instrmntNum;
+    private String tranRmks;
+    private String custId;
+    private String brCode;
+    private String crncyCode;
+    private String tranCrncyCode;
+    private Double refAmt;
+    private String solId;
+    private String bankCode;
+    private String treaRefNum;
+    private String reversalDate;
+}
+
