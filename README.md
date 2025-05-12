@@ -1,71 +1,38 @@
 package com.kotak.smartmessageprocessorservice.smartmessageprocessor.config;
 
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.Deserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
+import com.kotak.smartmessageprocessorservice.smartmessageprocessor.model.PlutusFinacleData;
+import com.kotak.smartmessageprocessorservice.smartmessageprocessor.serializer.PlutusFinacleDeserializer;
+import com.kotak.smartmessageprocessorservice.smartmessageprocessor.serializer.PlutusFinacleSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.*;
-import org.springframework.kafka.support.serializer.JsonSerializer;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration
-public class GenericKafkaConfig {
+public class KafkaBeanRegistrar {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+    private final GenericKafkaConfig genericKafkaConfig;
 
-    @Value("${spring.kafka.consumer.topic}")
-    private String consumerTopic;
-
-    // IAM Configuration
-    private Map<String, Object> getCommonKafkaProperties() {
-        return new HashMap<>();
+    public KafkaBeanRegistrar(GenericKafkaConfig genericKafkaConfig) {
+        this.genericKafkaConfig = genericKafkaConfig;
     }
 
-    // Producer Factory Method - now uses JsonSerializer for serializing the value (DTO)
-    public <T> ProducerFactory<String, T> producerFactory(Class<? extends Serializer<T>> valueSerializerClass) {
-        Map<String, Object> config = new HashMap<>(getCommonKafkaProperties());
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
-        return new DefaultKafkaProducerFactory<>(config);
-    }
-
-    // Kafka Template Bean Definition - uses JsonSerializer for the DTOs
+    // 🟦 PlutusFinacleData Beans
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory(JsonSerializer.class));
+    public KafkaTemplate<String, PlutusFinacleData> plutusKafkaTemplate() {
+        return genericKafkaConfig.kafkaTemplate(PlutusFinacleSerializer.class);
     }
 
-    // Consumer Factory Method - Configures consumer to read Avro (or other format) data
-    public <T> ConsumerFactory<String, T> consumerFactory(String groupId, Class<? extends Deserializer<T>> valueDeserializerClass) {
-        Map<String, Object> config = new HashMap<>(getCommonKafkaProperties());
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializerClass);
-        return new DefaultKafkaConsumerFactory<>(config);
-    }
-
-    // Listener Container Factory - for creating consumer listeners
-    public <T> ConcurrentKafkaListenerContainerFactory<String, T> listenerContainerFactory(
-            String groupId, Class<? extends Deserializer<T>> valueDeserializerClass) {
-        ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory(groupId, valueDeserializerClass));
-        return factory;
-    }
-
-    // New Kafka topic definition (if necessary)
     @Bean
-    public NewTopic dtdBusinessEventTopic() {
-        return new NewTopic(consumerTopic, 3, (short) 1); // Adjust partition and RF as per MSK topic config
+    public ConcurrentKafkaListenerContainerFactory<String, PlutusFinacleData> plutusListenerContainerFactory() {
+        return genericKafkaConfig.listenerContainerFactory("plutus-finacle-group", PlutusFinacleDeserializer.class);
     }
+
+    // 🟨 Employee Beans (assume JSON/String serialization)
+   /* @Bean
+    public KafkaTemplate<String, Employee> employeeKafkaTemplate() {
+        return genericKafkaConfig.kafkaTemplate((Class<? extends org.apache.kafka.common.serialization.Serializer<Employee>>) StringSerializer.class);
+    }*/
+
+    // ➕ Add more beans here for other DTOs if needed...
 }
