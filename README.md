@@ -1,367 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.kotak.orchestrator</groupId>
-    <artifactId>orchestrator-service</artifactId>
-    <version>0.0.1</version>
-    <name>orchestrator-service</name>
-    <description>orchestrator-service for plutus</description>
-    <parent>
-        <artifactId>spring-boot-starter-bom</artifactId>
-        <groupId>com.kmbl.buildertools</groupId>
-        <version>0.0.11</version>
-    </parent>
-    <properties>
-        <!-- Maven Properties -->
-        <parentVersion>0.0.1</parentVersion>
-        <aws.sdk.version>2.22.9</aws.sdk.version>
-        <!--<revision>${revision}</revision>-->
-        <main.basedir>${project.basedir}</main.basedir>
-        <java.version>21</java.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
-        <spring.version>6.2.1</spring.version>
-        <jacoco.version>0.8.11</jacoco.version>
-        <start-class>com.kotak.orchestrator.orchestrator.OrchestratorServiceApplication</start-class>
-    </properties>
-    <repositories>
-        <repository>
-            <id>DevOps-BuilderTools-Feed</id>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>plutus-application</id>
-            <url>
-                https://pkgs.dev.azure.com/kmbl-devops/9eeae0ff-87c8-44c3-a547-9f23496d21ad/_packaging/plutus-application/maven/v1
-            </url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.443 s <<< FAILURE! -- in com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumerTest
+[ERROR] com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumerTest -- Time elapsed: 1.443 s <<< ERROR!
+java.lang.NoClassDefFoundError: org/apache/commons/lang3/ArrayFill
+        at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.writeEOFRecord(TarArchiveOutputStream.java:677)
+        at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.finish(TarArchiveOutputStream.java:421)
+        at org.testcontainers.containers.ContainerState.copyFileToContainer(ContainerState.java:356)
+        at org.testcontainers.containers.KafkaContainer.containerIsStarting(KafkaContainer.java:199)
+        at org.testcontainers.containers.GenericContainer.containerIsStarting(GenericContainer.java:712)
+        at org.testcontainers.containers.GenericContainer.tryStart(GenericContainer.java:489)
+        at org.testcontainers.containers.GenericContainer.lambda$doStart$0(GenericContainer.java:354)
+        at org.rnorth.ducttape.unreliables.Unreliables.retryUntilSuccess(Unreliables.java:81)
+        at org.testcontainers.containers.GenericContainer.doStart(GenericContainer.java:344)
+        at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:330)
+        at com.kotak.orchestrator.orchestrator.integration.config.ContainerConfig.kafkaContainer(ContainerConfig.java:37)
+        at com.kotak.orchestrator.orchestrator.integration.testutils.KafkaTestBase.setUpBeforeClass(KafkaTestBase.java:25)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+        Suppressed: java.lang.NoClassDefFoundError: org/apache/commons/lang3/ArrayFill
+                at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.writeEOFRecord(TarArchiveOutputStream.java:677)
+                at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.finish(TarArchiveOutputStream.java:421)
+                at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.close(TarArchiveOutputStream.java:303)
+                at org.testcontainers.containers.ContainerState.copyFileToContainer(ContainerState.java:363)
+                ... 11 more
+        Caused by: java.lang.ClassNotFoundException: org.apache.commons.lang3.ArrayFill
+                ... 15 more
+Caused by: java.lang.ClassNotFoundException: org.apache.commons.lang3.ArrayFill
+        at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+        at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+        at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
+        ... 14 more
 
-    </repositories>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>3.6.5</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>2.30.23</version> <!-- Match the version pulled by aws-msk-iam-auth -->
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   GenericReactiveConsumerTest>KafkaTestBase.setUpBeforeClass:25 » NoClassDefFound org/apache/commons/lang3/ArrayFill
+[ERROR]   PlutusFinacleDataConsumerTest.testProcess:36 Mockito 
+Mockito cannot mock this class: class reactor.kafka.receiver.ReceiverRecord.
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.lettuce</groupId>
-            <artifactId>lettuce-core</artifactId>
-        </dependency>
+If you're not sure why you're getting this error, please open an issue on GitHub.
 
 
-        <dependency>
-            <groupId>io.projectreactor.kafka</groupId>
-            <artifactId>reactor-kafka</artifactId>
-            <version>1.3.23</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.kafka</groupId>
-                    <artifactId>kafka-clients</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-core</artifactId>
-            <version>1.12.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core-micrometer</artifactId>
-            <version>1.2.0</version>
-        </dependency>
+Java               : 23
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 23.0.1+11-39
+JVM name           : OpenJDK 64-Bit Server VM
+JVM version        : 23.0.1+11-39
+JVM info           : mixed mode, sharing
+OS name            : Mac OS X
+OS version         : 15.4.1
 
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.msk</groupId>
-            <artifactId>aws-msk-iam-auth</artifactId>
-            <version>2.3.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>auth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sts</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
 
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
-            <version>1.19.3</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <groupId>org.springframework.boot</groupId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.16.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.13.11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>2.10.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>1.8.2</version>
-                <executions>
-                    <execution>
-                        <id>schemas</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>schema</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>check-coverage</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.1</minimum>
-                                        </limit>
-                                        <!--<limit>
-                                            <counter>BRANCH</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.8</minimum>
-                                        </limit>-->
-                                    </limits>
-                                </rule>
-                            </rules>
-                            <haltOnFailure>false</haltOnFailure>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-        </plugins>
-    </build>
-    <distributionManagement>
-        <repository>
-            <id>DevOps-BuilderTools-Feed</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
-        </repository>
-
-    </distributionManagement>
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                            <report>summary</report>
-                            <report>licenses</report>
-                            <report>dependency-info</report>
-                            <report>dependencies</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <groupId>org.jacoco</groupId>
-                <version>${jacoco.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
-                </configuration>
-            </plugin>
-
-
-            <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
-                <version>${surefire.report.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <inherited>false</inherited>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <version>${maven.jxr.plugin.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
-</project>
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class java.lang.Object, class reactor.kafka.receiver.ReceiverRecord, class org.apache.kafka.clients.consumer.ConsumerRecord]
+[INFO] 
+[ERROR] Tests run: 8, Failures: 0, Errors: 2, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.244 s
+[INFO] Finished at: 2025-05-15T15:25:47+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project orchestrator-service: 
+[ERROR] 
+[ERROR] Please refer to /Users/SnehalGamare/IdeaProjects/orchestrator-service/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
