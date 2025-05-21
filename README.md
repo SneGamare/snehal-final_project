@@ -1,421 +1,214 @@
-org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "TIMESTAMP to BINARY VARYING" [22018-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:518) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.message.DbException.get(DbException.java:223) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.message.DbException.get(DbException.java:199) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.value.Value.getDataConversionError(Value.java:2573) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.value.Value.getBytes(Value.java:798) ~[h2-2.2.224.jar:2.2.224]
-	at org.h2.jdbc.JdbcResultSet.getBytes(JdbcResultSet.java:1208) ~[h2-2.2.224.jar:2.2.224]
-	at com.zaxxer.hikari.pool.HikariProxyResultSet.getBytes(HikariProxyResultSet.java) ~[HikariCP-5.0.1.jar:na]
+package com.kotak.orchestrator.orchestrator.consumer;
 
-
-
-CREATE TABLE PLUTUS_CLIENT_CONFIGURATION (
-    Id INT PRIMARY KEY,
-    Master_account VARCHAR(255),
-    UPI_SOURCE VARCHAR(255),
-    IMPS_SOURCE_System VARCHAR(255),
-    NEFT_Source VARCHAR(255),
-    RTGS_Source_System VARCHAR(255),
-    IFT_Source_System VARCHAR(255),
-    PG_Source_System VARCHAR(255),
-    API_TYPE VARCHAR(255),
-    ClientNAME VARCHAR(255),
-    CRN VARCHAR(255),
-    Active_Flag BOOLEAN,
-    Created_by VARCHAR(255),
-    modified_by VARCHAR(255),
-    created_date TIMESTAMP,
-    modified_date TIMESTAMP
-);
-
-
-package com.kotak.orchestrator.orchestrator.entity;
-
-import jakarta.persistence.*;
-import lombok.Data;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
+import com.kotak.orchestrator.orchestrator.schema.PlutusFinacleData;
+import com.kotak.orchestrator.orchestrator.service.ClientConfigCacheService;
+import com.kotak.orchestrator.orchestrator.validator.PlutusDataValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-@Entity
-@Table(name = "PAYMENT_PROCESSOR_TABLE")
-@Data
-public class PaymentProcessorData {
+@Service
+@Slf4j
+public class PlutusFinacleDataConsumer extends GenericAvroConsumer<PlutusFinacleData> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final PlutusFinacleDataRepository repository;
+    private final PlutusDataValidator plutusDataValidator;
+    private final ClientConfigCacheService clientConfigCacheService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private String foracid;
-    private String acctName;
+    public PlutusFinacleDataConsumer(
+            PlutusFinacleDataRepository repository,
+            PlutusDataValidator plutusDataValidator,
+            ClientConfigCacheService clientConfigCacheService) {
 
-    @Column(name = "tran_date")
-    private LocalDateTime tranDate;
 
-    private String tranId;
-    private Double tranAmt;
-    private String clientName;
+        System.out.println("PlutusFinacleDataConsumer constructor called");
+
+        this.repository = repository;
+        this.plutusDataValidator = plutusDataValidator;
+        this.clientConfigCacheService = clientConfigCacheService;
+    }
+
+    @KafkaListener(topics = "${spring.kafka.consumer.topic}", groupId = "plutus-finacle-group")
+    public void listen(ConsumerRecord<String, PlutusFinacleData> record) {
+        consume(record);
+    }
+
+    @Override
+    protected void handleMessage(PlutusFinacleData data, ConsumerRecord<String, PlutusFinacleData> record) {
+        try {
+            // Validate required fields
+            plutusDataValidator.validate(data);
+
+            // Normalize FORACID
+            String foracid = toStr(data.getForacid()).trim();
+
+            // Fetch valid FORACIDs from cache
+            Set<String> validForacids = clientConfigCacheService.getValidForacids();
+            log.debug("Valid FORACIDs from cache: {}", validForacids);
+
+            if (!validForacids.contains(foracid)) {
+                log.info("Skipping unmatched FORACID: {}", foracid);
+                return;
+            }
+
+            // Map to entity
+            PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+            entity.setTranId(toStr(data.getTranId()));
+            entity.setTranAmt(data.getTranAmt());
+            entity.setAcid(toStr(data.getAcid()));
+            entity.setForacid(foracid);
+            entity.setRefNum(toStr(data.getRefNum()));
+            entity.setReceivedAt(LocalDateTime.now());
+
+            // Prepare raw data map
+            Map<String, Object> rawMap = new HashMap<>();
+            rawMap.put("acctName", toStr(data.getAcctName()));
+            rawMap.put("lastTranDateCr", toStr(data.getLastTranDateCr()));
+            rawMap.put("partTranSrlNum", toStr(data.getPartTranSrlNum()));
+            rawMap.put("delFlg", toStr(data.getDelFlg()));
+            rawMap.put("tranType", toStr(data.getTranType()));
+            rawMap.put("tranSubType", toStr(data.getTranSubType()));
+            rawMap.put("partTranType", toStr(data.getPartTranType()));
+            rawMap.put("glSubHeadCode", toStr(data.getGlSubHeadCode()));
+            rawMap.put("valueDate", toStr(data.getValueDate()));
+            rawMap.put("tranParticular", toStr(data.getTranParticular()));
+            rawMap.put("entryDate", toStr(data.getEntryDate()));
+            rawMap.put("pstdDate", toStr(data.getPstdDate()));
+            rawMap.put("instrmntType", toStr(data.getInstrmntType()));
+            rawMap.put("instrmntDate", toStr(data.getInstrmntDate()));
+            rawMap.put("instrmntNum", toStr(data.getInstrmntNum()));
+            rawMap.put("tranRmks", toStr(data.getTranRmks()));
+            rawMap.put("custId", toStr(data.getCustId()));
+            rawMap.put("brCode", toStr(data.getBrCode()));
+            rawMap.put("crncyCode", toStr(data.getCrncyCode()));
+            rawMap.put("tranCrncyCode", toStr(data.getTranCrncyCode()));
+            rawMap.put("refAmt", data.getRefAmt());
+            rawMap.put("solId", toStr(data.getSolId()));
+            rawMap.put("bankCode", toStr(data.getBankCode()));
+            rawMap.put("treaRefNum", toStr(data.getTreaRefNum()));
+            rawMap.put("reversalDate", toStr(data.getReversalDate()));
+
+            entity.setRawData(objectMapper.writeValueAsString(rawMap));
+
+            // Save to DB
+            repository.save(entity);
+            log.info("Saved PlutusFinacleData to DB, tranId: {}", entity.getTranId());
+
+        } catch (IllegalArgumentException e) {
+            log.warn("Validation failed: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("Error processing record: {}", e.getMessage(), e);
+        }
+    }
+
+    private String toStr(CharSequence input) {
+        return input != null ? input.toString() : null;
+    }
 }
 
 
-package com.kotak.orchestrator.orchestrator.entity;
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-
-@Entity
-@Table(name = "plutus_finacle_data")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PlutusFinacleDataEntity {
-    
-    @Id
-    private String tranId; // Using tranId as the primary key
-    private String foracid;
-    private String acctName;
-    private String lastTranDateCr;
-    private String tranDate;
-    private String partTranSrlNum;
-    private String delFlg;
-    private String tranType;
-    private String tranSubType;
-    private String partTranType;
-    private String glSubHeadCode;
-    private String acid;
-    private String valueDate;
-    private Double tranAmt;
-    private String tranParticular;
-    private String entryDate;
-    private String pstdDate;
-    private String refNum;
-    private String instrmntType;
-    private String instrmntDate;
-    private String instrmntNum;
-    private String tranRmks;
-    private String custId;
-    private String brCode;
-    private String crncyCode;
-    private String tranCrncyCode;
-    private Double refAmt;
-    private String solId;
-    private String bankCode;
-    private String treaRefNum;
-    private String reversalDate;
-    @Column(name="received_at",nullable = false)
-    private LocalDateTime receivedAt;
-
-    @Column(name = "raw_json",columnDefinition =  "CLOB")
-    private String rawData;
-
-    public String getTranId() {
-        return tranId;
-    }
-
-    public void setTranId(String tranId) {
-        this.tranId = tranId;
-    }
-
-    public String getForacid() {
-        return foracid;
-    }
-
-    public void setForacid(String foracid) {
-        this.foracid = foracid;
-    }
-
-    public String getAcctName() {
-        return acctName;
-    }
-
-    public void setAcctName(String acctName) {
-        this.acctName = acctName;
-    }
-
-    public String getLastTranDateCr() {
-        return lastTranDateCr;
-    }
-
-    public void setLastTranDateCr(String lastTranDateCr) {
-        this.lastTranDateCr = lastTranDateCr;
-    }
-
-    public String getTranDate() {
-        return tranDate;
-    }
-
-    public void setTranDate(String tranDate) {
-        this.tranDate = tranDate;
-    }
-
-    public String getPartTranSrlNum() {
-        return partTranSrlNum;
-    }
-
-    public void setPartTranSrlNum(String partTranSrlNum) {
-        this.partTranSrlNum = partTranSrlNum;
-    }
-
-    public String getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(String delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public String getTranType() {
-        return tranType;
-    }
-
-    public void setTranType(String tranType) {
-        this.tranType = tranType;
-    }
-
-    public String getTranSubType() {
-        return tranSubType;
-    }
-
-    public void setTranSubType(String tranSubType) {
-        this.tranSubType = tranSubType;
-    }
-
-    public String getPartTranType() {
-        return partTranType;
-    }
-
-    public void setPartTranType(String partTranType) {
-        this.partTranType = partTranType;
-    }
-
-    public String getGlSubHeadCode() {
-        return glSubHeadCode;
-    }
-
-    public void setGlSubHeadCode(String glSubHeadCode) {
-        this.glSubHeadCode = glSubHeadCode;
-    }
-
-    public String getAcid() {
-        return acid;
-    }
-
-    public void setAcid(String acid) {
-        this.acid = acid;
-    }
-
-    public String getValueDate() {
-        return valueDate;
-    }
 
-    public void setValueDate(String valueDate) {
-        this.valueDate = valueDate;
-    }
-
-    public Double getTranAmt() {
-        return tranAmt;
-    }
-
-    public void setTranAmt(Double tranAmt) {
-        this.tranAmt = tranAmt;
-    }
-
-    public String getTranParticular() {
-        return tranParticular;
-    }
-
-    public void setTranParticular(String tranParticular) {
-        this.tranParticular = tranParticular;
-    }
-
-    public String getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
-    }
-
-    public String getPstdDate() {
-        return pstdDate;
-    }
-
-    public void setPstdDate(String pstdDate) {
-        this.pstdDate = pstdDate;
-    }
-
-    public String getRefNum() {
-        return refNum;
-    }
-
-    public void setRefNum(String refNum) {
-        this.refNum = refNum;
-    }
-
-    public String getInstrmntType() {
-        return instrmntType;
-    }
-
-    public void setInstrmntType(String instrmntType) {
-        this.instrmntType = instrmntType;
-    }
-
-    public String getInstrmntDate() {
-        return instrmntDate;
-    }
-
-    public void setInstrmntDate(String instrmntDate) {
-        this.instrmntDate = instrmntDate;
-    }
-
-    public String getInstrmntNum() {
-        return instrmntNum;
-    }
-
-    public void setInstrmntNum(String instrmntNum) {
-        this.instrmntNum = instrmntNum;
-    }
+this is my consumer 
 
-    public String getTranRmks() {
-        return tranRmks;
-    }
 
-    public void setTranRmks(String tranRmks) {
-        this.tranRmks = tranRmks;
-    }
 
-    public String getCustId() {
-        return custId;
-    }
+package com.kotak.orchestrator.orchestrator.service;
 
-    public void setCustId(String custId) {
-        this.custId = custId;
-    }
+import com.kotak.orchestrator.orchestrator.cache.CaffeineCache;
+import com.kotak.orchestrator.orchestrator.cache.ForAcidCache;
+import com.kotak.orchestrator.orchestrator.repository.PlutusClientConfigurationRepository;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-    public String getBrCode() {
-        return brCode;
-    }
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    public void setBrCode(String brCode) {
-        this.brCode = brCode;
-    }
+@Slf4j
+@Service
+public class ClientConfigCacheService {
 
-    public String getCrncyCode() {
-        return crncyCode;
-    }
+    private final CaffeineCache<String, Set<String>> foracidCache;
+    private final PlutusClientConfigurationRepository plutusClientConfigurationRepository;
 
-    public void setCrncyCode(String crncyCode) {
-        this.crncyCode = crncyCode;
+    public ClientConfigCacheService(
+            PlutusClientConfigurationRepository configRepo
+    ) {
+        this.plutusClientConfigurationRepository = configRepo;
+        this.foracidCache = new ForAcidCache(10, configRepo); // Use subclass with refresh logic
     }
 
-    public String getTranCrncyCode() {
-        return tranCrncyCode;
-    }
 
-    public void setTranCrncyCode(String tranCrncyCode) {
-        this.tranCrncyCode = tranCrncyCode;
+    @PostConstruct
+    public void init() {
+        Set<String> foracids = getValidForacids();
+        log.info("Loaded {} FORACIDs from configuration: {}", foracids.size(), foracids);
     }
 
-    public Double getRefAmt() {
-        return refAmt;
-    }
 
-    public void setRefAmt(Double refAmt) {
-        this.refAmt = refAmt;
-    }
+    public Set<String> getValidForacids() {
+        try {
+            Set<String> foracids = plutusClientConfigurationRepository.findAll()
+                    .stream()
+                    .map(config -> config.getMasterAccount().trim())
+                    .collect(Collectors.toSet());
 
-    public String getSolId() {
-        return solId;
+            log.info("Loaded {} FORACIDs from configuration", foracids.size());
+            return foracids;
+        } catch (Exception e) {
+            log.error("Failed to load FORACIDs from configuration", e);
+            return Collections.emptySet();
+        }
     }
+}
 
-    public void setSolId(String solId) {
-        this.solId = solId;
-    }
 
-    public String getBankCode() {
-        return bankCode;
-    }
+package com.kotak.orchestrator.orchestrator.cache;
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.extern.slf4j.Slf4j;
 
-    public String getTreaRefNum() {
-        return treaRefNum;
-    }
+import java.util.concurrent.*;
 
-    public void setTreaRefNum(String treaRefNum) {
-        this.treaRefNum = treaRefNum;
-    }
+@Slf4j
+public class CaffeineCache<K, V> {
 
-    public String getReversalDate() {
-        return reversalDate;
-    }
+    private final Cache<K, V> cache;
+    private final ScheduledExecutorService scheduler;
 
-    public void setReversalDate(String reversalDate) {
-        this.reversalDate = reversalDate;
+    public CaffeineCache(long refreshIntervalMinutes) {
+        this.cache = Caffeine.newBuilder()
+                .expireAfterWrite(refreshIntervalMinutes, TimeUnit.MINUTES)
+                .build();
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(this::refreshCache, 0, refreshIntervalMinutes, TimeUnit.MINUTES);
     }
 
-    public LocalDateTime getReceivedAt() {
-        return receivedAt;
+    public V get(K key) {
+        return cache.getIfPresent(key);
     }
 
-    public void setReceivedAt(LocalDateTime receivedAt) {
-        this.receivedAt = receivedAt;
+    public void put(K key, V value) {
+        cache.put(key, value);
     }
 
-    public String getRawData() {
-        return rawData;
+    public void refreshCache() {
+        // To be overridden by subclasses
     }
 
-    public void setRawData(String rawData) {
-        this.rawData = rawData;
+    public void shutdown() {
+        scheduler.shutdown();
     }
-} 
-
-
-
-
-
-{
-  "type": "record",
-  "name": "PlutusFinacleData",
-  "namespace": "com.kotak.orchestrator.orchestrator.schema",
-  "fields": [
-    {"name": "foracid", "type": ["null", "string"], "default": null},
-    {"name": "acctName", "type": ["null", "string"], "default": null},
-    {"name": "lastTranDateCr", "type": ["null", "string"], "default": null},
-    {"name": "tranDate", "type": ["null", "string"], "default": null},
-    {"name": "tranId", "type": ["null", "string"], "default": null},
-    {"name": "partTranSrlNum", "type": ["null", "string"], "default": null},
-    {"name": "delFlg", "type": ["null", "string"], "default": null},
-    {"name": "tranType", "type": ["null", "string"], "default": null},
-    {"name": "tranSubType", "type": ["null", "string"], "default": null},
-    {"name": "partTranType", "type": ["null", "string"], "default": null},
-    {"name": "glSubHeadCode", "type": ["null", "string"], "default": null},
-    {"name": "acid", "type": ["null", "string"], "default": null},
-    {"name": "valueDate", "type": ["null", "string"], "default": null},
-    {"name": "tranAmt", "type": ["null", "double"], "default": null},
-    {"name": "tranParticular", "type": ["null", "string"], "default": null},
-    {"name": "entryDate", "type": ["null", "string"], "default": null},
-    {"name": "pstdDate", "type": ["null", "string"], "default": null},
-    {"name": "refNum", "type": ["null", "string"], "default": null},
-    {"name": "instrmntType", "type": ["null", "string"], "default": null},
-    {"name": "instrmntDate", "type": ["null", "string"], "default": null},
-    {"name": "instrmntNum", "type": ["null", "string"], "default": null},
-    {"name": "tranRmks", "type": ["null", "string"], "default": null},
-    {"name": "custId", "type": ["null", "string"], "default": null},
-    {"name": "brCode", "type": ["null", "string"], "default": null},
-    {"name": "crncyCode", "type": ["null", "string"], "default": null},
-    {"name": "tranCrncyCode", "type": ["null", "string"], "default": null},
-    {"name": "refAmt", "type": ["null", "double"], "default": null},
-    {"name": "solId", "type": ["null", "string"], "default": null},
-    {"name": "bankCode", "type": ["null", "string"], "default": null},
-    {"name": "treaRefNum", "type": ["null", "string"], "default": null},
-    {"name": "reversalDate", "type": ["null", "string"], "default": null}
-  ]
-}   this is my avro generated class please solved this issue 
+}
