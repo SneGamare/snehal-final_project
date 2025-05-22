@@ -1,50 +1,86 @@
-package com.kotak.orchestrator.orchestrator.entity;
+package com.kotak.orchestrator.orchestrator.consumer;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import com.kotak.orchestrator.orchestrator.entity.DtdBusinessEventEntity;
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
+import com.kotak.orchestrator.orchestrator.service.DtdBusinessEventService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import reactor.kafka.receiver.ReceiverRecord;
 
-@Entity
-@Table(name = "dtd_business_event")
-@Getter
-@Setter
-public class DtdBusinessEventEntity {
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final DtdBusinessEventService service;
 
-    private Double effective_bal;
-    private Double clr_bal;
-    private byte[] foracid;
-    private Long last_bal_updated_date;
-    private byte[] schm_code;
-    private byte[] cif_id;
-    private byte[] acct_name;
-    private Double tran_amt;
-    private String tran_date;
-    private byte[] tran_id;
-    private byte[] tran_particular;
-    private byte[] acid;
-    private String value_date;
-    private String reversal_date;
-    private byte[] tran_type;
-    private byte[] tran_sub_type;
-    private byte[] part_tran_type;
-    private byte[] gl_sub_head_code;
-    private byte[] ref_num;
-    private Double ref_amt;
-    private byte[] cust_id;
-    private byte[] br_code;
-    private byte[] crncy_code;
-    private byte[] tran_crncy_code;
-    private byte[] sol_id;
-    private byte[] bank_code;
-    private byte[] trea_ref_num;
-    private byte[] tran_rmks;
-    private byte[] tran_particular_2;
-    private Double acct_balance;
-    private Double available_amt;
+    @Override
+    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
+        BusinessEvent data = receiverRecord.value().getEvent();
 
-    // Add additional fields as needed from the schema
+        if (data == null) {
+            log.warn("⚠️ Received null BusinessEvent.");
+            return;
+        }
+
+        try {
+            DtdBusinessEventEntity entity = mapToEntity(data);
+            service.save(entity);
+
+            log.info("✅ Saved DTD Event with TRAN_ID: {}", toStr(data.getTRANID()));
+            receiverRecord.receiverOffset().acknowledge();
+
+        } catch (Exception e) {
+            log.error("❌ Error while saving DTD Event: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String partitionKey(DtdGamBusinessEvent data) {
+        return toStr(data.getEvent() != null ? data.getEvent().getTRANID() : null);
+    }
+
+    private String toStr(Object obj) {
+        return obj != null ? obj.toString() : null;
+    }
+
+    private DtdBusinessEventEntity mapToEntity(BusinessEvent data) {
+        DtdBusinessEventEntity entity = new DtdBusinessEventEntity();
+
+        entity.setEffective_bal(data.getEFFECTIVEBAL());
+        entity.setClr_bal(data.getCLRBAL());
+        entity.setForacid(data.getFORACID());
+        entity.setLast_bal_updated_date(data.getLASTBALUPDATEDDATE());
+        entity.setSchm_code(data.getSCHMCODE());
+        entity.setCif_id(data.getCIFID());
+        entity.setAcct_name(data.getACCTNAME());
+        entity.setTran_amt(data.getTRANAMT());
+        entity.setTran_date(data.getTRANDATE());
+        entity.setTran_id(data.getTRANID());
+        entity.setTran_particular(data.getTRANPARTICULAR());
+        entity.setAcid(data.getACID());
+        entity.setValue_date(data.getVALUEDATE());
+        entity.setReversal_date(data.getREVERSALDATE());
+        entity.setTran_type(data.getTRANTYPE());
+        entity.setTran_sub_type(data.getTRANSUBTYPE());
+        entity.setPart_tran_type(data.getPARTTRANTYPE());
+        entity.setGl_sub_head_code(data.getGLSUBHEADCODE());
+        entity.setRef_num(data.getREFNUM());
+        entity.setRef_amt(data.getREFAMT());
+        entity.setCust_id(data.getCUSTID());
+        entity.setBr_code(data.getBRCODE());
+        entity.setCrncy_code(data.getCRNCYCODE());
+        entity.setTran_crncy_code(data.getTRANCRNCYCODE());
+        entity.setSol_id(data.getSOLID());
+        entity.setBank_code(data.getBANKCODE());
+        entity.setTrea_ref_num(data.getTREAREFNUM());
+        entity.setTran_rmks(data.getTRANRMKS());
+        entity.setTran_particular_2(data.getTRANPARTICULAR2());
+        entity.setAcct_balance(data.getACCTBALANCE());
+        entity.setAvailable_amt(data.getAVAILABLEAMT());
+
+        return entity;
+    }
 }
