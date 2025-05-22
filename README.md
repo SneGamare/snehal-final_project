@@ -1,83 +1,50 @@
-package com.kotak.orchestrator.orchestrator.consumer;
+package com.kotak.orchestrator.orchestrator.entity;
 
-import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
-import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
-import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import com.kotak.orchestrator.orchestrator.service.PlutusFinacleDataService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import reactor.kafka.receiver.ReceiverRecord;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Slf4j
-@Component
-@RequiredArgsConstructor
-public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
+@Entity
+@Table(name = "dtd_business_event")
+@Getter
+@Setter
+public class DtdBusinessEventEntity {
 
-    private final PlutusFinacleDataRepository repository;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    private Double effective_bal;
+    private Double clr_bal;
+    private byte[] foracid;
+    private Long last_bal_updated_date;
+    private byte[] schm_code;
+    private byte[] cif_id;
+    private byte[] acct_name;
+    private Double tran_amt;
+    private String tran_date;
+    private byte[] tran_id;
+    private byte[] tran_particular;
+    private byte[] acid;
+    private String value_date;
+    private String reversal_date;
+    private byte[] tran_type;
+    private byte[] tran_sub_type;
+    private byte[] part_tran_type;
+    private byte[] gl_sub_head_code;
+    private byte[] ref_num;
+    private Double ref_amt;
+    private byte[] cust_id;
+    private byte[] br_code;
+    private byte[] crncy_code;
+    private byte[] tran_crncy_code;
+    private byte[] sol_id;
+    private byte[] bank_code;
+    private byte[] trea_ref_num;
+    private byte[] tran_rmks;
+    private byte[] tran_particular_2;
+    private Double acct_balance;
+    private Double available_amt;
 
-    @Autowired
-    private PlutusFinacleDataService service;
-
-    @Override
-    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
-        var data = receiverRecord.value().getEvent();
-
-        try {
-            PlutusFinacleDataEntity entity = getPlutusFinacleDataEntity(data);
-
-            service.saveData(entity);
-
-            log.info("✅ Saved Finacle transaction with tran_id: {}", entity.getTran_id());
-            receiverRecord.receiverOffset().acknowledge();
-
-        } catch (Exception e) {
-            log.error("❌ Error while processing Finacle data: {}", e.getMessage(), e);
-        }
-    }
-
-    private static PlutusFinacleDataEntity getPlutusFinacleDataEntity(BusinessEvent data) {
-        PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
-        entity.setEffective_bal(data.getEFFECTIVEBAL());
-        entity.setClr_bal(data.getCLRBAL());
-        entity.setForacid(data.getFORACID());
-        entity.setTran_id(data.getTRANID());
-        entity.setTran_amt(data.getTRANAMT());
-        entity.setTran_particular(data.getTRANPARTICULAR());
-        entity.setAcct_name(data.getACCTNAME());
-        entity.setAcct_balance(data.getACCTBALANCE());
-        entity.setAvailable_amt(data.getAVAILABLEAMT());
-        entity.setTran_date(data.getTRANDATE());
-        entity.setValue_date(data.getVALUEDATE());
-        entity.setReversal_date(data.getREVERSALDATE());
-        entity.setTran_type(data.getTRANTYPE());
-        entity.setTran_sub_type(data.getTRANSUBTYPE());
-        entity.setPart_tran_type(data.getPARTTRANTYPE());
-        entity.setGl_sub_head_code(data.getGLSUBHEADCODE());
-        entity.setAcid(data.getACID());
-        entity.setRef_amt(data.getREFAMT());
-        entity.setRef_num(data.getREFNUM());
-        entity.setCust_id(data.getCUSTID());
-        entity.setBr_code(data.getBRCODE());
-        entity.setCrncy_code(data.getCRNCYCODE());
-        entity.setTran_crncy_code(data.getTRANCRNCYCODE());
-        entity.setSol_id(data.getSOLID());
-        entity.setBank_code(data.getBANKCODE());
-        entity.setTrea_ref_num(data.getTREAREFNUM());
-        entity.setTran_rmks(data.getTRANRMKS());
-        entity.setTran_particular_2(data.getTRANPARTICULAR2());
-        return entity;
-    }
-
-
-    @Override
-    public String partitionKey(DtdGamBusinessEvent data) {
-        return toStr(data.getEvent().getTRANID()); // Group by transaction ID or similar field
-    }
-
-    private String toStr(Object obj) {
-        return obj != null ? obj.toString() : null;
-    }
+    // Add additional fields as needed from the schema
 }
