@@ -1,61 +1,84 @@
-package com.kotak.orchestrator.orchestrator.config;
+package com.kotak.orchestrator.orchestrator.entity;
 
-import com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration;
-import com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer;
-import com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer;
-import com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler;
-import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
-import com.kotak.orchestrator.orchestrator.utils.MetricUtil;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Configuration
-public class PlutusDtdConsumerConfig {
+@Entity
+@Table(name = "dtd_business_event")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class DtdBusinessEventEntity {
 
-    private final PlutusFinacleDataRepository repository;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public PlutusDtdConsumerConfig(PlutusFinacleDataRepository repository) {
-        this.repository = repository;
-    }
+    private Double effectiveBal;
+    private Double clrBal;
+    private String foracid;
+    private String tranId;
+    private Double tranAmt;
+    private String tranParticular;
+    private String acctName;
+    private Double acctBalance;
+    private Double availableAmt;
+    private String tranDate; // <-- This maps to getTRANDATE() in Avro
+    private String valueDate;
+    private String reversalDate;
+    private String tranType;
+    private String tranSubType;
+    private String partTranType;
+    private String glSubHeadCode;
+    private String acid;
+    private Double refAmt;
+    private String refNum;
+    private String custId;
+    private String brCode;
+    private String crncyCode;
+    private String tranCrncyCode;
+    private String solId;
+    private String bankCode;
+    private String treaRefNum;
+    private String tranRmks;
+    private String tranParticular2;
 
-    @Bean
-    public PlutusDtdBusinessEventConsumer plutusDtdBusinessEventConsumer() {
-        return new PlutusDtdBusinessEventConsumer(repository);
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "dtd-gam-topic.kafka.consumer")
-    @Qualifier("plutusDtdEventConfig")
-    public ConsumerConfiguration<DtdGamBusinessEvent> plutusDtdEventConfig(
-            PlutusDtdBusinessEventConsumer consumer, DlqHandler<DtdGamBusinessEvent> failureHandler) {
-        return ConsumerConfiguration.<DtdGamBusinessEvent>builder().processor(consumer)
-                .failureHandler(failureHandler).build();
-    }
-
-    @Bean
-    @Qualifier("plutusDtdConsumer")
-    public GenericReactiveConsumer<DtdGamBusinessEvent> plutusDtdConsumer(
-            @Qualifier("plutusDtdEventConfig") ConsumerConfiguration<DtdGamBusinessEvent> config,
-            MetricUtil metricUtil) {
-        System.out.println("Config: " + config);
-        System.out.println("MetricUtil: " + metricUtil);
-        var consumer = new GenericReactiveConsumer<>(config, metricUtil);
-        consumer.start();
-        return consumer;
-    }
+    // Add more fields as needed from Avro schema
 }
 
 
 
+private static DtdBusinessEventEntity getPlutusFinacleDataEntity(BusinessEvent data) {
+    return DtdBusinessEventEntity.builder()
+        .effectiveBal(data.getEFFECTIVEBAL())
+        .clrBal(data.getCLRBAL())
+        .foracid(toStr(data.getFORACID()))
+        .tranId(toStr(data.getTRANID()))
+        .tranAmt(data.getTRANAMT())
+        .tranParticular(toStr(data.getTRANPARTICULAR()))
+        .acctName(toStr(data.getACCTNAME()))
+        .acctBalance(data.getACCTBALANCE())
+        .availableAmt(data.getAVAILABLEAMT())
+        .tranDate(toStr(data.getTRANDATE()))   // Matches `private String tranDate`
+        .valueDate(toStr(data.getVALUEDATE()))
+        .reversalDate(toStr(data.getREVERSALDATE()))
+        .tranType(toStr(data.getTRANTYPE()))
+        .tranSubType(toStr(data.getTRANSUBTYPE()))
+        .partTranType(toStr(data.getPARTTRANTYPE()))
+        .glSubHeadCode(toStr(data.getGLSUBHEADCODE()))
+        .acid(toStr(data.getACID()))
+        .refAmt(data.getREFAMT())
+        .refNum(toStr(data.getREFNUM()))
+        .custId(toStr(data.getCUSTID()))
+        .brCode(toStr(data.getBRCODE()))
+        .crncyCode(toStr(data.getCRNCYCODE()))
+        .tranCrncyCode(toStr(data.getTRANCRNCYCODE()))
+        .solId(toStr(data.getSOLID()))
+        .bankCode(toStr(data.getBANKCODE()))
+        .treaRefNum(toStr(data.getTREAREFNUM()))
+        .tranRmks(toStr(data.getTRANRMKS()))
+        .tranParticular2(toStr(data.getTRANPARTICULAR2()))
+        .build();
+}
 
- public java.lang.CharSequence getTRANDATE() {
-    return TRAN_DATE;
-  } this is generated from avro 
-
-so here also keep this only entity.setTran_date(data.getTRANDATE());
-
-
-and entity also we need to update accordingly   private String tran_date;
