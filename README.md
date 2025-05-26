@@ -1,17 +1,9 @@
-[ERROR]   location: variable config of type com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration<T>
-[ERROR] /Users/SnehalGamare/IdeaProjects/orchestrator-service/src/main/java/com/kotak/orchestrator/orchestrator/consumer/GenericReactiveConsumer.java:[148,9] cannot find symbol
-[ERROR]   symbol:   variable log
-[ERROR]   location: class com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer<T>
-[ERROR] /Users/SnehalGamare/IdeaProjects/orchestrator-service/src/main/java/com/kotak/orchestrator/orchestrator/consumer/GenericReactiveConsumer.java:[149,85] cannot find symbol
-[ERROR]   symbol:   method getTopic()
-[ERROR]   location: variable config of type com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration<T>
-[ERROR] /Users/SnehalGamare/IdeaProjects/orchestrator-service/src/main/java/com/kotak/orchestrator/orchestrator/consumer/GenericReactiveConsumer.java:[154,9] cannot find symbol
-[ERROR]   symbol:   variable log
-[ERROR]   location: class com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer<T>
-[ERROR] /Users/SnehalGamare/IdeaProjects/orchestrator-service/src/main/java/com/kotak/orchestrator/orchestrator/consumer/GenericReactiveConsumer.java:[157,13] cannot find symbol
-[ERROR]   symbol:   variable log
-[ERROR]   location: class com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer<T>
-[ERROR] /Users/SnehalGamare/IdeaProjects/orchestrator-service/src/main/java/com/kotak/orchestrator/orchestrator/consumer/GenericReactiveConsumer.java:[159,13] cannot find symbol
-[ERROR]   symbol:   variable log
-[ERROR]   location: class com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer<T>
-[ERROR] -> [Help 1]
+Steps:
+Data Extraction:
+Extract Finacle data from ROS using the DTD + GAM topic.
+Data Filtering:
+Apply the following filter using the Plutus_Client_Configuration table:
+If ROS.FORACID matches Plutus_Client_Configuration.Master_Account_Number, pass the record for further processing.
+Otherwise, ignore the record.
+Data Storage:
+Save the filtered Finacle DTD + GAM data in the Plutus_Finacle_Transaction_details table.
