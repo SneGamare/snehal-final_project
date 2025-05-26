@@ -1,31 +1,49 @@
-Steps:
-Data Extraction:
-Extract Finacle data from ROS using the DTD + GAM topic.
-Data Filtering:
-Apply the following filter using the Plutus_Client_Configuration table:
-If ROS.FORACID matches Plutus_Client_Configuration.Master_Account_Number, pass the record for further processing.
-Otherwise, ignore the record.
-Data Storage:
-Save the filtered Finacle DTD + GAM data in the Plutus_Finacle_Transaction_details table.
+@RequiredArgsConstructor
+@Slf4j
+@Component
+public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
 
+    private final PlutusFinacleDataRepository repository;
+    private final PlutusClientConfigurationRepository configurationRepository;
 
+    @Override
+    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
+        BusinessEvent data = receiverRecord.value().getEvent();
 
-CREATE TABLE PLUTUS_ECOLLECTION.PLUTUS_CLIENT_CONFIGURATION (
-    ID INT PRIMARY KEY,
-    MASTER_ACCOUNT VARCHAR(255),
-    UPI_SOURCE VARCHAR(255),
-    IMPS_SOURCE_SYSTEM VARCHAR(255),
-    NEFT_SOURCE VARCHAR(255),
-    RTGS_SOURCE_SYSTEM VARCHAR(255),
-    IFT_SOURCE_SYSTEM VARCHAR(255),
-    PG_SOURCE_SYSTEM VARCHAR(255),
-    API_TYPE VARCHAR(255),
-    CLIENTNAME VARCHAR(255),
-    CRN VARCHAR(255),
-    ACTIVE_FLAG BOOLEAN,
-    CREATED_BY VARCHAR(255),
-    MODIFIED_BY VARCHAR(255),
-    CREATED_DATE TIMESTAMP,
-    MODIFIED_DATE TIMESTAMP
-);
+        if (data == null) {
+            log.warn("Received null BusinessEvent.");
+            return;
+        }
 
+        String foracid = CbsUtils.byteBufferToStr(data.getFORACID());
+
+        try {
+            boolean isValid = configurationRepository.findByMasterAccount(foracid)
+                    .filter(PlutusClientConfiguration::getActiveFlag)
+                    .isPresent();
+
+            if (!isValid) {
+                log.info("FORACID {} not found in configuration or inactive. Skipping record.", foracid);
+                return;
+            }
+
+            PlutusFinacleDataEntity entity = mapToEntity(data);
+            repository.save(entity);
+
+            log.info("Saved DTD Event with TRAN_ID: {}", CbsUtils.byteBufferToStr(data.getTRANID()));
+            receiverRecord.receiverOffset().acknowledge();
+
+        } catch (Exception e) {
+            log.error("Error while processing DTD Event for FORACID {}: {}", foracid, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String partitionKey(DtdGamBusinessEvent data) {
+        return CbsUtils.byteBufferToStr(data.getEvent() != null ? data.getEvent().getTRANID() : null);
+    }
+
+    private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
+        // unchanged mapping logic...
+    }
+}
