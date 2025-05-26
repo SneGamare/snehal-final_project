@@ -1,74 +1,355 @@
-package com.kotak.orchestrator.orchestrator.consumer;
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
-import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
-import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
-import com.kotak.orchestrator.orchestrator.util.CbsUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import reactor.kafka.receiver.ReceiverRecord;
+    <modelVersion>4.0.0</modelVersion>
 
-import java.time.LocalDateTime;
+    <groupId>com.kotak.orchestrator</groupId>
+    <artifactId>orchestrator-service</artifactId>
+    <version>0.0.1</version>
+    <name>orchestrator-service</name>
+    <description>orchestrator-service for plutus</description>
 
-@Slf4j
-@Component
-@RequiredArgsConstructor
-public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
+    <parent>
+        <groupId>com.kmbl.buildertools</groupId>
+        <artifactId>spring-boot-starter-bom</artifactId>
+        <version>0.0.11</version>
+    </parent>
 
-    private final PlutusFinacleDataRepository repository;
+    <properties>
+        <java.version>21</java.version>
+        <spring.version>6.2.1</spring.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <aws.sdk.version>2.22.9</aws.sdk.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <start-class>com.kotak.orchestrator.orchestrator.OrchestratorServiceApplication</start-class>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
 
-    @Override
-    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
-        BusinessEvent data = receiverRecord.value().getEvent();
+    <repositories>
+        <repository>
+            <id>DevOps-BuilderTools-Feed</id>
+            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>plutus-application</id>
+            <url>https://pkgs.dev.azure.com/kmbl-devops/9eeae0ff-87c8-44c3-a547-9f23496d21ad/_packaging/plutus-application/maven/v1</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
 
-        if (data == null) {
-            log.warn("Received null BusinessEvent.");
-            return;
-        }
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.30.23</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>3.6.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-        try {
-            PlutusFinacleDataEntity entity = mapToEntity(data);
-            repository.save(entity);
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
 
-            log.info("Saved DTD Event with TRAN_ID: {}", CbsUtils.byteBufferToStr(data.getTRANID()));
-            receiverRecord.receiverOffset().acknowledge();
-        } catch (Exception e) {
-            log.error("Error while saving DTD Event: {}", e.getMessage(), e);
-        }
-    }
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
-    @Override
-    public String partitionKey(DtdGamBusinessEvent data) {
-        return CbsUtils.byteBufferToStr(data.getEvent() != null ? data.getEvent().getTRANID() : null);
-    }
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor.kafka</groupId>
+            <artifactId>reactor-kafka</artifactId>
+            <version>1.3.23</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
-        PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+        <!-- AWS SDK & MSK Auth -->
+        <dependency>
+            <groupId>software.amazon.msk</groupId>
+            <artifactId>aws-msk-iam-auth</artifactId>
+            <version>2.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sdk-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
 
-        entity.setForacid(CbsUtils.byteBufferToStr(data.getFORACID()));
-        entity.setAcctCrncyCode(CbsUtils.byteBufferToStr(data.getCRNCYCODE()));
-        entity.setAcctName(CbsUtils.byteBufferToStr(data.getACCTNAME()));
-        entity.setAcctBal(CbsUtils.doubleToBigDecimal(data.getACCTBALANCE()) != null ? CbsUtils.doubleToBigDecimal(data.getACCTBALANCE()).doubleValue() : null);
-        entity.setAvailBal(CbsUtils.doubleToBigDecimal(data.getAVAILABLEAMT()) != null ? CbsUtils.doubleToBigDecimal(data.getAVAILABLEAMT()).doubleValue() : null);
-        entity.setTranAmt(CbsUtils.doubleToBigDecimal(data.getTRANAMT()) != null ? CbsUtils.doubleToBigDecimal(data.getTRANAMT()).doubleValue() : null);
-        entity.setTranDate(CbsUtils.charSeqToStr(data.getTRANDATE()));
-        entity.setTranParticular(CbsUtils.byteBufferToStr(data.getTRANPARTICULAR()));
-        entity.setTranType(CbsUtils.byteBufferToStr(data.getTRANTYPE()));
-        entity.setTxnSubType(CbsUtils.byteBufferToStr(data.getTRANSUBTYPE()));
-        entity.setPartTranType(CbsUtils.byteBufferToStr(data.getPARTTRANTYPE()));
-        entity.setRefNum(CbsUtils.byteBufferToStr(data.getREFNUM()));
-        entity.setTxnCode(CbsUtils.byteBufferToStr(data.getGLSUBHEADCODE()));
-        entity.setLinkedAccNo(CbsUtils.byteBufferToStr(data.getACID()));
-        entity.setLinkedBranchCode(CbsUtils.byteBufferToStr(data.getBRCODE()));
-        entity.setLinkedCrncyCode(CbsUtils.byteBufferToStr(data.getTRANCRNCYCODE()));
-        entity.setLinkedName(CbsUtils.byteBufferToStr(data.getBANKCODE()));
-        entity.setNarrative(CbsUtils.byteBufferToStr(data.getTRANRMKS()));
-        entity.setTranTime(null); // Populate if available
-        entity.setMsgTs(LocalDateTime.now().toString());
-        entity.setCreatedAt(LocalDateTime.now());
+        <!-- Redis -->
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+        </dependency>
 
-        return entity;
-    }
-}
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core-micrometer</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <!-- Avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+
+        <!-- Utility -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.10.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.13.11</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.8.2</version>
+                <executions>
+                    <execution>
+                        <id>schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals><goal>prepare-agent</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals><goal>report</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>check-coverage</id>
+                        <phase>verify</phase>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.1</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <haltOnFailure>false</haltOnFailure>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>DevOps-BuilderTools-Feed</id>
+            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </distributionManagement>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <report>licenses</report>
+                            <report>dependency-info</report>
+                            <report>dependencies</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports><report>report</report></reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.3.0</version>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports><report>aggregate</report></reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
