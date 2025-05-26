@@ -1,55 +1,72 @@
-Failed to deserialize Avro data to type {}: {}DtdGamBusinessEventCannot read strings longer than 2147483639 bytesjava.lang.Un                                                                                         supportedOperationException: Cannot read strings longer than 2147483639 bytes
-PlutusAvroDeserializer received Hex payload for topic '{}': {}dtd-gam-business-event021a3831313534393232363935343502283030303                                                                                         0303030333339303032323538343436390234323032352d30352d31302030383a33323a34392e3934393834380292fbf3b3da650202ec5128a730b0e84102                                                                                         ec5128a730b0e8410214303435303331373731300290db8eb3da65020a534250524f021237303431373239323702224348495241472041204348414e44414                                                                                         e490000000226323032352d30352d31302030303a30303a30300212202020204d3137303902082020203202024e02025402044349020243020a3132303031                                                                                         02164b4d3139373734343639350226323032352d30352d31302030303a30303a30300200000000f05cf34002624d423a52454345495645442532304d4f4e4                                                                                         55925323046524f4d2532304f574e25323030363538303035303030313239330000000226323032352d30352d31302031343a30363a31340226323032352d                                                                                         30352d31302031343a30363a31350000021e4d422d39393939393938393530303600000000023c4d423a52454345495645442532304d4f4e4559253230465                                                                                         24f4d2532304f000000000000000000021252443930353139303200000000000000000206494e52000200000000f05cf34002083032393000000000000000                                                                                         000000000000000000000000000000000000000000020220000000000226323032352d30352d31302030303a30303a3030000204303100000000000000000                                                                                         00202200002ec51884c6ddae741
-Failed to deserialize Avro data to type {}: {}DtdGamBusinessEventCannot read strings longer than 2147483639 bytesjava.lang.Un                                                                                         supportedOperationException: Cannot read strings longer than 2147483639 bytes
-PlutusAvroDeserializer received Hex payload for topic '{}': {}dtd-gam-business-event021a3831313534393232363835343802283030303                                                                                         0303030333339303032323537343535380234323032352d30352d31302030383a33323a33372e39343336393502aa8ff4b3da650202000000ec00b2a54102                                                                                         000000ec00b2a54102143036353033333931393202b08aefb6d765020a534250524f02123130363539313231360226534f4e414c49205052414d4f4420425                                                                                         54448450000000226323032352d30352d31302030303a30303a30300212202020204d3137303502082020203202024e02025402044349020243020a313230                                                                                         303102164b4d3139373936373735380226323032352d30352d31302030303a30303a3030020000000000c2ac4002624d423a52454345495645442532304d4                                                                                         f4e455925323046524f4d2532304f574e25323030363538303035303030313239330000000226323032352d30352d31302031343a30363a30320226323032                                                                                         352d30352d31302031343a30363a30330000021e4d422d39393939393938393530303600000000023c4d423a52454345495645442532304d4f4e455925323                                                                                         046524f4d2532304f000000000000000000021252463533343537343400000000000000000206494e5200020000000000c2ac400208303935380000000000                                                                                         0000000000000000000000000000000000000000000000020220000000000226323032352d30352d31302030303a30303a303000020430310000000000000                                                                                         000000202200002000000fc4deca641
-Failed to deserialize Avro data to type {}: {}DtdGamBusinessEventCannot read strings longer than 2147483639 bytesjava.lang.Un                                                                                         supportedOperationException: Cannot read strings longer than 2147483639 bytes
-2025-05-26T18:17:28.293Z ERROR 1 --- [onsumer-group-1] reactor.core.publisher.Operators         : Operator called default onE                                                                                         rrorDropped
+package com.kotak.orchestrator.orchestrator.serializer;
 
-reactor.core.Exceptions$ErrorCallbackNotImplemented: java.lang.NullPointerException: Cannot invoke "com.kotak.orchestrator.or                                                                                         chestrator.schema.DtdGamBusinessEvent.getEvent()" because "data" is null
-Caused by: java.lang.NullPointerException: Cannot invoke "com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent.getE                                                                                         vent()" because "data" is null
-        at com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer.partitionKey(PlutusDtdBusinessEventCon                                                                                         sumer.java:60) ~[!/:0.0.1]
-        at com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer.partitionKey(PlutusDtdBusinessEventCon                                                                                         sumer.java:21) ~[!/:0.0.1]
-        at com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer.lambda$run$1(GenericReactiveConsumer.java:110                                                                                         ) ~[!/:0.0.1]
-        at reactor.core.publisher.FluxGroupBy$GroupByMain.onNext(FluxGroupBy.java:186) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.SerializedSubscriber.onNext(SerializedSubscriber.java:99) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxRetryWhen$RetryWhenMainSubscriber.onNext(FluxRetryWhen.java:178) ~[reactor-core-3.6.5.j                                                                                         ar!/:3.6.5]
-        at reactor.core.publisher.FluxPeek$PeekSubscriber.onNext(FluxPeek.java:200) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxUsingWhen$UsingWhenSubscriber.onNext(FluxUsingWhen.java:348) ~[reactor-core-3.6.5.jar!/                                                                                         :3.6.5]
-        at reactor.core.publisher.FluxUsing$UsingFuseableSubscriber.onNext(FluxUsing.java:353) ~[reactor-core-3.6.5.jar!/:3.6                                                                                         .5]
-        at reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber.onNext(FluxMapFuseable.java:129) ~[reactor-core-3.6.5                                                                                         .jar!/:3.6.5]
-        at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.onNext(FluxPeekFuseable.java:210) ~[reactor-core-3.                                                                                         6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxFlattenIterable$FlattenIterableSubscriber.drainAsync(FluxFlattenIterable.java:453) ~[re                                                                                         actor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxFlattenIterable$FlattenIterableSubscriber.drain(FluxFlattenIterable.java:724) ~[reactor                                                                                         -core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxFlattenIterable$FlattenIterableSubscriber.onNext(FluxFlattenIterable.java:256) ~[reacto                                                                                         r-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.runBackfused(FluxPublishOn.java:490) ~[reactor-core-3.6.5                                                                                         .jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.run(FluxPublishOn.java:527) ~[reactor-core-3.6.5.jar!/:3.                                                                                         6.5]
-        at reactor.core.scheduler.ExecutorScheduler$ExecutorTrackedRunnable.run(ExecutorScheduler.java:192) ~[reactor-core-3.                                                                                         6.5.jar!/:3.6.5]
-        at reactor.core.scheduler.ImmediateScheduler$ImmediateSchedulerWorker.schedule(ImmediateScheduler.java:84) ~[reactor-                                                                                         core-3.6.5.jar!/:3.6.5]
-        at reactor.core.scheduler.SingleWorkerScheduler.execute(SingleWorkerScheduler.java:64) ~[reactor-core-3.6.5.jar!/:3.6                                                                                         .5]
-        at reactor.core.scheduler.ExecutorScheduler$ExecutorSchedulerWorker.schedule(ExecutorScheduler.java:252) ~[reactor-co                                                                                         re-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.trySchedule(FluxPublishOn.java:312) ~[reactor-core-3.6.5.                                                                                         jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.onNext(FluxPublishOn.java:237) ~[reactor-core-3.6.5.jar!/                                                                                         :3.6.5]
-        at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.onNext(FluxPeekFuseable.java:210) ~[reactor-core-3.                                                                                         6.5.jar!/:3.6.5]
-        at reactor.core.publisher.SinkManyUnicast.drainRegular(SinkManyUnicast.java:284) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.SinkManyUnicast.drain(SinkManyUnicast.java:365) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.SinkManyUnicast.tryEmitNext(SinkManyUnicast.java:239) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.SinkManySerialized.tryEmitNext(SinkManySerialized.java:100) ~[reactor-core-3.6.5.jar!/:3.6.                                                                                         5]
-        at reactor.core.publisher.InternalManySink.emitNext(InternalManySink.java:27) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.kafka.receiver.internals.ConsumerEventLoop$PollEvent.run(ConsumerEventLoop.java:380) ~[reactor-kafka-1.3.2                                                                                         3.jar!/:1.3.23]
-        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.jav                                                                                         a:304) ~[na:na]
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
-        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
 
-2025-05-26T18:17:28.315Z  INFO 1 --- [onsumer-group-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer                                                                                         -plutus-dtd-consumer-group-1, groupId=plutus-dtd-consumer-group] Revoke previously assigned partitions dtd-gam-business-event                                                                                         -0, dtd-gam-business-event-1, dtd-gam-business-event-2, dtd-gam-business-event-3, dtd-gam-business-event-4, dtd-gam-business-                                                                                         event-5, dtd-gam-business-event-6, dtd-gam-business-event-7, dtd-gam-business-event-8, dtd-gam-business-event-9
-2025-05-26T18:17:28.315Z  INFO 1 --- [onsumer-group-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer                                                                                         -plutus-dtd-consumer-group-1, groupId=plutus-dtd-consumer-group] Member consumer-plutus-dtd-consumer-group-1-b9c572a4-b5e6-4d                                                                                         bd-80ad-9afa95c20cae sending LeaveGroup request to coordinator b-2.uatrosmsk.x7g3kf.c4.kafka.ap-south-1.amazonaws.com:9098 (i                                                                                         d: 2147483645 rack: null) due to the consumer is being closed
-2025-05-26T18:17:28.316Z  INFO 1 --- [onsumer-group-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer                                                                                         -plutus-dtd-consumer-group-1, groupId=plutus-dtd-consumer-group] Resetting generation and member id due to: consumer pro-acti                                                                                         vely leaving the group
-2025-05-26T18:17:28.316Z  INFO 1 --- [onsumer-group-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer                                                                                         -plutus-dtd-consumer-group-1, groupId=plutus-dtd-consumer-group] Request joining group due to: consumer pro-actively leaving                                                                                          the group
-2025-05-26T18:17:28.466Z  INFO 1 --- [onsumer-group-1] o.a.kafka.clients.FetchSessionHandler    : [Consumer clientId=consumer                                                                                         -plutus-dtd-consumer-group-1, groupId=plutus-dtd-consumer-group] Node 2 sent an invalid full fetch response with extraIds=(yT                                                                                         pucp1RQgSwEG-xDcfI6g), response=()
-2025-05-26T18:17:28.781Z  INFO 1 --- [onsumer-group-1] o.apache.kafka.common.metrics.Metrics    : Metrics scheduler closed
-2025-05-26T18:17:28.781Z  INFO 1 --- [onsumer-group-1] o.apache.kafka.common.metrics.Metrics    : Closing reporter org.apache                                                                                         .kafka.common.metrics.JmxReporter
-2025-05-26T18:17:28.781Z  INFO 1 --- [onsumer-group-1] o.apache.kafka.common.metrics.Metrics    : Metrics reporters closed
-2025-05-26T18:17:28.790Z  INFO 1 --- [onsumer-group-1] o.a.kafka.common.utils.AppInfoParser     : App info kafka.consumer for                                                                                          consumer-plutus-dtd-consumer-group-1 unregistered
+import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.specific.SpecificDatumReader;
+import org.apache.avro.specific.SpecificRecord;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.kafka.common.errors.SerializationException;
+import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.serialization.Deserializer;
+
+import java.io.ByteArrayInputStream;
+
+/**
+ * Generic Avro Deserializer for Plutus Kafka consumers.
+ *
+ * <p>
+ * This class deserializes Avro-encoded byte arrays into specific Avro record types.
+ * It also provides enhanced logging (including hex-encoded payloads) to simplify debugging
+ * in UAT and production environments.
+ *
+ * @param <T> The Avro-generated class extending {@link SpecificRecord}.
+ */
+@Slf4j
+public class PlutusAvroDeserializer<T extends SpecificRecord> implements Deserializer<T> {
+
+    private final Class<T> targetClass;
+
+    /**
+     * Constructs a new Plutus Avro Deserializer.
+     *
+     * @param targetClass The Avro class to deserialize to (e.g., PlutusFinacleData.class).
+     */
+    public PlutusAvroDeserializer(Class<T> targetClass) {
+        this.targetClass = targetClass;
+    }
+
+    @Override
+    public T deserialize(String topic, byte[] data) {
+        if (data == null) {
+            System.out.println("Received null data for topic '{}', skipping deserialization."+ topic);
+            return null;
+        }
+
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
+            BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(inputStream, null);
+            DatumReader<T> reader = new SpecificDatumReader<>(targetClass);
+            return reader.read(null, decoder);
+        } catch (Exception e) {
+            System.out.println("Failed to deserialize Avro data to type {}: {}"+ targetClass.getSimpleName()+ e.getMessage()+ e);
+            throw new SerializationException("Error deserializing byte[] to " + targetClass.getName(), e);
+        }
+    }
+
+    @Override
+    public T deserialize(String topic, Headers headers, byte[] data) {
+        // Log hex payload for debugging (especially useful during UAT)
+        if (data != null) {
+            String hexData = Hex.encodeHexString(data);
+            System.out.println("PlutusAvroDeserializer received Hex payload for topic '{}': {}"+ topic+ hexData);
+        }
+
+        try {
+            return deserialize(topic, data);
+        } catch (SerializationException e) {
+            return null; // Optional: allow downstream code to handle nulls gracefully
+        }
+    }
+}
