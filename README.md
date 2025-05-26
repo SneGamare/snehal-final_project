@@ -1,634 +1,99 @@
-{
-  "type" : "record",
-  "name" : "DtdGamBusinessEvent",
-  "namespace" : "com.kotak.orchestrator.orchestrator.schema",
-  "fields" : [ {
-    "name" : "source_scn",
-    "type" : [ "null", "string" ],
-    "default" : null
-  }, {
-    "name" : "pos",
-    "type" : [ "null", "string" ],
-    "default" : null
-  }, {
-    "name" : "table_op_ts",
-    "type" : [ "null", "string" ],
-    "default" : null
-  }, {
-    "name" : "ros_op_ts",
-    "type" : [ "null", "string" ],
-    "default" : null
-  }, {
-    "name": "Event",
-    "type" : [ "null", {
-      "type" : "record",
-      "name" : "BusinessEvent",
-      "fields": [
-        {
-          "name" : "EFFECTIVE_BAL",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },{
-          "name" : "FORACID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_CLS_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_CLS_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_CRNCY_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        },{
-          "name" : "ACCT_NAME",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_SHORT_NAME",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_OPN_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "ACTIVE_STATUS",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        },  {
-          "name" : "ADHOC_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "ALLOW_SWEEPS",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "CIF_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        },  {
-          "name" : "CLEAN_ADHOC_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "CLEAN_SINGLE_TRAN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "CLEAN_EMER_ADVN",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "CLR_BAL_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "DACC_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "DAFA_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "DRWNG_POWER",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "EMER_ADVN",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "ENTITY_CRE_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        },  {
-          "name" : "FFD_CONTRIB_TO_ACCT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_REASON_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_REASON_CODE_2",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_REASON_CODE_3",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_REASON_CODE_4",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FREZ_REASON_CODE_5",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FX_CLR_BAL_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "FUTURE_OC_TOD_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "LAST_MODIFIED_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        },  {
-          "name" : "LAST_TRAN_DATE_CR",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "LAST_TRAN_DATE_DR",
-          "type" : [ "null", "string" ],
-          "default" : null
-        },  {
-          "name" : "LIEN_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "MODE_OF_OPER_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        },  {
-          "name" : "NEXT_TRAN_SRL_NUM",
-          "type" : [ "null", "long" ],
-          "default" : null
-        }, {
-          "name" : "POOL_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SANCT_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "SCHM_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SCHM_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SCHM_SUB_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SINGLE_TRAN_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SINGLE_TRAN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "SYSTEM_RESERVED_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "SYSTEM_GEN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "SYS_BEHAVIOR_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "UN_CLR_BAL_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "USED_CLEAN_SINGLE_TRAN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "USED_OC_CLN_SINGLE_TRAN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "USED_SINGLE_TRAN_LIM",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "USED_UN_CLR_OVER_DACC_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "UTIL_FUTURE_BAL_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        },  {
-          "name" : "UTILISED_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "LAST_BAL_UPDATED_DATE",
-          "type" : [ "null", "long" ],
-          "default" : null
-        },
-        // DTD Events
-        {
-          "name" : "TRAN_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PART_TRAN_SRL_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "DEL_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_SUB_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PART_TRAN_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "GL_SUB_HEAD_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ACID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "VALUE_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_PARTICULAR",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ENTRY_USER_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PSTD_USER_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "VFD_USER_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ENTRY_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "PSTD_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "VFD_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "RPT_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REF_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "INSTRMNT_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "INSTRMNT_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "INSTRMNT_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "INSTRMNT_ALPHA",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_RMKS",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PSTD_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PRNT_ADVC_IND",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "AMT_RESERVATION_IND",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "RESERVATION_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "RESTRICT_MODIFY_IND",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "LCHG_USER_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "LCHG_TIME",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "RCRE_USER_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "RCRE_TIME",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "CUST_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "VOUCHER_PRINT_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "MODULE_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "BR_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "FX_TRAN_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "RATE_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "RATE",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "CRNCY_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "NAVIGATION_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_CRNCY_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REF_CRNCY_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REF_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "SOL_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "BANK_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TREA_REF_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TREA_RATE",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "TS_CNT",
-          "type" : [ "null", "long" ],
-          "default" : null
-        }, {
-          "name" : "GST_UPD_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "ISO_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "EABFAB_UPD_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "LIFT_LIEN_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PROXY_POST_IND",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SI_SRL_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SI_ORG_EXEC_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "PR_SRL_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SERIAL_NUM",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "DEL_MEMO_PAD",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "UAD_MODULE_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "UAD_MODULE_KEY",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REVERSAL_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "REVERSAL_VALUE_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "PTTM_EVENT_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PROXY_ACID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TOD_ENTITY_TYPE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TOD_ENTITY_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "DTH_INIT_SOL_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REGULARIZATION_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "PRINCIPAL_PORTION_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "TF_ENTITY_SOL_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_PARTICULAR_2",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_PARTICULAR_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TR_STATUS",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SVS_TRAN_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "CRNCY_HOL_CHK_DONE_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "REFERRAL_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PARTY_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "GL_DATE",
-          "type" : [ "null", "string" ],
-          "default" : null
-        }, {
-          "name" : "BKDT_TRAN_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "BANK_ID",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "IMPL_CASH_PART_TRAN_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PTRAN_CHRG_EXISTS_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "MUD_POOL_BAL_BUILD_FLG",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "GL_SEGMENT_STRING",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "SYS_PART_TRAN_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "USER_PART_TRAN_CODE",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_FREE_CODE1",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "TRAN_FREE_CODE2",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "PSTD_SRL_NUM",
-          "type" : [ "null", "long" ],
-          "default" : null
-        }, {
-          "name" : "REVERSAL_STATUS",
-          "type" : [ "null", "bytes" ],
-          "default" : null
-        }, {
-          "name" : "AVAILABLE_AMT",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }, {
-          "name" : "ACCT_BALANCE",
-          "type" : [ "null", "double" ],
-          "default" : null
-        }
-      ]
-    }]
-  }
-  ]
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "plutus_finacle_transaction_details")
+public class FinacleTransaction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Primary Account Fields
+    @Column(name = "foracid")
+    private String foracid;
+
+    @Column(name = "acct_cls_flg")
+    private String acctClsFlg;
+
+    @Column(name = "acct_crncy_code")
+    private String acctCrncyCode;
+
+    @Column(name = "acct_name")
+    private String acctName;
+
+    @Column(name = "acct_ownership")
+    private String acctOwnership;
+
+    @Column(name = "acct_opn_date")
+    private String acctOpnDate;
+
+    @Column(name = "acct_type")
+    private String acctType;
+
+    @Column(name = "acct_bal")
+    private Double acctBal;
+
+    @Column(name = "avail_bal")
+    private Double availBal;
+
+    // Transaction Fields
+    @Column(name = "tran_amt")
+    private Double tranAmt;
+
+    @Column(name = "tran_date")
+    private String tranDate;
+
+    @Column(name = "tran_particular")
+    private String tranParticular;
+
+    @Column(name = "tran_time")
+    private String tranTime;
+
+    @Column(name = "tran_type")
+    private String tranType;
+
+    @Column(name = "txn_code")
+    private String txnCode;
+
+    @Column(name = "txn_sub_type")
+    private String txnSubType;
+
+    // Reference and Narration Fields
+    @Column(name = "ref_num")
+    private String refNum;
+
+    @Column(name = "ref_doc_num")
+    private String refDocNum;
+
+    @Column(name = "narrative")
+    private String narrative;
+
+    @Column(name = "part_tran_type")
+    private String partTranType;
+
+    // Linked/Counterparty Fields
+    @Column(name = "linked_acc_no")
+    private String linkedAccNo;
+
+    @Column(name = "linked_branch_code")
+    private String linkedBranchCode;
+
+    @Column(name = "linked_crncy_code")
+    private String linkedCrncyCode;
+
+    @Column(name = "linked_name")
+    private String linkedName;
+
+    // Timestamp Fields
+    @Column(name = "msg_ts")
+    private String msgTs;
+
+    // Add a created timestamp (optional)
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    // Getters and setters below
+
+    // ... (use Lombok or generate them manually)
 }
