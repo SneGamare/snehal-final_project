@@ -1,85 +1,74 @@
-package com.kmbl.cros.accountinquiryservice.utils;
+package com.kotak.orchestrator.orchestrator.consumer;
 
-import static com.kmbl.cros.accountinquiryservice.constants.AppConstants.GAM_DATE_TIME;
+import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
+import com.kotak.orchestrator.orchestrator.util.CbsUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import reactor.kafka.receiver.ReceiverRecord;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-public class CbsUtils {
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
 
-    /**
-     * Converts a ByteBuffer to a String using UTF-8 encoding.
-     *
-     * @param value The ByteBuffer to convert.
-     * @return The converted String, or null if the input value was null.
-     */
-    public static String byteBufferToStr(ByteBuffer value) {
-        if (value == null) {
-            return null;
+    private final PlutusFinacleDataRepository repository;
+
+    @Override
+    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
+        BusinessEvent data = receiverRecord.value().getEvent();
+
+        if (data == null) {
+            log.warn("Received null BusinessEvent.");
+            return;
         }
-        ByteBuffer duplicate = value.duplicate();
-        return StandardCharsets.UTF_8.decode(duplicate).toString();
-    }
 
-    /**
-     * Converts a Double to a BigDecimal with a scale of 4, rounded using HALF_UP mode.
-     *
-     * @param value The Double value to convert.
-     * @return The converted BigDecimal, or null if the input value was null.
-     */
-    public static BigDecimal doubleToBigDecimal(Double value) {
-        return value != null ? new BigDecimal(value).setScale(4, RoundingMode.HALF_UP) : null;
-    }
-
-    /**
-     * Converts a Number object to a Long.
-     *
-     * @param value The Number object to convert.
-     * @return The converted Long, or null if the input value was null or not a Number.
-     */
-    public static Long numberToLong(Object value) {
-        return value != null ? ((Number) value).longValue() : null;
-    }
-
-    /**
-     * Parses a CharSequence as a LocalDateTime using the GAM_DATE_TIME format.
-     * Throws a DateTimeParseException if the input value cannot be parsed.
-     *
-     * @param value The CharSequence to parse.
-     * @return The parsed LocalDateTime, or null if the input value was null.
-     */
-    public static LocalDateTime strToLocalDateTime(CharSequence value) {
         try {
-            return LocalDateTime.parse(value.toString(), GAM_DATE_TIME);
+            PlutusFinacleDataEntity entity = mapToEntity(data);
+            repository.save(entity);
+
+            log.info("Saved DTD Event with TRAN_ID: {}", CbsUtils.byteBufferToStr(data.getTRANID()));
+            receiverRecord.receiverOffset().acknowledge();
         } catch (Exception e) {
-            return null;
+            log.error("Error while saving DTD Event: {}", e.getMessage(), e);
         }
     }
 
-    /**
-     * Parses a String DateTime to date using the YYYY-MM-DDT00:HH:MM:SSS or YYYY-MM-DDT00:HH:MM format.
-     * @param value The String to parse.
-     * @return The parsed DateTime in String YYYY-MM-DDT00:HH:MM:SSS format, or null if the input value was null.
-     */
-    public static String strDateTimeToDate(String value) {
-        try {
-            String date = value.split("T")[0];
-            return date + "T00:00:00.001";
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public String partitionKey(DtdGamBusinessEvent data) {
+        return CbsUtils.byteBufferToStr(data.getEvent() != null ? data.getEvent().getTRANID() : null);
     }
 
-    /**
-     * Converts an object to a String using its String representation.
-     *
-     * @param value The CharSequence to parse.
-     * @return The converted String, or null if the input value was null.
-     */
-    public static String charSeqToStr(CharSequence value) {
-        return value != null ? String.valueOf(value) : null;
+    private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
+        PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+
+        entity.setForacid(CbsUtils.byteBufferToStr(data.getFORACID()));
+        entity.setAcctCrncyCode(CbsUtils.byteBufferToStr(data.getCRNCYCODE()));
+        entity.setAcctName(CbsUtils.byteBufferToStr(data.getACCTNAME()));
+        entity.setAcctBal(CbsUtils.doubleToBigDecimal(data.getACCTBALANCE()) != null ? CbsUtils.doubleToBigDecimal(data.getACCTBALANCE()).doubleValue() : null);
+        entity.setAvailBal(CbsUtils.doubleToBigDecimal(data.getAVAILABLEAMT()) != null ? CbsUtils.doubleToBigDecimal(data.getAVAILABLEAMT()).doubleValue() : null);
+        entity.setTranAmt(CbsUtils.doubleToBigDecimal(data.getTRANAMT()) != null ? CbsUtils.doubleToBigDecimal(data.getTRANAMT()).doubleValue() : null);
+        entity.setTranDate(CbsUtils.charSeqToStr(data.getTRANDATE()));
+        entity.setTranParticular(CbsUtils.byteBufferToStr(data.getTRANPARTICULAR()));
+        entity.setTranType(CbsUtils.byteBufferToStr(data.getTRANTYPE()));
+        entity.setTxnSubType(CbsUtils.byteBufferToStr(data.getTRANSUBTYPE()));
+        entity.setPartTranType(CbsUtils.byteBufferToStr(data.getPARTTRANTYPE()));
+        entity.setRefNum(CbsUtils.byteBufferToStr(data.getREFNUM()));
+        entity.setTxnCode(CbsUtils.byteBufferToStr(data.getGLSUBHEADCODE()));
+        entity.setLinkedAccNo(CbsUtils.byteBufferToStr(data.getACID()));
+        entity.setLinkedBranchCode(CbsUtils.byteBufferToStr(data.getBRCODE()));
+        entity.setLinkedCrncyCode(CbsUtils.byteBufferToStr(data.getTRANCRNCYCODE()));
+        entity.setLinkedName(CbsUtils.byteBufferToStr(data.getBANKCODE()));
+        entity.setNarrative(CbsUtils.byteBufferToStr(data.getTRANRMKS()));
+        entity.setTranTime(null); // Populate if available
+        entity.setMsgTs(LocalDateTime.now().toString());
+        entity.setCreatedAt(LocalDateTime.now());
+
+        return entity;
     }
 }
