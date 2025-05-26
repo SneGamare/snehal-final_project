@@ -1,4 +1,4 @@
-025-05-26T18:32:38.802Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Deserialization failed for topic 'dtd-gam-business-event': Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
+2025-05-26T18:32:38.684Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Deserialization failed for topic 'dtd-gam-business-event': Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
 
 org.apache.kafka.common.errors.SerializationException: Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
         at com.kotak.orchestrator.orchestrator.serializer.PlutusAvroDeserializer.deserialize(PlutusAvroDeserializer.java:49) ~[!/:0.0.1]
@@ -38,7 +38,7 @@ Caused by: java.lang.UnsupportedOperationException: Cannot read strings longer t
         at com.kotak.orchestrator.orchestrator.serializer.PlutusAvroDeserializer.deserialize(PlutusAvroDeserializer.java:46) ~[!/:0.0.1]
         ... 18 common frames omitted
 
-2025-05-26T18:32:38.802Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Failed to deserialize Avro data to type DtdGamBusinessEvent: Cannot read strings longer than 2147483639 bytes
+2025-05-26T18:32:38.684Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Failed to deserialize Avro data to type DtdGamBusinessEvent: Cannot read strings longer than 2147483639 bytes
 
 java.lang.UnsupportedOperationException: Cannot read strings longer than 2147483639 bytes
         at org.apache.avro.SystemLimitException.checkMaxStringLength(SystemLimitException.java:175) ~[avro-1.12.0.jar!/:1.12.0]
@@ -75,7 +75,7 @@ java.lang.UnsupportedOperationException: Cannot read strings longer than 2147483
         at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
         at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
 
-2025-05-26T18:32:38.802Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Deserialization failed for topic 'dtd-gam-business-event': Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
+2025-05-26T18:32:38.685Z ERROR 1 --- [onsumer-group-1] c.k.o.o.s.PlutusAvroDeserializer         : Deserialization failed for topic 'dtd-gam-business-event': Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
 
 org.apache.kafka.common.errors.SerializationException: Error deserializing byte[] to com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent
         at com.kotak.orchestrator.orchestrator.serializer.PlutusAvroDeserializer.deserialize(PlutusAvroDeserializer.java:49) ~[!/:0.0.1]
@@ -97,3 +97,20 @@ org.apache.kafka.common.errors.SerializationException: Error deserializing byte[
         at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
         at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
         at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.lang.UnsupportedOperationException: Cannot read strings longer than 2147483639 bytes
+        at org.apache.avro.SystemLimitException.checkMaxStringLength(SystemLimitException.java:175) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.io.BinaryDecoder.readString(BinaryDecoder.java:284) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.io.ResolvingDecoder.readString(ResolvingDecoder.java:208) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readString(GenericDatumReader.java:470) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readString(GenericDatumReader.java:460) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readWithoutConversion(GenericDatumReader.java:192) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:161) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readWithoutConversion(GenericDatumReader.java:188) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.specific.SpecificDatumReader.readField(SpecificDatumReader.java:181) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readRecord(GenericDatumReader.java:248) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.specific.SpecificDatumReader.readRecord(SpecificDatumReader.java:168) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.readWithoutConversion(GenericDatumReader.java:180) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:161) ~[avro-1.12.0.jar!/:1.12.0]
+        at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:154) ~[avro-1.12.0.jar!/:1.12.0]
+        at com.kotak.orchestrator.orchestrator.serializer.PlutusAvroDeserializer.deserialize(PlutusAvroDeserializer.java:46) ~[!/:0.0.1]
+        ... 18 common frames omitted
