@@ -16,3 +16,14 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA plutus_ecollection 
 
 CREATE ROLE app_user WITH LOGIN PASSWORD 'your_password';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA plutus_ecollection TO app_user;
+
+
+
+
+-- Create the user if not already present
+CREATE ROLE plutus_app_user WITH LOGIN PASSWORD 'your_password';
+
+-- Grant access to the schema and tables
+GRANT USAGE ON SCHEMA plutus_ecollection TO plutus_app_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA plutus_ecollection TO plutus_app_user;
+
