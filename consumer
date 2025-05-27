@@ -1,106 +1,100 @@
-package com.kotak.orchestrator.orchestrator.entity;
-
-import jakarta.persistence.*;
-import lombok.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-@Entity
-@Table(name = "plutus_finacle_transaction_details", schema = "plutus_ecollection")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class PlutusFinacleTransactionDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "acct_bal")
-    private BigDecimal acctBal;
-
-    @Column(name = "acct_cls_flg")
-    private String acctClsFlg;
-
-    @Column(name = "acct_crncy_code")
-    private String acctCrncyCode;
-
-    @Column(name = "acct_name")
-    private String acctName;
-
-    @Column(name = "acct_opn_date")
-    private LocalDate acctOpnDate; // ✅ Converted to LocalDate
-
-    @Column(name = "acct_ownership")
-    private String acctOwnership;
-
-    @Column(name = "acct_type")
-    private String acctType;
-
-    @Column(name = "avail_bal")
-    private BigDecimal availBal;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "foracid")
-    private String foracid;
-
-    @Column(name = "linked_acc_no")
-    private String linkedAccNo;
-
-    @Column(name = "linked_branch_code")
-    private String linkedBranchCode;
-
-    @Column(name = "linked_crncy_code")
-    private String linkedCrncyCode;
-
-    @Column(name = "linked_name")
-    private String linkedName;
-
-    @Column(name = "msg_ts")
-    private LocalDateTime msgTs;
-
-    @Column(name = "narrative")
-    private String narrative;
-
-    @Column(name = "part_tran_type")
-    private String partTranType;
-
-    @Lob
-    @Column(name = "raw_json", columnDefinition = "TEXT")
-    private String rawJson;
-
-    @Column(name = "received_at")
-    private LocalDateTime receivedAt;
-
-    @Column(name = "ref_doc_num")
-    private String refDocNum;
-
-    @Column(name = "ref_num")
-    private String refNum;
-
-    @Column(name = "tran_amt")
-    private BigDecimal tranAmt;
-
-    @Column(name = "tran_date")
-    private LocalDate tranDate; // ✅ Converted to LocalDate
-
-    @Column(name = "tran_particular")
-    private String tranParticular;
-
-    @Column(name = "tran_time")
-    private LocalDateTime tranTime;
-
-    @Column(name = "tran_type")
-    private String tranType;
-
-    @Column(name = "txn_code")
-    private String txnCode;
-
-    @Column(name = "txn_sub_type")
-    private String txnSubType;
-}
+org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [ERROR: column "tran_date" is of                                                                                          type date but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 485] [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,ac                                                                                         ct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_cod                                                                                         e,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tra                                                                                         n_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into p                                                                                         lutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_owne                                                                                         rship,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,                                                                                         part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_s                                                                                         ub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
+        at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:27                                                                                         7) ~[spring-orm-6.1.6.jar!/:6.1.6]
+        at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)                                                                                          ~[spring-orm-6.1.6.jar!/:6.1.6]
+        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFac                                                                                         toryBean.java:550) ~[spring-orm-6.1.6.jar!/:6.1.6]
+        at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersiste                                                                                         nceExceptionTranslator.java:61) ~[spring-tx-6.1.6.jar!/:6.1.6]
+        at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335) ~[spring-tx-6.1.6.j                                                                                         ar!/:6.1.6]
+        at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationI                                                                                         nterceptor.java:152) ~[spring-tx-6.1.6.jar!/:6.1.6]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethod                                                                                         Interceptor.invoke(CrudMethodMetadataPostProcessor.java:164) ~[spring-data-jpa-3.2.5.jar!/:3.2.5]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[spri                                                                                         ng-aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.1.6.jar!/:                                                                                         6.1.6]
+        at jdk.proxy2/jdk.proxy2.$Proxy137.save(Unknown Source) ~[na:na]
+        at com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer.process(PlutusDtdBusinessEventConsumer                                                                                         .java:50) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer.processRecord(GenericReactiveConsumer.java:12                                                                                         6) ~[!/:0.0.1]
+        at reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber.onNext(FluxMapFuseable.java:113) ~[reactor-core-3.6.5                                                                                         .jar!/:3.6.5]
+        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.runAsync(FluxPublishOn.java:446) ~[reactor-core-3.6.5.jar                                                                                         !/:3.6.5]
+        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.run(FluxPublishOn.java:533) ~[reactor-core-3.6.5.jar!/:3.                                                                                         6.5]
+        at io.micrometer.core.instrument.AbstractTimer.record(AbstractTimer.java:247) ~[micrometer-core-1.12.5.jar!/:1.12.5]
+        at io.micrometer.core.instrument.Timer.lambda$wrap$0(Timer.java:193) ~[micrometer-core-1.12.5.jar!/:1.12.5]
+        at io.micrometer.core.instrument.LongTaskTimer.record(LongTaskTimer.java:184) ~[micrometer-core-1.12.5.jar!/:1.12.5]
+        at reactor.core.observability.micrometer.TimedScheduler$TimedRunnable.run(TimedScheduler.java:265) ~[reactor-core-mic                                                                                         rometer-1.2.0.jar!/:1.2.0]
+        at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:84) ~[reactor-core-3.6.5.jar!/:3.6.5]
+        at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37) ~[reactor-core-3.6.5.jar!/:3.6.5]
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.jav                                                                                         a:304) ~[na:na]
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "tran_date" is of type dat                                                                                         e but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 485] [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,ac                                                                                         ct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_cod                                                                                         e,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tra                                                                                         n_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
+        at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernat                                                                                         e-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hi                                                                                         bernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.4.4.Final                                                                                         .jar!/:6.4.4.Final]
+        at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197) ~[hibernate-cor                                                                                         e-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107) ~[hibernate-core                                                                                         -6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInse                                                                                         rtSingleTable.java:100) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175) ~[hibernate-                                                                                         core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113) ~[hibernate                                                                                         -core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868) ~[hibernate-core-                                                                                         6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81) ~[hibernate-c                                                                                         ore-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-6.4.4.Fi                                                                                         nal.jar!/:6.4.4.Final]
+        at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-6.4.4.Final.jar!/:6.4.                                                                                         4.Final]
+        at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Fina                                                                                         l]
+        at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386) ~[hiber                                                                                         nate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)                                                                                          ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219) ~[hibernate                                                                                         -core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134) ~[h                                                                                         ibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~                                                                                         [hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-                                                                                         core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernat                                                                                         e-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernat                                                                                         e-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:12                                                                                         7) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Fina                                                                                         l]
+        at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+        at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityMan                                                                                         agerCreator.java:319) ~[spring-orm-6.1.6.jar!/:6.1.6]
+        at jdk.proxy2/jdk.proxy2.$Proxy134.persist(Unknown Source) ~[na:na]
+        at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:618) ~[spring-da                                                                                         ta-jpa-3.2.5.jar!/:3.2.5]
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354) ~[spring-aop-6.1.6.jar!                                                                                         /:6.1.6]
+        at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$ne                                                                                         w$0(RepositoryMethodInvoker.java:277) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170                                                                                         ) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)                                                                                          ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryCompos                                                                                         ition.java:516) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285) ~[sp                                                                                         ring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor                                                                                         .invoke(RepositoryFactorySupport.java:628) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterc                                                                                         eptor.java:168) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodIntercep                                                                                         tor.java:143) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInter                                                                                         ceptor.java:70) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.                                                                                         java:123) ~[spring-tx-6.1.6.jar!/:6.1.6]
+        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupp                                                                                         ort.java:392) ~[spring-tx-6.1.6.jar!/:6.1.6]
+        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[sprin                                                                                         g-tx-6.1.6.jar!/:6.1.6]
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring                                                                                         -aop-6.1.6.jar!/:6.1.6]
+        at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationI                                                                                         nterceptor.java:137) ~[spring-tx-6.1.6.jar!/:6.1.6]
+        ... 23 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: column "tran_date" is of type date but expression is of type character v                                                                                         arying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 485
+        at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713) ~[postgresql-42.6.2.jar                                                                                         !/:42.6.2]
+        at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401) ~[postgresql-42.6.2.jar!/:42.                                                                                         6.2]
+        at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368) ~[postgresql-42.6.2.jar!/:42.6.2]
+        at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498) ~[postgresql-42.6.2.jar!/:42.6.2]
+        at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415) ~[postgresql-42.6.2.jar!/:42.6.2]
+        at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190) ~[postgresql-42.6.2.jar!/:4                                                                                         2.6.2]
+        at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152) ~[postgresql-42.6.2.jar!/:42.6                                                                                         .2]
+        at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61) ~[HikariCP-5.0.1.jar!/                                                                                         :na]
+        at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java) ~[HikariCP-5.                                                                                         0.1.jar!/:na]
+        at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194) ~[hibernate-cor                                                                                         e-6.4.4.Final.jar!/:6.4.4.Final]
+        ... 69 common frames omitted
