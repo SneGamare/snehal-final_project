@@ -1,103 +1,106 @@
-package com.kotak.orchestrator.orchestrator.consumer;
+package com.kotak.orchestrator.orchestrator.entity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kotak.orchestrator.orchestrator.dto.PlutusFinacleData;
-import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
-import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import com.kotak.orchestrator.orchestrator.validator.PlutusDataValidator;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
-
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class PlutusFinacleDataConsumer extends GenericAvroConsumer<PlutusFinacleData> {
+@Entity
+@Table(name = "plutus_finacle_transaction_details", schema = "plutus_ecollection")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class PlutusFinacleTransactionDetails {
 
-    private final PlutusFinacleDataRepository repository;
-    private final PlutusDataValidator plutusDataValidator;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @KafkaListener(topics = "${topic.plutus-finacle:plutus-finacle-topic}", groupId = "plutus-finacle-group")
-    public void listen(ConsumerRecord<String, PlutusFinacleData> record) {
-        consume(record);
-    }
+    @Column(name = "acct_bal")
+    private BigDecimal acctBal;
 
-    @Override
-    protected void handleMessage(PlutusFinacleData data, ConsumerRecord<String, PlutusFinacleData> record) {
-        try {
-            plutusDataValidator.validate(data);
+    @Column(name = "acct_cls_flg")
+    private String acctClsFlg;
 
-            PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+    @Column(name = "acct_crncy_code")
+    private String acctCrncyCode;
 
-            // Mandatory Fields
-            entity.setTranId(toStr(data.getTranId()));
-            entity.setTranDate(toStr(data.getTranDate()));
-            entity.setTranAmt(data.getTranAmt());
-            entity.setAcid(toStr(data.getAcid()));
-            entity.setForacid(toStr(data.getForacid()));
-            entity.setRefNum(toStr(data.getRefNum()));
+    @Column(name = "acct_name")
+    private String acctName;
 
-            // Optional Fields
-            entity.setAcctName(toStr(data.getAcctName()));
-            entity.setLastTranDateCr(toStr(data.getLastTranDateCr()));
-            entity.setPartTranSrlNum(toStr(data.getPartTranSrlNum()));
-            entity.setDelFlg(toStr(data.getDelFlg()));
-            entity.setTranType(toStr(data.getTranType()));
-            entity.setTranSubType(toStr(data.getTranSubType()));
-            entity.setPartTranType(toStr(data.getPartTranType()));
-            entity.setGlSubHeadCode(toStr(data.getGlSubHeadCode()));
-            entity.setValueDate(toStr(data.getValueDate()));
-            entity.setTranParticular(toStr(data.getTranParticular()));
-            entity.setEntryDate(toStr(data.getEntryDate()));
-            entity.setPstdDate(toStr(data.getPstdDate()));
-            entity.setInstrmntType(toStr(data.getInstrmntType()));
-            entity.setInstrmntDate(toStr(data.getInstrmntDate()));
-            entity.setInstrmntNum(toStr(data.getInstrmntNum()));
-            entity.setTranRmks(toStr(data.getTranRmks()));
-            entity.setCustId(toStr(data.getCustId()));
-            entity.setBrCode(toStr(data.getBrCode()));
-            entity.setCrncyCode(toStr(data.getCrncyCode()));
-            entity.setTranCrncyCode(toStr(data.getTranCrncyCode()));
-            entity.setRefAmt(data.getRefAmt());
-            entity.setSolId(toStr(data.getSolId()));
-            entity.setBankCode(toStr(data.getBankCode()));
-            entity.setTreaRefNum(toStr(data.getTreaRefNum()));
-            entity.setReversalDate(toStr(data.getReversalDate()));
-            entity.setReceivedAt(LocalDateTime.now());
+    @Column(name = "acct_opn_date")
+    private LocalDate acctOpnDate; // ✅ Converted to LocalDate
 
-            // Serialize without Avro schema metadata
-            Map<String, Object> rawMap = new HashMap<>();
-            rawMap.put("foracid", toStr(data.getForacid()));
-            rawMap.put("tranId", toStr(data.getTranId()));
-            rawMap.put("tranDate", toStr(data.getTranDate()));
-            rawMap.put("acctName", toStr(data.getAcctName()));
-            rawMap.put("tranAmt", data.getTranAmt());
-            rawMap.put("refNum", toStr(data.getRefNum()));
-            // Add more if needed...
+    @Column(name = "acct_ownership")
+    private String acctOwnership;
 
-            entity.setRawData(objectMapper.writeValueAsString(rawMap));
+    @Column(name = "acct_type")
+    private String acctType;
 
-            repository.save(entity);
-            log.info("Saved PlutusFinacleData to database with tranId: {}", entity.getTranId());
+    @Column(name = "avail_bal")
+    private BigDecimal availBal;
 
-        } catch (IllegalArgumentException e) {
-            log.warn("Validation failed for record: {}", e.getMessage());
-        } catch (JsonProcessingException e) {
-            log.error("Error serializing rawData to JSON: {}", e.getMessage(), e);
-        } catch (Exception e) {
-            log.error("Error saving record: {}", e.getMessage(), e);
-        }
-    }
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    private String toStr(CharSequence input) {
-        return input != null ? input.toString() : null;
-    }
+    @Column(name = "foracid")
+    private String foracid;
+
+    @Column(name = "linked_acc_no")
+    private String linkedAccNo;
+
+    @Column(name = "linked_branch_code")
+    private String linkedBranchCode;
+
+    @Column(name = "linked_crncy_code")
+    private String linkedCrncyCode;
+
+    @Column(name = "linked_name")
+    private String linkedName;
+
+    @Column(name = "msg_ts")
+    private LocalDateTime msgTs;
+
+    @Column(name = "narrative")
+    private String narrative;
+
+    @Column(name = "part_tran_type")
+    private String partTranType;
+
+    @Lob
+    @Column(name = "raw_json", columnDefinition = "TEXT")
+    private String rawJson;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
+
+    @Column(name = "ref_doc_num")
+    private String refDocNum;
+
+    @Column(name = "ref_num")
+    private String refNum;
+
+    @Column(name = "tran_amt")
+    private BigDecimal tranAmt;
+
+    @Column(name = "tran_date")
+    private LocalDate tranDate; // ✅ Converted to LocalDate
+
+    @Column(name = "tran_particular")
+    private String tranParticular;
+
+    @Column(name = "tran_time")
+    private LocalDateTime tranTime;
+
+    @Column(name = "tran_type")
+    private String tranType;
+
+    @Column(name = "txn_code")
+    private String txnCode;
+
+    @Column(name = "txn_sub_type")
+    private String txnSubType;
 }
