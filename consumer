@@ -1,2 +1,127 @@
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        entity.setTranDate(LocalDate.parse(data.getTRANDATE(),formatter));
+logging.level.root=info
+
+#dtd consumer config
+spring.kafka.consumer.bootstrap-servers=localhost:9092
+spring.kafka.consumer.group-id=plutus-dtd-consumer-group
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=com.kotak.orchestrator.orchestrator.serializer.PlutusDtdDeserializer
+spring.kafka.consumer.enable-auto-commit=true
+spring.kafka.consumer.fetch-min-size=1024
+spring.kafka.consumer.max-poll-records=500
+spring.kafka.consumer.metrics.enabled=true
+spring.kafka.consumer.topic=dtd-gam-business-event
+spring.kafka.consumer.security-protocol=AWS_MSK_IAM
+spring.kafka.consumer.processor-thread-pool-name=plutus_application
+spring.kafka.consumer.aws-role-arn=arn:aws:iam::381492193153:role/role-plutus-kafka-ingestor-cross-acc-uat
+spring.kafka.consumer.aws-sts-session-name=plutus-kafka-dev-session
+spring.kafka.consumer.aws-sts-region=ap-south-1
+
+# Producer Configuration
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=com.kotak.orchestrator.orchestrator.serializer.PlutusFinacleSerializer
+spring.kafka.producer.topic=dtd-business-event
+
+# PostgreSQL Database Configuration
+spring.datasource.url=jdbc:postgresql://plutus-rds-aurora-postgres-dev.cluster-cnmg44oeipzz.ap-south-1.rds.amazonaws.com:5433/plutusdb_dev
+spring.datasource.username=plutus_app_user_dev
+spring.datasource.password=Plutus@123
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.default_schema=plutus_ecollection
+spring.sql.init.schema-locations=classpath:schema.sql
+
+#
+## H2 Database Configuration
+#spring.datasource.url=jdbc:h2:mem:testdb
+#spring.datasource.driverClassName=org.h2.Driver
+#spring.datasource.username=sa
+#spring.datasource.password=
+#spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+#spring.h2.console.enabled=true
+#spring.h2.console.path=/h2-console
+#spring.kafka.consumer.in-memory-partitions=10
+#
+## Enable IAM-based authentication
+#spring.kafka.consumer.security-protocol=AWS_MSK_IAM
+#spring.kafka.properties.sasl.jaas.config=software.amazon.msk.auth.iam.IAMLoginModule required;
+#spring.kafka.properties.sasl.client.callback.handler.class=software.amazon.msk.auth.iam.IAMClientCallbackHandler
+#spring.kafka.consumer.aws-role-arn=arn:aws:iam::381492193153:role/role-plutus-kafka-ingestor-cross-acc-uat
+#spring.kafka.consumer.aws-sts-session-name=plutus-kafka-dev-session
+#spring.kafka.consumer.aws-sts-region=ap-south-1
+
+## Kafka Configuration
+#spring.kafka.consumer.bootstrap-servers=b-1.uatrosmsk.x7g3kf.c4.kafka.ap-south-1.amazonaws.com:9098,b-2.uatrosmsk.x7g3kf.c4.kafka.ap-south-1.amazonaws.com:9098
+#
+
+
+# Consumer Configuration
+#spring.kafka.consumer.group-id=plutus-finacle-data-group
+#spring.kafka.consumer.auto-offset-reset=earliest
+#spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+#spring.kafka.consumer.value-deserializer=com.kotak.orchestrator.orchestrator.serializer.PlutusFinacleDeserializer
+#spring.kafka.consumer.enable-auto-commit=true
+#spring.kafka.consumer.fetch-min-size=1024
+#spring.kafka.consumer.max-poll-records=500
+#spring.kafka.consumer.metrics.enabled=true
+#spring.kafka.consumer.topic=dtd-business-event
+#spring.kafka.consumer.in-memory-partitions=10
+
+
+
+package com.kotak.orchestrator.orchestrator.producer;
+
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+public class PlutusFinacleDataProducer extends GenericProducer<BusinessEvent> {
+
+    @Autowired
+    private KafkaTemplate<String, BusinessEvent> kafkaTemplate;
+
+    @Value("${spring.kafka.producer.topic}")
+    private String topicName;
+
+    public void send(BusinessEvent data) {
+        System.out.println("data is getting produced ");
+        kafkaTemplate.send(topicName, data);
+    }
+}
+
+
+package com.kotak.orchestrator.orchestrator.controller;
+
+
+import com.kotak.orchestrator.orchestrator.producer.PlutusFinacleDataProducer;
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/api/finacle")
+public class PlutusFinacleDataController {
+
+    @Autowired
+    private PlutusFinacleDataProducer producer;
+
+    @PostMapping("/data")
+    public String sendData(@RequestBody BusinessEvent data) {
+        producer.send(data);
+        return "PlutusFinacleData sent successfully!";
+    }
+}
+
