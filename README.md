@@ -384,7 +384,69 @@ public class PlutusFinacleDataEntity {
 
 
 
-   private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
+  
+package com.kotak.orchestrator.orchestrator.consumer;
+
+import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
+import com.kotak.orchestrator.orchestrator.service.ClientConfigCacheService;
+import com.kotak.orchestrator.orchestrator.utils.CbsUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import reactor.kafka.receiver.ReceiverRecord;
+
+import java.time.LocalDateTime;
+
+/**
+ * Kafka consumer for DTD/GAM business events from Finacle.
+ * Filters events based on FORACID presence in the client config cache.
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
+
+    private final PlutusFinacleDataRepository repository;
+    private final ClientConfigCacheService clientConfigCacheService;
+
+    @Override
+    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
+        BusinessEvent data = receiverRecord.value().getEvent();
+
+        if (data == null) {
+            log.warn("Received null BusinessEvent.");
+            return;
+        }
+
+       /* String foracid = CbsUtils.byteBufferToStr(data.getFORACID());
+
+        // Filter based on cache
+        if (!clientConfigCacheService.isMasterAccount(foracid)) {
+            log.info("FORACID {} not found in client config, skipping record.", foracid);
+            receiverRecord.receiverOffset().acknowledge();
+            return;
+        }*/
+
+        try {
+            PlutusFinacleDataEntity entity = mapToEntity(data);
+            repository.save(entity);
+
+            log.info("Saved DTD Event with TRAN_ID: {}", CbsUtils.byteBufferToStr(data.getTRANID()));
+            receiverRecord.receiverOffset().acknowledge();
+        } catch (Exception e) {
+            log.error("Error while saving DTD Event: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String partitionKey(DtdGamBusinessEvent data) {
+        return CbsUtils.byteBufferToStr(data.getEvent() != null ? data.getEvent().getTRANID() : null);
+    }
+
+    private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
         PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
 
         entity.setForacid(CbsUtils.byteBufferToStr(data.getFORACID()));
@@ -412,3 +474,4 @@ public class PlutusFinacleDataEntity {
 
         return entity;
     }
+}
