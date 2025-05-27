@@ -1,123 +1,83 @@
-2025-04-29T16:54:42.923Z DEBUG 1 --- [| adminclient-1] o.a.k.clients.admin.KafkaAdminClient     : [AdminClient clientId=adminclient-1] Timed out 1 call(s) with assigned nodes.
-2025-04-29T16:54:42.924Z  INFO 1 --- [| adminclient-1] o.a.k.clients.admin.KafkaAdminClient     : [AdminClient clientId=adminclient-1] Timed out 2 remaining operation(s) during close.
-2025-04-29T16:54:42.928Z  INFO 1 --- [| adminclient-1] o.apache.kafka.common.metrics.Metrics    : Metrics scheduler closed
-2025-04-29T16:54:42.928Z  INFO 1 --- [| adminclient-1] o.apache.kafka.common.metrics.Metrics    : Closing reporter org.apache.kafka.common.metrics.JmxReporter
-2025-04-29T16:54:42.928Z  INFO 1 --- [| adminclient-1] o.apache.kafka.common.metrics.Metrics    : Metrics reporters closed
-2025-04-29T16:54:42.928Z DEBUG 1 --- [| adminclient-1] o.a.k.clients.admin.KafkaAdminClient     : [AdminClient clientId=adminclient-1] Exiting AdminClientRunnable thread.
-2025-04-29T16:54:43.128Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8181 (http) with context path ''
-2025-04-29T16:54:43.151Z  INFO 1 --- [           main] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values:
-        allow.auto.create.topics = true
-        auto.commit.interval.ms = 5000
-        auto.include.jmx.reporter = true
-        auto.offset.reset = earliest
-        bootstrap.servers = [b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098, b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098]
-        check.crcs = true
-        client.dns.lookup = use_all_dns_ips
-        client.id = consumer-plutus-finacle-group-1
-        client.rack =
-        connections.max.idle.ms = 540000
-        default.api.timeout.ms = 60000
-        enable.auto.commit = true
-        exclude.internal.topics = true
-        fetch.max.bytes = 52428800
-        fetch.max.wait.ms = 500
-        fetch.min.bytes = 1024
-        group.id = plutus-finacle-group
-        group.instance.id = null
-        heartbeat.interval.ms = 3000
-        interceptor.classes = []
-        internal.leave.group.on.close = true
-        internal.throw.on.fetch.stable.offset.unsupported = false
-        isolation.level = read_uncommitted
-        key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
-        max.partition.fetch.bytes = 1048576
-        max.poll.interval.ms = 300000
-        max.poll.records = 500
-        metadata.max.age.ms = 300000
-        metric.reporters = []
-        metrics.num.samples = 2
-        metrics.recording.level = INFO
-        metrics.sample.window.ms = 30000
-        partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
-        receive.buffer.bytes = 65536
-        reconnect.backoff.max.ms = 1000
-        reconnect.backoff.ms = 50
-        request.timeout.ms = 30000
-        retry.backoff.ms = 100
-        sasl.client.callback.handler.class = null
-        sasl.jaas.config = null
-        sasl.kerberos.kinit.cmd = /usr/bin/kinit
-        sasl.kerberos.min.time.before.relogin = 60000
-        sasl.kerberos.service.name = null
-        sasl.kerberos.ticket.renew.jitter = 0.05
-        sasl.kerberos.ticket.renew.window.factor = 0.8
-        sasl.login.callback.handler.class = null
-        sasl.login.class = null
-        sasl.login.connect.timeout.ms = null
-        sasl.login.read.timeout.ms = null
-        sasl.login.refresh.buffer.seconds = 300
-        sasl.login.refresh.min.period.seconds = 60
-        sasl.login.refresh.window.factor = 0.8
-        sasl.login.refresh.window.jitter = 0.05
-        sasl.login.retry.backoff.max.ms = 10000
-        sasl.login.retry.backoff.ms = 100
-        sasl.mechanism = GSSAPI
-        sasl.oauthbearer.clock.skew.seconds = 30
-        sasl.oauthbearer.expected.audience = null
-        sasl.oauthbearer.expected.issuer = null
-        sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
-        sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
-        sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
-        sasl.oauthbearer.jwks.endpoint.url = null
-        sasl.oauthbearer.scope.claim.name = scope
-        sasl.oauthbearer.sub.claim.name = sub
-        sasl.oauthbearer.token.endpoint.url = null
-        security.protocol = PLAINTEXT
-        security.providers = null
-        send.buffer.bytes = 131072
-        session.timeout.ms = 45000
-        socket.connection.setup.timeout.max.ms = 30000
-        socket.connection.setup.timeout.ms = 10000
-        ssl.cipher.suites = null
-        ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
-        ssl.endpoint.identification.algorithm = https
-        ssl.engine.factory.class = null
-        ssl.key.password = null
-        ssl.keymanager.algorithm = SunX509
-        ssl.keystore.certificate.chain = null
-        ssl.keystore.key = null
-        ssl.keystore.location = null
-        ssl.keystore.password = null
-        ssl.keystore.type = JKS
-        ssl.protocol = TLSv1.3
-        ssl.provider = null
-        ssl.secure.random.implementation = null
-        ssl.trustmanager.algorithm = PKIX
-        ssl.truststore.certificates = null
-        ssl.truststore.location = null
-        ssl.truststore.password = null
-        ssl.truststore.type = JKS
-        value.deserializer = class com.kotak.orchestrator.orchestrator.serializer.PlutusFinacleDeserializer
+package com.kotak.orchestrator.orchestrator.entity;
 
-2025-04-29T16:54:43.207Z  INFO 1 --- [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.2
-2025-04-29T16:54:43.208Z  INFO 1 --- [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: c4deed513057c94e
-2025-04-29T16:54:43.208Z  INFO 1 --- [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1745945683207
-2025-04-29T16:54:43.221Z  INFO 1 --- [           main] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Subscribed to topic(s): dtd-business-event
-2025-04-29T16:54:43.253Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Sending FindCoordinator request to broker b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -2 rack: null)
-2025-04-29T16:54:43.255Z  INFO 1 --- [           main] c.k.o.o.OrchestratorServiceApplication   : Started OrchestratorServiceApplication in 52.145 seconds (process running for 53.06)
-2025-04-29T16:54:43.424Z DEBUG 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.ClientUtils     : Resolved host b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com as 10.65.252.35
-2025-04-29T16:54:43.424Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.clients.ClusterConnectionStates    : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Resolved host b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com to addresses [b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com/10.65.252.35]
-2025-04-29T16:54:43.424Z DEBUG 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Initiating connection to node b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -2 rack: null) using address b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com/10.65.252.35
-2025-04-29T16:54:51.817Z  INFO 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Disconnecting from node -2 due to socket connection setup timeout. The timeout value is 8520 ms.
-2025-04-29T16:54:51.818Z  WARN 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Bootstrap broker b-1.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -2 rack: null) disconnected
-2025-04-29T16:54:51.820Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.c.c.i.ConsumerNetworkClient        : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Cancelled request with header RequestHeader(apiKey=FIND_COORDINATOR, apiVersion=4, clientId=consumer-plutus-finacle-group-1, correlationId=0, headerVersion=2) due to node -2 being disconnected
-2025-04-29T16:54:51.820Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] FindCoordinator request failed due to org.apache.kafka.common.errors.DisconnectException
-2025-04-29T16:54:51.820Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Coordinator discovery failed, refreshing metadata
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-org.apache.kafka.common.errors.DisconnectException: null
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-2025-04-29T16:54:51.917Z DEBUG 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Initialize connection to node b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -1 rack: null) for sending metadata request
-2025-04-29T16:54:51.917Z DEBUG 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.ClientUtils     : Resolved host b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com as 10.65.252.234
-2025-04-29T16:54:51.918Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.clients.ClusterConnectionStates    : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Resolved host b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com to addresses [b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com/10.65.252.234]
-2025-04-29T16:54:51.918Z DEBUG 1 --- [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Initiating connection to node b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -1 rack: null) using address b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com/10.65.252.234
-2025-04-29T16:54:53.257Z DEBUG 1 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-plutus-finacle-group-1, groupId=plutus-finacle-group] Sending FindCoordinator request to broker b-2.mskplutusuat01.y79307.c2.kafka.ap-south-1.amazonaws.com:9098 (id: -1 rack: null)
+@Entity
+@Table(name = "plutus_finacle_transaction_details", schema = "plutus_ecollection")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class PlutusFinacleTransactionDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "acct_bal")
+    private BigDecimal acctBal;
+
+    @Column(name = "acct_cls_flg")
+    private String acctClsFlg;
+
+    @Column(name = "acct_crncy_code")
+    private String acctCrncyCode;
+
+    @Column(name = "acct_name")
+    private String acctName;
+
+    @Column(name = "acct_opn_date")
+    private LocalDate acctOpnDate;  // Proper mapping for PostgreSQL DATE
+
+    @Column(name = "acct_ownership")
+    private String acctOwnership;
+
+    @Column(name = "acct_type")
+    private String acctType;
+
+    @Column(name = "avail_bal")
+    private BigDecimal availBal;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "foracid")
+    private String foracid;
+
+    @Column(name = "linked_acc_no")
+    private String linkedAccNo;
+
+    @Column(name = "linked_branch_code")
+    private String linkedBranchCode;
+
+    @Column(name = "linked_crncy_code")
+    private String linkedCrncyCode;
+
+    @Column(name = "linked_name")
+    private String linkedName;
+
+    @Column(name = "msg_ts")
+    private String msgTs;
+
+    @Column(name = "narrative")
+    private String narrative;
+
+    @Column(name = "part_tran_type")
+    private String partTranType;
+
+    @Lob
+    @Column(name = "raw_json")
+    private String rawJson;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
+
+    @Column(name = "ref_doc_num")
+    private String refDo
