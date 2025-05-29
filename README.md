@@ -1,111 +1,35 @@
-2025-05-27T11:50:06.458Z  INFO 1 --- [s_application-4] c.k.o.o.c.GenericReactiveConsumer        : Processing record: ConsumerRecord(topic = dtd-gam-business-event, partition = 1, leaderEpoch = null, offset = 1824, CreateTime = 1748333783539, serialized key size = 0, serialized value size = 776, headers = RecordHeaders(headers = [], isReadOnly = false), key = , value = {"source_scn": "8116548013361", "pos": "00000003470016560510", "table_op_ts": "2025-05-23 12:24:54.959651", "ros_op_ts": "2025-05-27 13:46:23", "Event": {"EFFECTIVE_BAL": 7.744072413673922E13, "FORACID": "08200050000449", "ACCT_CLS_FLG": null, "ACCT_CLS_DATE": null, "ACCT_CRNCY_CODE": null, "ACCT_NAME": "NAME OF 30328159", "ACCT_SHORT_NAME": null, "ACCT_OPN_DATE": null, "ACTIVE_STATUS": null, "ADHOC_LIM": null, "ALLOW_SWEEPS": null, "CIF_ID": "30328159", "CLEAN_ADHOC_LIM": null, "CLEAN_SINGLE_TRAN_LIM": null, "CLEAN_EMER_ADVN": null, "CLR_BAL_AMT": -2.252732962113564E13, "DACC_LIM": null, "DAFA_LIM": null, "DRWNG_POWER": null, "EMER_ADVN": null, "ENTITY_CRE_FLG": null, "FFD_CONTRIB_TO_ACCT": null, "ACCT_NUM": null, "FREZ_CODE": null, "FREZ_REASON_CODE": null, "FREZ_REASON_CODE_2": null, "FREZ_REASON_CODE_3": null, "FREZ_REASON_CODE_4": null, "FREZ_REASON_CODE_5": null, "FX_CLR_BAL_AMT": null, "FUTURE_OC_TOD_AMT": null, "LAST_MODIFIED_DATE": null, "LAST_TRAN_DATE_CR": null, "LAST_TRAN_DATE_DR": null, "LIEN_AMT": null, "MODE_OF_OPER_CODE": null, "NEXT_TRAN_SRL_NUM": null, "POOL_ID": null, "SANCT_LIM": null, "SCHM_TYPE": "SBA", "SCHM_CODE": "STEDG", "SCHM_SUB_TYPE": null, "SINGLE_TRAN_FLG": null, "SINGLE_TRAN_LIM": null, "SYSTEM_RESERVED_AMT": null, "SYSTEM_GEN_LIM": null, "SYS_BEHAVIOR_CODE": null, "UN_CLR_BAL_AMT": null, "USED_CLEAN_SINGLE_TRAN_LIM": null, "USED_OC_CLN_SINGLE_TRAN_LIM": null, "USED_SINGLE_TRAN_LIM": null, "USED_UN_CLR_OVER_DACC_AMT": null, "UTIL_FUTURE_BAL_AMT": null, "UTILISED_AMT": null, "LAST_BAL_UPDATED_DATE": 1747834460000, "TRAN_DATE": "2025-05-23 00:00:00", "TRAN_ID": "   M36890", "PART_TRAN_SRL_NUM": "   2", "DEL_FLG": "N", "TRAN_TYPE": "T", "TRAN_SUB_TYPE": "CI", "PART_TRAN_TYPE": "C", "GL_SUB_HEAD_CODE": "12005", "ACID": "KM4129922", "VALUE_DATE": "2025-05-23 00:00:00", "TRAN_AMT": 1.0, "TRAN_PARTICULAR": "IFT-RTN-AUTOREL-25052300MCM9-3-ACCOUNT DOES NOT E", "ENTRY_USER_ID": "FIVUSR", "PSTD_USER_ID": "FIVUSR", "VFD_USER_ID": "FIVUSR", "ENTRY_DATE": "2025-05-23 17:55:12", "PSTD_DATE": "2025-05-23 17:55:24", "VFD_DATE": "2025-05-23 17:55:24", "RPT_CODE": null, "REF_NUM": "FCM-250523014II70000", "INSTRMNT_TYPE": null, "INSTRMNT_DATE": null, "INSTRMNT_NUM": null, "INSTRMNT_ALPHA": null, "TRAN_RMKS": null, "PSTD_FLG": "Y", "PRNT_ADVC_IND": " ", "AMT_RESERVATION_IND": " ", "RESERVATION_AMT": 0.0, "RESTRICT_MODIFY_IND": " ", "LCHG_USER_ID": "FIVUSR", "LCHG_TIME": "2025-05-23 17:55:24", "RCRE_USER_ID": "FIVUSR", "RCRE_TIME": "2025-05-23 17:55:12", "CUST_ID": "30328159", "VOUCHER_PRINT_FLG": " ", "MODULE_ID": null, "BR_CODE": null, "FX_TRAN_AMT": 0.0, "RATE_CODE": null, "RATE": 1.0, "CRNCY_CODE": null, "NAVIGATION_FLG": " ", "TRAN_CRNCY_CODE": "INR", "REF_CRNCY_CODE": "INR", "REF_AMT": 1.0, "SOL_ID": "0820", "BANK_CODE": null, "TREA_REF_NUM": null, "TREA_RATE": 0.0, "TS_CNT": 1, "GST_UPD_FLG": "N", "ISO_FLG": "N", "EABFAB_UPD_FLG": "N", "LIFT_LIEN_FLG": "N", "PROXY_POST_IND": "B", "SI_SRL_NUM": null, "SI_ORG_EXEC_DATE": null, "PR_SRL_NUM": null, "SERIAL_NUM": null, "DEL_MEMO_PAD": "N", "UAD_MODULE_ID": null, "UAD_MODULE_KEY": null, "REVERSAL_DATE": null, "REVERSAL_VALUE_DATE": null, "PTTM_EVENT_TYPE": null, "PROXY_ACID": null, "TOD_ENTITY_TYPE": null, "TOD_ENTITY_ID": null, "DTH_INIT_SOL_ID": "0001", "REGULARIZATION_AMT": 0.0, "PRINCIPAL_PORTION_AMT": 0.0, "TF_ENTITY_SOL_ID": null, "TRAN_PARTICULAR_2": null, "TRAN_PARTICULAR_CODE": null, "TR_STATUS": " ", "SVS_TRAN_ID": null, "CRNCY_HOL_CHK_DONE_FLG": "N", "REFERRAL_ID": null, "PARTY_CODE": null, "GL_DATE": "2025-05-23 00:00:00", "BKDT_TRAN_FLG": " ", "BANK_ID": "01", "IMPL_CASH_PART_TRAN_FLG": " ", "PTRAN_CHRG_EXISTS_FLG": "N", "MUD_POOL_BAL_BUILD_FLG": "N", "GL_SEGMENT_STRING": null, "SYS_PART_TRAN_CODE": "PTRN00414", "USER_PART_TRAN_CODE": null, "TRAN_FREE_CODE1": null, "TRAN_FREE_CODE2": null, "PSTD_SRL_NUM": 0, "REVERSAL_STATUS": " ", "AVAILABLE_AMT": 0.0, "ACCT_BALANCE": -2.252732962113564E13}})
-MetricsName: {}, MetricsData:[ count: {}, total: {}, mean: {}, max: {}, percentile: {}]ConsumptionLag.dtd-gam-business-event2573.295646417E91.2823526914396888E71.2824053E7[(1.2644383719424E13 at 100.0%), (1.2644383719424E13 at 99.0%), (1.2644383719424E13 at 95.0%), (1.2644383719424E13 at 90.0%), (1.2644383719424E13 at 50.0%)]
-Hibernate: insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-2025-05-27T11:50:06.462Z  WARN 1 --- [s_application-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 42804
-2025-05-27T11:50:06.462Z ERROR 1 --- [s_application-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: column "acct_opn_date" is of type date but expression is of type character varying
-  Hint: You will need to rewrite or cast the expression.
-  Position: 418
-2025-05-27T11:50:06.463Z ERROR 1 --- [s_application-4] c.k.o.o.c.PlutusDtdBusinessEventConsumer : Error while saving DTD Event: could not execute statement [ERROR: column "acct_opn_date" is of type date but expression is of type character varying
-  Hint: You will need to rewrite or cast the expression.
-  Position: 418] [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
 
-org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [ERROR: column "acct_opn_date" is of type date but expression is of type character varying
-  Hint: You will need to rewrite or cast the expression.
-  Position: 418] [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-        at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:277) ~[spring-orm-6.1.6.jar!/:6.1.6]
-        at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241) ~[spring-orm-6.1.6.jar!/:6.1.6]
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550) ~[spring-orm-6.1.6.jar!/:6.1.6]
-        at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164) ~[spring-data-jpa-3.2.5.jar!/:3.2.5]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at jdk.proxy2/jdk.proxy2.$Proxy136.save(Unknown Source) ~[na:na]
-        at com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer.process(PlutusDtdBusinessEventConsumer.java:49) ~[!/:0.0.1]
-        at com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer.processRecord(GenericReactiveConsumer.java:126) ~[!/:0.0.1]
-        at reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber.onNext(FluxMapFuseable.java:113) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.runAsync(FluxPublishOn.java:446) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.run(FluxPublishOn.java:533) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at io.micrometer.core.instrument.AbstractTimer.record(AbstractTimer.java:247) ~[micrometer-core-1.12.5.jar!/:1.12.5]
-        at io.micrometer.core.instrument.Timer.lambda$wrap$0(Timer.java:193) ~[micrometer-core-1.12.5.jar!/:1.12.5]
-        at io.micrometer.core.instrument.LongTaskTimer.record(LongTaskTimer.java:184) ~[micrometer-core-1.12.5.jar!/:1.12.5]
-        at reactor.core.observability.micrometer.TimedScheduler$TimedRunnable.run(TimedScheduler.java:265) ~[reactor-core-micrometer-1.2.0.jar!/:1.2.0]
-        at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:84) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37) ~[reactor-core-3.6.5.jar!/:3.6.5]
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[na:na]
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
-        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
-Caused by: org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "acct_opn_date" is of type date but expression is of type character varying
-  Hint: You will need to rewrite or cast the expression.
-  Position: 418] [insert into plutus_ecollection.plutus_finacle_transaction_details (acct_bal,acct_cls_flg,acct_crncy_code,acct_name,acct_opn_date,acct_ownership,acct_type,avail_bal,created_at,foracid,linked_acc_no,linked_branch_code,linked_crncy_code,linked_name,msg_ts,narrative,part_tran_type,raw_json,received_at,ref_doc_num,ref_num,tran_amt,tran_date,tran_particular,tran_time,tran_type,txn_code,txn_sub_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-        at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-        at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319) ~[spring-orm-6.1.6.jar!/:6.1.6]
-        at jdk.proxy2/jdk.proxy2.$Proxy133.persist(Unknown Source) ~[na:na]
-        at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:618) ~[spring-data-jpa-3.2.5.jar!/:3.2.5]
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:168) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70) ~[spring-data-commons-3.2.5.jar!/:3.2.5]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.6.jar!/:6.1.6]
-        at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-6.1.6.jar!/:6.1.6]
-        ... 23 common frames omitted
-Caused by: org.postgresql.util.PSQLException: ERROR: column "acct_opn_date" is of type date but expression is of type character varying
-  Hint: You will need to rewrite or cast the expression.
-  Position: 418
-        at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152) ~[postgresql-42.6.2.jar!/:42.6.2]
-        at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61) ~[HikariCP-5.0.1.jar!/:na]
-        at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java) ~[HikariCP-5.0.1.jar!/:na]
-        at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
-        ... 69 common frames omitted
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 61 more
+Caused by: java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:260)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:121)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:140)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:268)
+	... 75 more
+
+[INFO] Running com.kotak.distributionmanager.datadistributionmanager.OdsVirtualApacDataCustomRepositoryImplTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.kotak.distributionmanager.datadistributionmanager.OdsVirtualApacDataCustomRepositoryImplTest
+[INFO] Running com.kotak.distributionmanager.datadistributionmanager.TransactionServiceImplTest
+2025-05-29T09:22:06.149Z  INFO 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : Handling CMS request for client: ClientA, requestId: 12345678
+2025-05-29T09:22:06.151Z  WARN 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : No configuration found for client: ClientA
+2025-05-29T09:22:06.151Z  WARN 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : No configuration  for client: ClientA
+2025-05-29T09:22:06.155Z  INFO 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : Handling CMS request for client: ClientB, requestId: 123
+2025-05-29T09:22:06.156Z  INFO 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : Returning response for requestId: 123, total records: 1
+2025-05-29T09:22:06.160Z  INFO 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : Handling CMS request for client: ClientC, requestId: 987654
+2025-05-29T09:22:06.160Z  INFO 2054 --- [           main] c.k.d.d.s.impl.TransactionServiceImpl    : Returning response for requestId: 987654, total records: 2
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.256 s -- in com.kotak.distributionmanager.datadistributionmanager.TransactionServiceImplTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   DatadistributionmanagerApplicationTests.contextLoads » IllegalState Failed to load ApplicationContext for [WebMergedContextConfiguration@7b57587e testClass = com.kotak.distributionmanager.datadistributionmanager.DatadistributionmanagerApplicationTests, locations = [], classes = [com.kotak.distributionmanager.datadistributionmanager.DataDistributionManagerApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@267dc982, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1c26273d, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@38b8b6c0, org.springframework.boot.test.web.reactor.netty.DisableReactorResourceFactoryGlobalResourcesContextCustomizerFactory$DisableReactorResourceFactoryGlobalResourcesContextCustomizerCustomizer@3240b2a4, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@7dbe2ebf, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@29a98d9f, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.test.context.SpringBootTestAnnotation@367808e5], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+[INFO] 
