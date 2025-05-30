@@ -1,80 +1,464 @@
-[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.095 s <<< FAILURE! -- in com.kotak.orchestrator.orchestrator.OrchestratorServiceApplicationTest
-[ERROR] com.kotak.orchestrator.orchestrator.OrchestratorServiceApplicationTest -- Time elapsed: 1.095 s <<< ERROR!
-java.lang.ExceptionInInitializerError
-	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
-	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1160)
-	at java.base/java.lang.reflect.Constructor.acquireConstructorAccessor(Constructor.java:549)
-	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
-	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
-	at java.base/java.util.Optional.orElseGet(Optional.java:364)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.testcontainers.containers.ContainerFetchException: Can't get Docker image: RemoteDockerImage(imageName=confluentinc/cp-kafka:confluentinc/cp-kafka:7.5.2, imagePullPolicy=DefaultPullPolicy(), imageNameSubstitutor=org.testcontainers.utility.ImageNameSubstitutor$LogWrappedImageNameSubstitutor@3451fc88)
-	at org.testcontainers.containers.GenericContainer.getDockerImageName(GenericContainer.java:1364)
-	at org.testcontainers.containers.GenericContainer.doStart(GenericContainer.java:359)
-	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:330)
-	at com.kotak.orchestrator.orchestrator.OrchestratorServiceApplicationTest.<clinit>(OrchestratorServiceApplicationTest.java:24)
-	... 7 more
-Caused by: com.github.dockerjava.api.exception.BadRequestException: Status 400: {"message":"invalid reference format"}
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	at org.testcontainers.shaded.com.github.dockerjava.core.DefaultInvocationBuilder.execute(DefaultInvocationBuilder.java:237)
-	at org.testcontainers.shaded.com.github.dockerjava.core.DefaultInvocationBuilder.get(DefaultInvocationBuilder.java:202)
-	at org.testcontainers.shaded.com.github.dockerjava.core.DefaultInvocationBuilder.get(DefaultInvocationBuilder.java:74)
-	at org.testcontainers.shaded.com.github.dockerjava.core.exec.InspectImageCmdExec.execute(InspectImageCmdExec.java:28)
-	at org.testcontainers.shaded.com.github.dockerjava.core.exec.InspectImageCmdExec.execute(InspectImageCmdExec.java:13)
-	at org.testcontainers.shaded.com.github.dockerjava.core.exec.AbstrSyncDockerCmdExec.exec(AbstrSyncDockerCmdExec.java:21)
-	at org.testcontainers.shaded.com.github.dockerjava.core.command.AbstrDockerCmd.exec(AbstrDockerCmd.java:33)
-	at org.testcontainers.shaded.com.github.dockerjava.core.command.InspectImageCmdImpl.exec(InspectImageCmdImpl.java:39)
-	at org.testcontainers.images.LocalImagesCache.refreshCache(LocalImagesCache.java:42)
-	at org.testcontainers.images.AbstractImagePullPolicy.shouldPull(AbstractImagePullPolicy.java:24)
-	at org.testcontainers.images.RemoteDockerImage.resolve(RemoteDockerImage.java:70)
-	at org.testcontainers.images.RemoteDockerImage.resolve(RemoteDockerImage.java:28)
-	at org.testcontainers.utility.LazyFuture.getResolvedValue(LazyFuture.java:20)
-	at org.testcontainers.utility.LazyFuture.get(LazyFuture.java:41)
-	at org.testcontainers.containers.GenericContainer.getDockerImageName(GenericContainer.java:1362)
-	... 10 more
+    <modelVersion>4.0.0</modelVersion>
 
-[INFO] Running com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest
-16:58:24.922 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest]: KafkaIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-16:58:24.992 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.kotak.orchestrator.orchestrator.OrchestratorServiceApplication for test class com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest
-16:58:25.055 [main] INFO tc.confluentinc/cp-kafka:7.5.2 -- Creating container for image: confluentinc/cp-kafka:7.5.2
-16:58:25.055 [main] WARN tc.confluentinc/cp-kafka:7.5.2 -- Reuse was requested but the environment does not support the reuse of containers
-To enable reuse of containers, you must set 'testcontainers.reuse.enable=true' in a file located at /Users/SnehalGamare/.testcontainers.properties
-16:58:25.102 [main] INFO tc.confluentinc/cp-kafka:7.5.2 -- Container confluentinc/cp-kafka:7.5.2 is starting: 7c19ce9f2f8360f062effcf4ff3f8de33d38fc65d178464cf74066255c74ac92
-[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.563 s <<< FAILURE! -- in com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest
-[ERROR] com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest -- Time elapsed: 0.563 s <<< ERROR!
-java.lang.NoClassDefFoundError: org/apache/commons/lang3/ArrayFill
-	at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.writeEOFRecord(TarArchiveOutputStream.java:677)
-	at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.finish(TarArchiveOutputStream.java:421)
-	at org.testcontainers.containers.ContainerState.copyFileToContainer(ContainerState.java:356)
-	at org.testcontainers.containers.KafkaContainer.containerIsStarting(KafkaContainer.java:199)
-	at org.testcontainers.containers.GenericContainer.containerIsStarting(GenericContainer.java:712)
-	at org.testcontainers.containers.GenericContainer.tryStart(GenericContainer.java:489)
-	at org.testcontainers.containers.GenericContainer.lambda$doStart$0(GenericContainer.java:354)
-	at org.rnorth.ducttape.unreliables.Unreliables.retryUntilSuccess(Unreliables.java:81)
-	at org.testcontainers.containers.GenericContainer.doStart(GenericContainer.java:344)
-	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:330)
-	at com.kotak.orchestrator.orchestrator.integration.config.KafkaIntegrationTest.setup(KafkaIntegrationTest.java:28)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	Suppressed: java.lang.NoClassDefFoundError: org/apache/commons/lang3/ArrayFill
-		at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.writeEOFRecord(TarArchiveOutputStream.java:677)
-		at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.finish(TarArchiveOutputStream.java:421)
-		at org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.close(TarArchiveOutputStream.java:303)
-		at org.testcontainers.containers.ContainerState.copyFileToContainer(ContainerState.java:363)
-		... 10 more
-	Caused by: java.lang.ClassNotFoundException: org.apache.commons.lang3.ArrayFill
-		... 14 more
-Caused by: java.lang.ClassNotFoundException: org.apache.commons.lang3.ArrayFill
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
-	... 13 more
+    <groupId>com.kotak.orchestrator</groupId>
+    <artifactId>orchestrator-service</artifactId>
+    <version>0.0.1</version>
+    <name>orchestrator-service</name>
+    <description>orchestrator-service for plutus</description>
 
-[INFO] Running com.kotak.orchestrator.orchestrator.consumer.ConsumerConfigurationTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in com.kotak.orchestrator.orchestrator.consumer.ConsumerConfigurationTest
-[INFO] 
-[INFO] Results:
-[INFO] 
-[ERROR] Errors: 
-[ERROR]   OrchestratorServiceApplicationTest » ExceptionInInitializer
-[ERROR]   KafkaIntegrationTest.setup:28 » NoClassDefFound org/apache/commons/lang3/ArrayFill
+    <parent>
+        <groupId>com.kmbl.buildertools</groupId>
+        <artifactId>spring-boot-starter-bom</artifactId>
+        <version>0.0.11</version>
+    </parent>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+
+    <properties>
+        <java.version>21</java.version>
+        <spring.version>6.2.1</spring.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <aws.sdk.version>2.22.9</aws.sdk.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <start-class>com.kotak.orchestrator.orchestrator.OrchestratorServiceApplication</start-class>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>DevOps-BuilderTools-Feed</id>
+            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>plutus-application</id>
+            <url>
+                https://pkgs.dev.azure.com/kmbl-devops/9eeae0ff-87c8-44c3-a547-9f23496d21ad/_packaging/plutus-application/maven/v1
+            </url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.30.23</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>3.6.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>3.37.0</version> <!-- Choose the higher version -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.13.1</version>
+        </dependency>
+
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor.kafka</groupId>
+            <artifactId>reactor-kafka</artifactId>
+            <version>1.3.23</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- AWS SDK & MSK Auth -->
+        <dependency>
+            <groupId>software.amazon.msk</groupId>
+            <artifactId>aws-msk-iam-auth</artifactId>
+            <version>2.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sdk-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
+
+        <!-- Redis -->
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+        </dependency>
+
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core-micrometer</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.13.0</version>
+        </dependency>
+
+        <!-- Avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.12.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core
+                    </groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Utility -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.10.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.13.11</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.8.2</version>
+                <executions>
+                    <execution>
+                        <id>schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>        <!-- Attach JaCoCo agent during test phase -->
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>        <!-- Generate the coverage report during the package phase -->
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>        <!-- Check coverage thresholds during the verify phase -->
+                    <execution>
+                        <id>check-coverage</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.8</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <haltOnFailure>false</haltOnFailure>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <cucumber.options>--plugin json:target/cucumber-report.json</cucumber.options>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>cucumber-report</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.masterthought</groupId>
+                        <artifactId>maven-cucumber-reporting</artifactId>
+                        <version>5.7.0</version>
+                        <executions>
+                            <execution>
+                                <id>generate-cucumber-html-report</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <projectName>orchestrator-service</projectName>
+                                    <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
+                                    <jsonFiles>
+                                        <param>${project.build.directory}/cucumber.json</param>
+                                    </jsonFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <distributionManagement>
+        <repository>
+            <id>DevOps-BuilderTools-Feed</id>
+            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </distributionManagement>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <groupId>org.jacoco</groupId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <version>${jacoco.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>
