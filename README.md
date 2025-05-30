@@ -1,91 +1,36 @@
-trigger:
-  branches:
-    include:
-      - main
-      - develop
-      - release/*
-      - hotfix/*
-      - feature/*
-    exclude:
-      - none
+[INFO] About to generate Cucumber report.
+May 30, 2025 12:39:18 PM net.masterthought.cucumber.ReportBuilder generateErrorPage
+INFO: Unexpected error
+net.masterthought.cucumber.ValidationException: None report file was added!
+        at net.masterthought.cucumber.ReportParser.parseJsonFiles(ReportParser.java:61)
+        at net.masterthought.cucumber.ReportBuilder.generateReports(ReportBuilder.java:97)
+        at net.masterthought.cucumber.CucumberReportGeneratorMojo.execute(CucumberReportGeneratorMojo.java:236)
+        at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:137)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:210)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:156)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:148)
+        at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:117)
+        at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:81)
+        at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:56)
+        at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:128)
+        at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:305)
+        at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:192)
+        at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:105)
+        at org.apache.maven.cli.MavenCli.execute(MavenCli.java:957)
+        at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:289)
+        at org.apache.maven.cli.MavenCli.main(MavenCli.java:193)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:282)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:225)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:406)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:347)
 
-variables:
-  - group: ECR_NonProd
-  - name: AWS-ACCESS-KEY-ID
-    value: $[variables.AWS_ACCESS_KEY_ID]
-  - name: AWS-SECRET-ACCESS-KEY
-    value: $[variables.AWS_SECRET_ACCESS_KEY]
-  - name: AWS-DEFAULT-REGION
-    value: $[variables.AWS_DEFAULT_REGION]
-  - name: AWS-ACCOUNT-ID
-    value: $[variables.AWS_ACCOUNT_ID]
-  - name: DOCKER_REPO_NAME
-    value: 'ecr-plutus-dev-nonprod-01'
-  - name: DOCKER_REPOSITORY
-    value: '$(AWS-ACCOUNT-ID).dkr.ecr.ap-south-1.amazonaws.com/$(DOCKER_REPO_NAME)'
-  - name: DOCKER_REPO_TAG
-    value: $(Build.BuildId)
-
-resources:
-  repositories:
-    - repository: templates
-      type: git
-      name: "Builder Tools/cicd-templates"
-      ref: refs/tags/v1.3.6
-
-stages:
-  - stage: Checkmarkx
-    displayName: Checkmarx Scan
-    pool:
-      name: private build
-    jobs:
-      - job:
-        displayName:
-        steps:
-          - task: DownloadSecureFile@1
-            inputs:
-              secureFile: 'CxSast_root.pem'
-          - task: checkmarx.cxsast.cx-scan-task.Application security testing@2024
-            displayName: 'Application security testing'
-            inputs:
-              projectName: '[APP-03146]Plutus - [orchestrator-service]'
-              syncMode: false
-              CheckmarxService: 'Checkmarx-connection'
-              fullTeamName: 'CxServer\APP-03146:Plutus'
-              sastCaChainFilePath: '$(Agent.TempDirectory)/CxSast_root.pem'
-              comment: 'APP-03146:Plutus:$(Build.Repository.Name):orchestrator-service:$(Build.BuildId)'
-
-  # Build stage
-  - template: templates/build-stage/build-java-maven.yaml@templates
-    parameters:
-      #settingsFile: settings.xml
-      jdkVersionOption: '1.21'
-      mavenGoals: clean package
-      dockerNetwork: host
-      filePathOfCodeCoverageHtml: 'target/site/jacoco/index.html'
-      dockerImageDetails:
-        - dockerFilePath: '$(system.defaultworkingdirectory)'
-          dockerRepoName: 'ecr-plutus-dev-nonprod-01'
-
-  # Code Quality stage
-  - template: templates/code-quality-stage/scan-java-code.yaml@templates
-    parameters:
-      sonarsources: .
-      manifestsFolder: '/kubernetes'
-      featureFilesPath: src/test/resources/feature.acceptance
-      CheckmarxServiceConnection: checkmarx-connection
-      prismaServiceConnection: default-prisma
-
-  # Test stage
-  - template: templates/test-stage/test-java.yaml@templates
-    parameters:
-      applicationPort: 9090
-      relativeUrlsToTest: '/certify'
-      manifestFiles: 'kubernetes/deployment-uat.yaml,kubernetes/service.yaml,kubernetes/ingress.yaml'
-
-  # Package stage
-  - template: templates/package-stage/package-java.yaml@templates
-    parameters:
-      dockerImageDetails:
-        - dockerFilePath: '$(system.defaultworkingdirectory)'
-          dockerRepoName: 'ecr-plutus-dev-nonprod-01'
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.570 s
+[INFO] Finished at: 2025-05-30T12:39:18+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal net.masterthought:maven-cucumber-reporting:5.7.0:generate (generate-cucumber-html-report) on project orchestrator-service: Error Found:: BUILD FAILED - Check Report For Details -> [Help 1]
+[ERROR] 
