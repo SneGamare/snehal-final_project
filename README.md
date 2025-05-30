@@ -1,40 +1,53 @@
-package com.kotak.orchestrator.orchestrator.integration.config;
+package com.kotak.orchestrator.orchestrator.integration;
 
 import com.kotak.orchestrator.orchestrator.integration.testutils.KafkaAdminUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.KafkaContainer;
-import org.testcontainers.containers.wait.strategy.DockerHealthcheckWaitStrategy;
 import org.testcontainers.utility.DockerImageName;
 
-@Configuration
-@Slf4j
-public class ContainerConfig {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Value("${spring.kafka.consumer.topic}")
-    private String gamTopic;
+@SpringBootTest
+public class KafkaIntegrationTest {
 
-    @Bean(destroyMethod = "stop")
-    public KafkaContainer kafkaContainer() {
-        var imageName = DockerImageName.parse("confluentinc/cp-kafka:7.5.2");
-        KafkaContainer kafka = new KafkaContainer(imageName)
-                .withReuse(true)
-                .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false")
-                .withEnv("TOPIC_AUTO_CREATE", "false");
+    // Define Kafka container as static for the entire test class lifecycle
+    private static final KafkaContainer kafkaContainer = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:7.5.2")
+    ).withReuse(true);
 
-        if (!kafka.isRunning()) {
-            kafka.start();
-        }
+    private static final String testTopic = "test-topic";
 
-        kafka.waitingFor(new DockerHealthcheckWaitStrategy());
-        log.info("Kafka container up.");
-
-        KafkaAdminUtils.createTopic(kafka.getBootstrapServers(), gamTopic);
-
-        log.info("[CONFIG] Kafka Bootstrap Servers: " + kafka.getBootstrapServers());
-        return kafka;
+    @BeforeAll
+    static void setup() {
+        kafkaContainer.start();
+        // Create your topic after container started
+        KafkaAdminUtils.createTopic(kafkaContainer.getBootstrapServers(), testTopic);
     }
+
+    @AfterAll
+    static void cleanup() {
+        kafkaContainer.stop();
+    }
+
+    // Inject Kafka bootstrap servers dynamically into Spring Environment
+    @DynamicPropertySource
+    static void kafkaProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
+        // Add your topic property if needed
+        registry.add("spring.kafka.consumer.topic", () -> testTopic);
+    }
+
+    @Test
+    public void contextLoads() {
+        assertThat(kafkaContainer.isRunning()).isTrue();
+        System.out.println("Kafka bootstrap servers: " + kafkaContainer.getBootstrapServers());
+    }
+
+    // Add more integration tests that produce/consume messages to/from Kafka here
+
 }
