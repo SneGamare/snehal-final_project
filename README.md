@@ -1,29 +1,32 @@
 package com.kotak.orchestrator.orchestrator.integration.testutils;
 
-
-import com.kotak.orchestrator.orchestrator.integration.config.ContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import static com.kotak.orchestrator.orchestrator.testUtils.RandUtils.randStr;
 
 @Slf4j
 public class KafkaTestBase {
 
+    public static KafkaContainer kafkaContainer;
     public static String bootstrapServers;
-    public static final ContainerConfig containerConfig = new ContainerConfig();
 
     public String topic;
     public String dlq_topic;
-
     public String groupId;
 
     @BeforeAll
     public static void setUpBeforeClass() {
-        var container = containerConfig.kafkaContainer();
-        bootstrapServers = container.getBootstrapServers();
+        kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.2"))
+                .withReuse(true);
+        kafkaContainer.start();
+
+        bootstrapServers = kafkaContainer.getBootstrapServers();
+        log.info("Kafka container started at: {}", bootstrapServers);
     }
 
     @BeforeEach
@@ -41,6 +44,7 @@ public class KafkaTestBase {
         KafkaAdminUtils.deleteTopics(bootstrapServers, this.topic);
     }
 
+    // Optional helper sleep method for async test waits
     public static void peacefulSleep(long millis) {
         try {
             Thread.sleep(millis);
