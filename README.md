@@ -1,464 +1,79 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.kotak.orchestrator</groupId>
-    <artifactId>orchestrator-service</artifactId>
-    <version>0.0.1</version>
-    <name>orchestrator-service</name>
-    <description>orchestrator-service for plutus</description>
-
-    <parent>
-        <groupId>com.kmbl.buildertools</groupId>
-        <artifactId>spring-boot-starter-bom</artifactId>
-        <version>0.0.11</version>
-    </parent>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
-
-    <properties>
-        <java.version>21</java.version>
-        <spring.version>6.2.1</spring.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
-        <aws.sdk.version>2.22.9</aws.sdk.version>
-        <jacoco.version>0.8.11</jacoco.version>
-        <start-class>com.kotak.orchestrator.orchestrator.OrchestratorServiceApplication</start-class>
-        <main.basedir>${project.basedir}</main.basedir>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>DevOps-BuilderTools-Feed</id>
-            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>plutus-application</id>
-            <url>
-                https://pkgs.dev.azure.com/kmbl-devops/9eeae0ff-87c8-44c3-a547-9f23496d21ad/_packaging/plutus-application/maven/v1
-            </url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>2.30.23</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>3.6.5</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.checkerframework</groupId>
-                <artifactId>checker-qual</artifactId>
-                <version>3.37.0</version> <!-- Choose the higher version -->
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.13.1</version>
-        </dependency>
-
-        <!-- Spring Boot -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4-runtime</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.3</version>
-        </dependency>
-
-        <!-- Kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.kafka</groupId>
-            <artifactId>reactor-kafka</artifactId>
-            <version>1.3.23</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.kafka</groupId>
-                    <artifactId>kafka-clients</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- AWS SDK & MSK Auth -->
-        <dependency>
-            <groupId>software.amazon.msk</groupId>
-            <artifactId>aws-msk-iam-auth</artifactId>
-            <version>2.3.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>auth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sts</artifactId>
-        </dependency>
-
-        <!-- Redis -->
-        <dependency>
-            <groupId>io.lettuce</groupId>
-            <artifactId>lettuce-core</artifactId>
-        </dependency>
-
-        <!-- Monitoring -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-core</artifactId>
-            <version>1.12.5</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core-micrometer</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.13.0</version>
-        </dependency>
-
-        <!-- Avro -->
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.12.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core
-                    </groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Utility -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>2.10.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.16.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.13.11</version>
-        </dependency>
-
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- H2 Database -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
-            <version>1.19.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.30</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>1.8.2</version>
-                <executions>
-                    <execution>
-                        <id>schemas</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>schema</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>        <!-- Attach JaCoCo agent during test phase -->
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>        <!-- Generate the coverage report during the package phase -->
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>        <!-- Check coverage thresholds during the verify phase -->
-                    <execution>
-                        <id>check-coverage</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.8</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                            <haltOnFailure>false</haltOnFailure>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <cucumber.options>--plugin json:target/cucumber-report.json</cucumber.options>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
-
-        </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <id>cucumber-report</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>net.masterthought</groupId>
-                        <artifactId>maven-cucumber-reporting</artifactId>
-                        <version>5.7.0</version>
-                        <executions>
-                            <execution>
-                                <id>generate-cucumber-html-report</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                                <configuration>
-                                    <projectName>orchestrator-service</projectName>
-                                    <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
-                                    <jsonFiles>
-                                        <param>${project.build.directory}/cucumber.json</param>
-                                    </jsonFiles>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    <distributionManagement>
-        <repository>
-            <id>DevOps-BuilderTools-Feed</id>
-            <url>https://pkgs.dev.azure.com/kmbl-devops/_packaging/DevOps-BuilderTools-Feed/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </distributionManagement>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <groupId>org.jacoco</groupId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <version>${jacoco.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
-</project>
+[ERROR] [ERROR] Some problems were encountered while processing the POMs:
+[ERROR] Malformed POM /Users/SnehalGamare/IdeaProjects/orchestrator-service/pom.xml: Unrecognised tag: 'version' (position: START_TAG seen ...</artifactId>\n                    <version>... @120:30)  @ /Users/SnehalGamare/IdeaProjects/orchestrator-service/pom.xml, line 120, column 30
+ @ 
+[ERROR] The build could not read 1 project -> [Help 1]
+[ERROR]   
+[ERROR]   The project com.kotak.orchestrator:orchestrator-service:0.0.1 (/Users/SnehalGamare/IdeaProjects/orchestrator-service/pom.xml) has 1 error
+[ERROR]     Malformed POM /Users/SnehalGamare/IdeaProjects/orchestrator-service/pom.xml: Unrecognised tag: 'version' (position: START_TAG seen ...</artifactId>\n                    <version>... @120:30)  @ /Users/SnehalGamare/IdeaProjects/orchestrator-service/pom.xml, line 120, column 30 -> [Help 2]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
+[ERROR] [Help 2] http://cwiki.apache.org/confluence/display/MAVEN/ModelParseException
+SnehalGamare@KBMK24-00000677 orchestrator-service % mvn dependency:tree -Dverbose
+[INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/3.4.0/build-helper-maven-plugin-3.4.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.codehaus.mojo:build-helper-maven-plugin:3.4.0: Plugin org.codehaus.mojo:build-helper-maven-plugin:3.4.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.codehaus.mojo:build-helper-maven-plugin:jar:3.4.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/flywaydb/flyway-maven-plugin/9.22.3/flyway-maven-plugin-9.22.3.pom
+[WARNING] Failed to retrieve plugin descriptor for org.flywaydb:flyway-maven-plugin:9.22.3: Plugin org.flywaydb:flyway-maven-plugin:9.22.3 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.flywaydb:flyway-maven-plugin:jar:9.22.3
+Downloading from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/git-commit-id-maven-plugin/6.0.0/git-commit-id-maven-plugin-6.0.0.pom
+[WARNING] Failed to retrieve plugin descriptor for io.github.git-commit-id:git-commit-id-maven-plugin:6.0.0: Plugin io.github.git-commit-id:git-commit-id-maven-plugin:6.0.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for io.github.git-commit-id:git-commit-id-maven-plugin:jar:6.0.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/jooq/jooq-codegen-maven/3.18.14/jooq-codegen-maven-3.18.14.pom
+[WARNING] Failed to retrieve plugin descriptor for org.jooq:jooq-codegen-maven:3.18.14: Plugin org.jooq:jooq-codegen-maven:3.18.14 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.jooq:jooq-codegen-maven:jar:3.18.14
+Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-maven-plugin/1.9.23/kotlin-maven-plugin-1.9.23.pom
+[WARNING] Failed to retrieve plugin descriptor for org.jetbrains.kotlin:kotlin-maven-plugin:1.9.23: Plugin org.jetbrains.kotlin:kotlin-maven-plugin:1.9.23 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.jetbrains.kotlin:kotlin-maven-plugin:jar:1.9.23
+Downloading from central: https://repo.maven.apache.org/maven2/org/liquibase/liquibase-maven-plugin/4.24.0/liquibase-maven-plugin-4.24.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.liquibase:liquibase-maven-plugin:4.24.0: Plugin org.liquibase:liquibase-maven-plugin:4.24.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.liquibase:liquibase-maven-plugin:jar:4.24.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-antrun-plugin/3.1.0/maven-antrun-plugin-3.1.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-antrun-plugin:3.1.0: Plugin org.apache.maven.plugins:maven-antrun-plugin:3.1.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-antrun-plugin:jar:3.1.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/3.6.0/maven-assembly-plugin-3.6.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-assembly-plugin:3.6.0: Plugin org.apache.maven.plugins:maven-assembly-plugin:3.6.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-assembly-plugin:jar:3.6.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin/3.6.1/maven-dependency-plugin-3.6.1.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-dependency-plugin:3.6.1: Plugin org.apache.maven.plugins:maven-dependency-plugin:3.6.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-dependency-plugin:jar:3.6.1
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-release-plugin/2.5.3/maven-release-plugin-2.5.3.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-release-plugin:2.5.3: Plugin org.apache.maven.plugins:maven-release-plugin:2.5.3 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-release-plugin:jar:2.5.3
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-failsafe-plugin/3.1.2/maven-failsafe-plugin-3.1.2.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-failsafe-plugin:3.1.2: Plugin org.apache.maven.plugins:maven-failsafe-plugin:3.1.2 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-failsafe-plugin:jar:3.1.2
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/3.4.0/maven-help-plugin-3.4.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-help-plugin:3.4.0: Plugin org.apache.maven.plugins:maven-help-plugin:3.4.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-help-plugin:jar:3.4.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-invoker-plugin/3.6.1/maven-invoker-plugin-3.6.1.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-invoker-plugin:3.6.1: Plugin org.apache.maven.plugins:maven-invoker-plugin:3.6.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-invoker-plugin:jar:3.6.1
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin/3.6.3/maven-javadoc-plugin-3.6.3.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-javadoc-plugin:3.6.3: Plugin org.apache.maven.plugins:maven-javadoc-plugin:3.6.3 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-javadoc-plugin:jar:3.6.3
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-shade-plugin/3.5.2/maven-shade-plugin-3.5.2.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-shade-plugin:3.5.2: Plugin org.apache.maven.plugins:maven-shade-plugin:3.5.2 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-shade-plugin:jar:3.5.2
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin/3.3.1/maven-source-plugin-3.3.1.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-source-plugin:3.3.1: Plugin org.apache.maven.plugins:maven-source-plugin:3.3.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-source-plugin:jar:3.3.1
+Downloading from central: https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs-maven-plugin/4.7.2.1/spotbugs-maven-plugin-4.7.2.1.pom
+[WARNING] Failed to retrieve plugin descriptor for com.github.spotbugs:spotbugs-maven-plugin:4.7.2.1: Plugin com.github.spotbugs:spotbugs-maven-plugin:4.7.2.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for com.github.spotbugs:spotbugs-maven-plugin:jar:4.7.2.1
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-war-plugin/3.4.0/maven-war-plugin-3.4.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-war-plugin:3.4.0: Plugin org.apache.maven.plugins:maven-war-plugin:3.4.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-war-plugin:jar:3.4.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/native-maven-plugin/0.9.28/native-maven-plugin-0.9.28.pom
+[WARNING] Failed to retrieve plugin descriptor for org.graalvm.buildtools:native-maven-plugin:0.9.28: Plugin org.graalvm.buildtools:native-maven-plugin:0.9.28 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.graalvm.buildtools:native-maven-plugin:jar:0.9.28
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/2.16.2/versions-maven-plugin-2.16.2.pom
+[WARNING] Failed to retrieve plugin descriptor for org.codehaus.mojo:versions-maven-plugin:2.16.2: Plugin org.codehaus.mojo:versions-maven-plugin:2.16.2 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.codehaus.mojo:versions-maven-plugin:jar:2.16.2
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/xml-maven-plugin/1.1.0/xml-maven-plugin-1.1.0.pom
+[WARNING] Failed to retrieve plugin descriptor for org.codehaus.mojo:xml-maven-plugin:1.1.0: Plugin org.codehaus.mojo:xml-maven-plugin:1.1.0 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.codehaus.mojo:xml-maven-plugin:jar:1.1.0
+Downloading from central: https://repo.maven.apache.org/maven2/org/owasp/dependency-check-maven/8.3.1/dependency-check-maven-8.3.1.pom
+[WARNING] Failed to retrieve plugin descriptor for org.owasp:dependency-check-maven:8.3.1: Plugin org.owasp:dependency-check-maven:8.3.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.owasp:dependency-check-maven:jar:8.3.1
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[WARNING] Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): transfer failed for https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[WARNING] Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): transfer failed for https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[WARNING] org.apache.maven.plugins/maven-metadata.xmlfailed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of central has elapsed or updates are forced. Original error: Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): transfer failed for https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[WARNING] org.codehaus.mojo/maven-metadata.xmlfailed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of central has elapsed or updates are forced. Original error: Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): transfer failed for https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.569 s
+[INFO] Finished at: 2025-05-30T17:04:16+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] No plugin found for prefix 'dependency' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (/Users/SnehalGamare/.m2/repository), central (https://repo.maven.apache.org/maven2)] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/NoPluginFoundForPrefixExcept
