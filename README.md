@@ -1,130 +1,142 @@
 package com.kotak.orchestrator.orchestrator.service;
 
-import com.kotak.orchestrator.orchestrator.cache.CaffeineCache;
+import com.kotak.orchestrator.orchestrator.entity.PlutusClientConfiguration;
 import com.kotak.orchestrator.orchestrator.repository.PlutusClientConfigurationRepository;
-import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+class ClientConfigCacheServiceTest {
 
-/**
- * Service to manage and validate master accounts using an in-memory cache.
- */
-@Slf4j
-@Service
-public class ClientConfigCacheService extends CaffeineCache<String, Boolean> {
+    @Mock
+    private PlutusClientConfigurationRepository repository;
 
-    private final PlutusClientConfigurationRepository repository;
+    @InjectMocks
+    private ClientConfigCacheService cacheService;
 
-    //A thread-safe set holding null active master accounts
-    private final Set<String> masterAccountSet = ConcurrentHashMap.newKeySet();
-
-    public ClientConfigCacheService(PlutusClientConfigurationRepository repository) {
-        super(60); // Cache refresh interval: 60 minutes
-        this.repository = repository;
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @PostConstruct
-    public void init() {
-        log.info("Initializing ClientConfigCacheService...");
-        refreshCache();
+    @Test
+    void testRefreshCacheLoadsActiveMasterAccounts() {
+        PlutusClientConfiguration config1 = new PlutusClientConfiguration();
+        config1.setMasterAccount("ACC123");
+        PlutusClientConfiguration config2 = new PlutusClientConfiguration();
+        config2.setMasterAccount("ACC456");
+
+        when(repository.findAllActive()).thenReturn(List.of(config1, config2));
+
+        cacheService.refreshCache();
+
+        assertTrue(cacheService.isMasterAccount("ACC123"));
+        assertTrue(cacheService.isMasterAccount("ACC456"));
+        assertFalse(cacheService.isMasterAccount("UNKNOWN"));
     }
 
-    /**
-     * periodically reloads the list of active master account from the DB
-     */
-
-    @Override
-    public void refreshCache() {
-        try {
-            masterAccountSet.clear();
-            repository.findAllActive().forEach(config -> {
-                if (config.getMasterAccount() != null) {
-                    masterAccountSet.add(config.getMasterAccount());
-                }
-            });
-            log.info("Client configuration cache refreshed with {} master accounts", masterAccountSet.size());
-        } catch (Exception e) {
-            log.error("Error refreshing client config cache", e);
-        }
+    @Test
+    void testIsMasterAccountLogsCorrectly() {
+        // No data loaded, so should return false
+        boolean result = cacheService.isMasterAccount("ACC999");
+        assertFalse(result);
     }
 
-    /**
-     * Checks whether the given FORACID exists in the configured client master accounts.
-     */
-    public boolean isMasterAccount(String foracid) {
-        boolean result = masterAccountSet.contains(foracid);
-        log.info("Checking master account {}: {}", foracid, result);
-        return result;
-    }
+    @Test
+    void testRefreshCacheHandlesNullMasterAccount() {
+        PlutusClientConfiguration configWithNull = new PlutusClientConfiguration();
+        configWithNull.setMasterAccount(null);
 
+        when(repository.findAllActive()).thenReturn(List.of(configWithNull));
+
+        // Should not throw exception or add null
+        cacheService.refreshCache();
+
+        assertFalse(cacheService.isMasterAccount(null));
+    }
 }
+
 
 
 package com.kotak.orchestrator.orchestrator.service;
 
 import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
 
 import java.time.LocalDateTime;
 
-@Service
-@Slf4j
-public class PlutusDataCleanupService {
+import static org.mockito.Mockito.*;
 
-    @Autowired
+class PlutusDataCleanupServiceTest {
+
+    @Mock
     private PlutusFinacleDataRepository repository;
 
-    @Scheduled(cron = "0 0 3 * * ?")
-    public void cleanupOldData(){
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
-        repository.deleteByReceivedAtBefore(oneMonthAgo);
+    @InjectMocks
+    private PlutusDataCleanupService cleanupService;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testCleanupOldDataCallsRepository() {
+        cleanupService.cleanupOldData();
+        verify(repository, times(1)).deleteByReceivedAtBefore(any(LocalDateTime.class));
+    }
+
+    @Test
+    void testCleanupOldDataExceptionHandled() {
+        doThrow(new RuntimeException("DB error")).when(repository).deleteByReceivedAtBefore(any(LocalDateTime.class));
+
+        // Should not throw, just logs error
+        cleanupService.cleanupOldData();
+
+        verify(repository, times(1)).deleteByReceivedAtBefore(any(LocalDateTime.class));
     }
 }
 
 
 package com.kotak.orchestrator.orchestrator.repository;
 
-
 import com.kotak.orchestrator.orchestrator.entity.PlutusClientConfiguration;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
-/**
- * Repository to fetch active client configurations from the database.
- */
-@Repository
-public interface PlutusClientConfigurationRepository extends JpaRepository<PlutusClientConfiguration, Integer> {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    /**
-     * Fetch all active configurations (with activeFlag = true).
-     */
-    @Query("SELECT c FROM PlutusClientConfiguration c WHERE c.activeFlag = true")
-    List<PlutusClientConfiguration> findAllActive();
+@DataJpaTest
+class PlutusClientConfigurationRepositoryTest {
+
+    @Autowired
+    private PlutusClientConfigurationRepository repository;
+
+    @Test
+    void findAllActiveReturnsOnlyActiveConfigs() {
+        // Prepare test data (assuming entity has setters)
+        PlutusClientConfiguration activeConfig = new PlutusClientConfiguration();
+        activeConfig.setActiveFlag(true);
+        activeConfig.setMasterAccount("ACTIVE_ACC");
+
+        PlutusClientConfiguration inactiveConfig = new PlutusClientConfiguration();
+        inactiveConfig.setActiveFlag(false);
+        inactiveConfig.setMasterAccount("INACTIVE_ACC");
+
+        repository.save(activeConfig);
+        repository.save(inactiveConfig);
+
+        List<PlutusClientConfiguration> activeConfigs = repository.findAllActive();
+
+        assertThat(activeConfigs).hasSize(1);
+        assertThat(activeConfigs.get(0).getMasterAccount()).isEqualTo("ACTIVE_ACC");
+    }
 }
-
-
-package com.kotak.orchestrator.orchestrator.repository;
-
-
-import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-
-@Repository
-public interface PlutusFinacleDataRepository extends JpaRepository<PlutusFinacleDataEntity, String> {
-    void deleteByReceivedAtBefore(LocalDateTime dateTime);
-
-} 
-
-
