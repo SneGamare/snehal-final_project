@@ -1,87 +1,26 @@
-org.springframework.dao.InvalidDataAccessResourceUsageException: could not prepare statement [Schema "PLUTUS_ECOLLECTION" not found; SQL statement:
-insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) [90079-224]] [insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
+2025-06-09T06:55:54.446Z  INFO 1 --- [           main] c.k.o.o.OrchestratorServiceApplication   : Starting OrchestratorServic                                                                                         eApplication v0.0.1 using Java 21 with PID 1 (/app/orchestrator-service-0.0.1.jar started by root in /app)
+2025-06-09T06:55:54.449Z  INFO 1 --- [           main] c.k.o.o.OrchestratorServiceApplication   : No active profile set, fall                                                                                         ing back to 1 default profile: "default"
+2025-06-09T06:55:55.114Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data J                                                                                         PA repositories in DEFAULT mode.
+2025-06-09T06:55:55.265Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data reposi                                                                                         tory scanning in 144 ms. Found 2 JPA repository interfaces.
+2025-06-09T06:55:56.278Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with por                                                                                         t 8080 (http)
+2025-06-09T06:55:56.289Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-09T06:55:56.289Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [A                                                                                         pache Tomcat/10.1.20]
+2025-06-09T06:55:56.314Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedde                                                                                         d WebApplicationContext
+2025-06-09T06:55:56.315Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext:                                                                                          initialization completed in 1782 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to av                                                                                         oid potential conflicts
+2025-06-09T06:55:57.361Z  WARN 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered durin                                                                                         g context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Erro                                                                                         r creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/auto                                                                                         configure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceS                                                                                         criptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [com/kotak/o                                                                                         rchestrator/orchestrator/config/DataSourceConfig.class]: Unsatisfied dependency expressed through method 'dataSource' paramet                                                                                         er 0: Error creating bean with name 'dbSecrets' defined in class path resource [com/kotak/orchestrator/orchestrator/config/Se                                                                                         cretsManagerConfig.class]: Failed to instantiate [java.util.Map]: Factory method 'dbSecrets' threw exception with message: Us                                                                                         er: arn:aws:sts::977098984058:assumed-role/iam-role-plutus-msk-uat-01/aws-sdk-java-1749452156942 is not authorized to perform                                                                                         : secretsmanager:GetSecretValue on resource: kongcertkey-uat because no identity-based policy allows the secretsmanager:GetSe                                                                                         cretValue action (Service: SecretsManager, Status Code: 400, Request ID: a0c311c9-972a-4ba9-b260-932635410e73)
+2025-06-09T06:55:57.364Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-06-09T06:55:57.386Z  INFO 1 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger :
 
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:277)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
-	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
-	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy112.save(Unknown Source)
-	at com.kotak.orchestrator.orchestrator.repository.PlutusClientConfigurationRepositoryTest.findAllActiveReturnsOnlyActiveConfigs(PlutusClientConfigurationRepositoryTest.java:29)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.SQLGrammarException: could not prepare statement [Schema "PLUTUS_ECOLLECTION" not found; SQL statement:
-insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) [90079-224]] [insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:66)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl$StatementPreparationTemplate.prepareStatement(MutationStatementPreparerImpl.java:117)
-	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl.prepareStatement(MutationStatementPreparerImpl.java:63)
-	at org.hibernate.id.insert.GetGeneratedKeysDelegate.prepareStatement(GetGeneratedKeysDelegate.java:86)
-	at org.hibernate.engine.jdbc.mutation.internal.ModelMutationHelper.lambda$identityPreparation$1(ModelMutationHelper.java:132)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementDetailsStandard.resolveStatement(PreparedStatementDetailsStandard.java:87)
-	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:104)
-	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
-	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
-	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
-	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
-	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
-	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
-	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
-	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
-	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
-	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
-	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
-	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
-	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
-	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
-	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
-	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
-	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
-	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
-	at jdk.proxy2/jdk.proxy2.$Proxy104.persist(Unknown Source)
-	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:618)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
-	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
-	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:168)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	... 11 more
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "PLUTUS_ECOLLECTION" not found; SQL statement:
-insert into plutus_ecollection.plutus_client_configuration (active_flag,api_type,clientname,created_by,created_date,crn,ift_source_system,imps_source_system,master_account,modified_by,modified_date,neft_source,pg_source_system,rtgs_source_system,upi_source) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) [90079-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getSchema(Parser.java:944)
-	at org.h2.command.Parser.getSchema(Parser.java:950)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7999)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7990)
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-06-09T06:55:57.401Z ERROR 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataSourceScriptDatabaseInit                                                                                         ializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguratio                                                                                         n.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating b                                                                                         ean with name 'dataSource' defined in class path resource [com/kotak/orchestrator/orchestrator/config/DataSourceConfig.class]                                                                                         : Unsatisfied dependency expressed through method 'dataSource' parameter 0: Error creating bean with name 'dbSecrets' defined                                                                                          in class path resource [com/kotak/orchestrator/orchestrator/config/SecretsManagerConfig.class]: Failed to instantiate [java.                                                                                         util.Map]: Factory method 'dbSecrets' threw exception with message: User: arn:aws:sts::977098984058:assumed-role/iam-role-plu                                                                                         tus-msk-uat-01/aws-sdk-java-1749452156942 is not authorized to perform: secretsmanager:GetSecretValue on resource: kongcertke                                                                                         y-uat because no identity-based policy allows the secretsmanager:GetSecretValue action (Service: SecretsManager, Status Code:                                                                                          400, Request ID: a0c311c9-972a-4ba9-b260-932635410e73)
+        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[                                                                                         spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.ja                                                                                         va:542) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(Abstrac                                                                                         tAutowireCapableBeanFactory.java:1335) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCa                                                                                         pableBeanFactory.java:1165) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableB                                                                                         eanFactory.java:562) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBea                                                                                         nFactory.java:522) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[s                                                                                         pring-beans-6.1.6.jar!/:6.1.6]
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.j                                                                                         ava:234) ~[spring-beans-6.1.6.jar!/:6.1.6]
