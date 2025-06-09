@@ -1,90 +1,48 @@
-package com.kotak.orchestrator.orchestrator.util;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
-import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerException;
-
-import java.io.IOException;
-import java.util.Map;
-
-public class AwsSecretsUtil {
-
-    public static Map<String, String> getSecret(String secretName, String regionName) {
-        try (SecretsManagerClient client = SecretsManagerClient.builder()
-                .region(Region.of(regionName))
-                .build()) {
-
-            GetSecretValueRequest request = GetSecretValueRequest.builder()
-                    .secretId(secretName)
-                    .build();
-
-            GetSecretValueResponse response = client.getSecretValue(request);
-            String secretString = response.secretString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(secretString, new TypeReference<>() {});
-        } catch (SecretsManagerException e) {
-            System.err.println("AWS SecretsManager error: " + e.awsErrorDetails().errorMessage());
-            throw new RuntimeException("Failed to retrieve secret from AWS", e);
-        } catch (IOException e) {
-            System.err.println("Error parsing secret JSON: " + e.getMessage());
-            throw new RuntimeException("Failed to parse secret JSON", e);
-        }
-    }
-}
-
-
-
-package com.kotak.orchestrator.orchestrator.config;
-
-import com.kotak.orchestrator.orchestrator.util.AwsSecretsUtil;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
-
-@Configuration
-public class SecretsManagerConfig {
-
-    @Value("${aws.secret.name}")
-    private String secretName;
-
-    @Value("${aws.region}")
-    private String region;
-
-    @Bean(name = "dbSecrets")
-    public Map<String, String> dbSecrets() {
-        return AwsSecretsUtil.getSecret(secretName, region);
-    }
-}
-
-
-package com.kotak.orchestrator.orchestrator.config;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
-import java.util.Map;
-
-@Configuration
-public class DataSourceConfig {
-
-    @Bean
-    public DataSource dataSource(@Qualifier("dbSecrets") Map<String, String> secrets) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://plutus-rds-aurora-postgres-dev.cluster-cnmg44oeipzz.ap-south-1.rds.amazonaws.com:5433/plutusdb_dev");
-        config.setUsername(secrets.get("db_postgres_username"));
-        config.setPassword(secrets.get("db_postgres_password"));
-        config.setDriverClassName("org.postgresql.Driver");
-        return new HikariDataSource(config);
-    }
-}
+Caused by: software.amazon.awssdk.services.secretsmanager.model.SecretsManagerException: User: arn:aws:sts::977098984058:assumed-role/role-service-msk-ros-access-dev-01/aws-sdk-java-1749456432370 is not authorized to perform: secretsmanager:GetSecretValue on resource: secret-plutus-dev-nonprod-01 because no identity-based policy allows the secretsmanager:GetSecretValue action (Service: SecretsManager, Status Code: 400, Request ID: 8a773dbc-67bd-416c-8cc5-bf4af6bb1a1b)
+        at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleErrorResponse(CombinedResponseHandler.java:124) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleResponse(CombinedResponseHandler.java:81) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handle(CombinedResponseHandler.java:59) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handle(CombinedResponseHandler.java:40) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.HandleResponseStage.execute(HandleResponseStage.java:50) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.HandleResponseStage.execute(HandleResponseStage.java:38) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptTimeoutTrackingStage.execute(ApiCallAttemptTimeoutTrackingStage.java:74) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptTimeoutTrackingStage.execute(ApiCallAttemptTimeoutTrackingStage.java:43) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.TimeoutExceptionHandlingStage.execute(TimeoutExceptionHandlingStage.java:79) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.TimeoutExceptionHandlingStage.execute(TimeoutExceptionHandlingStage.java:41) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptMetricCollectionStage.execute(ApiCallAttemptMetricCollectionStage.java:55) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptMetricCollectionStage.execute(ApiCallAttemptMetricCollectionStage.java:39) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.RetryableStage.executeRequest(RetryableStage.java:93) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.RetryableStage.execute(RetryableStage.java:56) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.RetryableStage.execute(RetryableStage.java:36) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.StreamManagingStage.execute(StreamManagingStage.java:53) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.StreamManagingStage.execute(StreamManagingStage.java:35) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.executeWithTimer(ApiCallTimeoutTrackingStage.java:82) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.execute(ApiCallTimeoutTrackingStage.java:62) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.execute(ApiCallTimeoutTrackingStage.java:43) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallMetricCollectionStage.execute(ApiCallMetricCollectionStage.java:50) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallMetricCollectionStage.execute(ApiCallMetricCollectionStage.java:32) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ExecutionFailureExceptionReportingStage.execute(ExecutionFailureExceptionReportingStage.java:37) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.pipeline.stages.ExecutionFailureExceptionReportingStage.execute(ExecutionFailureExceptionReportingStage.java:26) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.http.AmazonSyncHttpClient$RequestExecutionBuilderImpl.execute(AmazonSyncHttpClient.java:210) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.invoke(BaseSyncClientHandler.java:103) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.doExecute(BaseSyncClientHandler.java:173) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.lambda$execute$1(BaseSyncClientHandler.java:80) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.measureApiCallSuccess(BaseSyncClientHandler.java:182) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.execute(BaseSyncClientHandler.java:74) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.core.client.handler.SdkSyncClientHandler.execute(SdkSyncClientHandler.java:45) ~[sdk-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.awscore.client.handler.AwsSyncClientHandler.execute(AwsSyncClientHandler.java:53) ~[aws-core-2.30.23.jar!/:na]
+        at software.amazon.awssdk.services.secretsmanager.DefaultSecretsManagerClient.getSecretValue(DefaultSecretsManagerClient.java:1129) ~[secretsmanager-2.30.23.jar!/:na]
+        at com.kotak.orchestrator.orchestrator.config.SecretsManagerConfig.dbSecrets(SecretsManagerConfig.java:35) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.config.SecretsManagerConfig$$SpringCGLIB$$0.CGLIB$dbSecrets$0(<generated>) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.config.SecretsManagerConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>) ~[!/:0.0.1]
+        at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258) ~[spring-core-6.1.6.jar!/:6.1.6]
+        at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331) ~[spring-context-6.1.6.jar!/:6.1.6]
+        at com.kotak.orchestrator.orchestrator.config.SecretsManagerConfig$$SpringCGLIB$$0.dbSecrets(<generated>) ~[!/:0.0.1]
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+        at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140) ~[spring-beans-6.1.6.jar!/:6.1.6]
+        ... 55 common frames omitted
