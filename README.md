@@ -1,50 +1,39 @@
-{"kongcertkey-uat":"test","db_postgres_username":"plutus_app_user_dev","db_postgres_password":"Plutus@123"}
+// Use this code snippet in your app.
+// If you need more information about configurations or implementing the sample
+// code, visit the AWS docs:
+// https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.html
 
+// Make sure to import the following packages in your code
+// import software.amazon.awssdk.regions.Region;
+// import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+// import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+// import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;	
 
+public static void getSecret() {
 
-@Configuration
-public class DataSourceConfig {
+    String secretName = "secret-plutus-dev-nonprod-01";
+    Region region = Region.of("ap-south-1");
 
-    @Bean
-    public DataSource dataSource(@Qualifier("dbSecrets") Map<String, String> secrets) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://plutus-rds-aurora-postgres-dev.cluster-cnmg44oeipzz.ap-south-1.rds.amazonaws.com:5433/plutusdb_dev");
-        config.setUsername(secrets.get("db_postgres_username"));
-        config.setPassword(secrets.get("db_postgres_password"));
-        config.setDriverClassName("org.postgresql.Driver");
-        return new HikariDataSource(config);
-    }
-}
+    // Create a Secrets Manager client
+    SecretsManagerClient client = SecretsManagerClient.builder()
+            .region(region)
+            .build();
 
+    GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+            .secretId(secretName)
+            .build();
 
-@Configuration
-public class SecretsManagerConfig {
+    GetSecretValueResponse getSecretValueResponse;
 
-    @Value("${aws.secret.name}")
-    private String secretName;
-
-    @Value("${aws.region}")
-    private String region;
-
-    @Bean
-    public Map<String, String> dbSecrets() throws IOException {
-        SecretsManagerClient client = SecretsManagerClient.builder()
-                .region(Region.of(region))
-                .build();
-
-        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-                .secretId(secretName)
-                .build();
-
-        GetSecretValueResponse getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
-        String secretString = getSecretValueResponse.secretString();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> secrets = mapper.readValue(secretString, new TypeReference<Map<String, String>>() {});
-
-        System.out.println("DB Username: " + secrets.get("db_postgres_username"));
-
-        return secrets;
+    try {
+        getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
+    } catch (Exception e) {
+        // For a list of exceptions thrown, see
+        // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        throw e;
     }
 
+    String secret = getSecretValueResponse.secretString();
+
+    // Your code goes here.
 }
