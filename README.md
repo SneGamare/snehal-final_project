@@ -1,39 +1,90 @@
-// Use this code snippet in your app.
-// If you need more information about configurations or implementing the sample
-// code, visit the AWS docs:
-// https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.html
+package com.kotak.orchestrator.orchestrator.util;
 
-// Make sure to import the following packages in your code
-// import software.amazon.awssdk.regions.Region;
-// import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-// import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-// import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;	
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerException;
 
-public static void getSecret() {
+import java.io.IOException;
+import java.util.Map;
 
-    String secretName = "secret-plutus-dev-nonprod-01";
-    Region region = Region.of("ap-south-1");
+public class AwsSecretsUtil {
 
-    // Create a Secrets Manager client
-    SecretsManagerClient client = SecretsManagerClient.builder()
-            .region(region)
-            .build();
+    public static Map<String, String> getSecret(String secretName, String regionName) {
+        try (SecretsManagerClient client = SecretsManagerClient.builder()
+                .region(Region.of(regionName))
+                .build()) {
 
-    GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-            .secretId(secretName)
-            .build();
+            GetSecretValueRequest request = GetSecretValueRequest.builder()
+                    .secretId(secretName)
+                    .build();
 
-    GetSecretValueResponse getSecretValueResponse;
+            GetSecretValueResponse response = client.getSecretValue(request);
+            String secretString = response.secretString();
 
-    try {
-        getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
-    } catch (Exception e) {
-        // For a list of exceptions thrown, see
-        // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        throw e;
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(secretString, new TypeReference<>() {});
+        } catch (SecretsManagerException e) {
+            System.err.println("AWS SecretsManager error: " + e.awsErrorDetails().errorMessage());
+            throw new RuntimeException("Failed to retrieve secret from AWS", e);
+        } catch (IOException e) {
+            System.err.println("Error parsing secret JSON: " + e.getMessage());
+            throw new RuntimeException("Failed to parse secret JSON", e);
+        }
     }
+}
 
-    String secret = getSecretValueResponse.secretString();
 
-    // Your code goes here.
+
+package com.kotak.orchestrator.orchestrator.config;
+
+import com.kotak.orchestrator.orchestrator.util.AwsSecretsUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+
+@Configuration
+public class SecretsManagerConfig {
+
+    @Value("${aws.secret.name}")
+    private String secretName;
+
+    @Value("${aws.region}")
+    private String region;
+
+    @Bean(name = "dbSecrets")
+    public Map<String, String> dbSecrets() {
+        return AwsSecretsUtil.getSecret(secretName, region);
+    }
+}
+
+
+package com.kotak.orchestrator.orchestrator.config;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
+import java.util.Map;
+
+@Configuration
+public class DataSourceConfig {
+
+    @Bean
+    public DataSource dataSource(@Qualifier("dbSecrets") Map<String, String> secrets) {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://plutus-rds-aurora-postgres-dev.cluster-cnmg44oeipzz.ap-south-1.rds.amazonaws.com:5433/plutusdb_dev");
+        config.setUsername(secrets.get("db_postgres_username"));
+        config.setPassword(secrets.get("db_postgres_password"));
+        config.setDriverClassName("org.postgresql.Driver");
+        return new HikariDataSource(config);
+    }
 }
