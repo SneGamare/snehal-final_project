@@ -1,27 +1,18 @@
-@Column(name = "navigation_flg")
-private String navigationFlg;
+package com.kotak.orchestrator.orchestrator.entity;
 
-@Column(name = "prnt_advc_ind")
-private String prntAdvcInd;
-
-@Column(name = "instrmnt_type")
-private String instrmntType;
-
-@Column(name = "instrmnt_date")
-private LocalDate instrmntDate;
-
-@Column(name = "instrmnt_num")
-private String instrmntNum;
-
-@Column(name = "instrmnt_alpha")
-private String instrmntAlpha;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "plutus_finacle_data")
+@Table(name = "plutus_finacle_transaction_details", schema = "plutus_ecollection")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class PlutusFinacleDataEntity {
 
     @Id
@@ -469,6 +460,76 @@ public class PlutusFinacleDataEntity {
     @Column(name = "acct_balance")
     private BigDecimal acctBalance;
 
-    // Getters and Setters
-    // (You can generate these using your IDE or manually if needed)
+    @Column(name = "navigation_flg")
+    private String navigationFlg;
+
+    @Column(name = "prnt_advc_ind")
+    private String prntAdvcInd;
+
+    @Column(name = "instrmnt_type")
+    private String instrmntType;
+
+    @Column(name = "instrmnt_date")
+    private LocalDate instrmntDate;
+
+    @Column(name = "instrmnt_num")
+    private String instrmntNum;
+
+    @Column(name = "instrmnt_alpha")
+    private String instrmntAlpha;
+
+    @Lob
+    @Column(name = "raw_json", columnDefinition = "TEXT")
+    private String rawJson;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
 }
+
+
+out of this  
+TRAN_DATE
+TRAN_ID
+PART_TRAN_SRL_NUM
+DEL_FLG
+TRAN_TYPE
+TRAN_SUB_TYPE
+PART_TRAN_TYPE
+GL_SUB_HEAD_CODE
+ACID
+VALUE_DATE
+TRAN_AMT
+TRAN_PARTICULAR
+ENTRY_DATE
+PSTD_DATE
+REF_NUM
+INSTRMNT_TYPE
+INSTRMNT_DATE
+INSTRMNT_NUM
+TRAN_RMKS
+CUST_ID
+BR_CODE
+CRNCY_CODE
+TRAN_CRNCY_CODE
+REF_AMT
+SOL_ID
+BANK_CODE
+TREA_REF_NUM
+REVERSAL_DATE
+REVERSAL_VALUE_DATE
+TRAN_PARTICULAR_2
+TRAN_PARTICULAR_CODE
+TR_STATUS
+PARTY_CODE
+GL_DATE
+BANK_ID
+TRAN_FREE_CODE1
+TRAN_FREE_CODE2
+REVERSAL_STATUS
+AVAILABLE_AMT
+ACCT_BALANCE
+FORACID
+ACCT_NAME
+ACCT_SHORT_NAME
+BANK_ID
+LAST_TRAN_DATE_CR this data i want to store in DB 
