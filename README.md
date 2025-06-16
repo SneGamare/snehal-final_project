@@ -1,4 +1,20 @@
+@Column(name = "navigation_flg")
+private String navigationFlg;
 
+@Column(name = "prnt_advc_ind")
+private String prntAdvcInd;
+
+@Column(name = "instrmnt_type")
+private String instrmntType;
+
+@Column(name = "instrmnt_date")
+private LocalDate instrmntDate;
+
+@Column(name = "instrmnt_num")
+private String instrmntNum;
+
+@Column(name = "instrmnt_alpha")
+private String instrmntAlpha;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
