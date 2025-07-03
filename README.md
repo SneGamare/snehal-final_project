@@ -322,3 +322,32 @@ public class GenericReactiveConsumer<T> extends Thread implements AutoCloseable 
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+@Bean
+    @ConfigurationProperties(prefix = "spring.kafka.consumer")
+    @Qualifier("gamKafka")
+    public ConsumerConfiguration<DtdGamBusinessEvent> gamKafka(
+            PlutusDtdBusinessEventConsumer consumer,
+            DlqHandler<DtdGamBusinessEvent> failureHandler) {
+        return ConsumerConfiguration.<DtdGamBusinessEvent>builder()
+                .bootstrapServers("b-1.uatrosmsk.x7g3kf.c4.kafka.ap-south-1.amazonaws.com:9098,b-2.uatrosmsk.x7g3kf.c4.kafka.ap-south-1.amazonaws.com:9098\n")
+                .groupId("plutus-consumer-group")
+                .topic("dtd-gam-business-event")
+                .valueDeserializer(PlutusDtdDeserializer.class)
+                .maxPollRecords(1000)
+                .processor(consumer)
+                .failureHandler(failureHandler)
+                .deferredCommitConfig(new ConsumerConfiguration.DeferredCommitConfiguration(1000, 10, 100))
+                .inMemoryPartitions(10) // Default values
+                .build();
+    }
