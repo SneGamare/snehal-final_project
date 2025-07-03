@@ -81,3 +81,7 @@ public interface FailureHandler<T> {
 }
 
 b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098
+
+b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098
+
+arn:aws:kafka:ap-south-1:977098984058:cluster/msk-plutus-dev-01/4824fa47-6b3b-42e6-8b9c-db241b55f242-2 this is my arn 
