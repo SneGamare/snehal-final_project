@@ -15,6 +15,9 @@ import reactor.kafka.receiver.ReceiverRecord;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * FailureHandler implementation to publish failed messages to DLQ.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -60,7 +63,7 @@ public class DlqHandler<T> implements FailureHandler<T> {
         try (KafkaProducer<String, T> producer = new KafkaProducer<>(props)) {
             ProducerRecord<String, T> record = new ProducerRecord<>(topic, key, message);
             producer.send(record).get();
-            log.info("Message published to DLQ topic: {}", topic);
+            log.info("✅ Message published to DLQ topic: {}", topic);
         }
     }
 
@@ -72,7 +75,7 @@ public class DlqHandler<T> implements FailureHandler<T> {
             ReceiverRecord<String, T> event
     ) {
         try {
-            log.info("Publishing failed event to DLQ topic: {}. Event: {}", dlqConfig.getDlqTopic(), event.value());
+            log.warn("Publishing failed event to DLQ topic [{}]: {}", dlqConfig.getDlqTopic(), event.value());
             publishMessage(
                     bootstrapServers,
                     dlqConfig.getDlqTopic(),
@@ -85,7 +88,7 @@ public class DlqHandler<T> implements FailureHandler<T> {
                     dlqConfig.getAwsStsRegion()
             );
         } catch (Exception e) {
-            log.error("Error while publishing message to DLQ topic: {}", dlqConfig.getDlqTopic(), e);
+            log.error("❌ Error while publishing message to DLQ topic [{}]", dlqConfig.getDlqTopic(), e);
             throw new RuntimeException("DLQ publishing failed", e);
         }
     }
@@ -109,15 +112,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Kafka consumer configuration for Plutus DTD events.
+ */
 @Configuration
 public class PlutusDtdConsumerConfig {
 
     private final PlutusFinacleDataRepository repository;
-
     private final ClientConfigCacheService clientConfigCacheService;
 
-
-    public PlutusDtdConsumerConfig(PlutusFinacleDataRepository repository, ClientConfigCacheService clientConfigCacheService, ObjectMapper objectMapper) {
+    public PlutusDtdConsumerConfig(
+            PlutusFinacleDataRepository repository,
+            ClientConfigCacheService clientConfigCacheService,
+            ObjectMapper objectMapper
+    ) {
         this.repository = repository;
         this.clientConfigCacheService = clientConfigCacheService;
     }
@@ -127,19 +135,18 @@ public class PlutusDtdConsumerConfig {
         return new PlutusDtdBusinessEventConsumer(repository, clientConfigCacheService);
     }
 
-
     @Bean
     @Qualifier("gamKafka")
     public ConsumerConfiguration<DtdGamBusinessEvent> gamKafka(
             PlutusDtdBusinessEventConsumer consumer,
             DlqHandler<DtdGamBusinessEvent> failureHandler,
-            GamConsumerProperties props) {
-
+            GamConsumerProperties props
+    ) {
         return ConsumerConfiguration.<DtdGamBusinessEvent>builder()
                 .bootstrapServers(props.getBootstrapServers())
                 .groupId(props.getGroupId())
                 .topic(props.getTopic())
-                .valueDeserializer(PlutusDtdDeserializer.class) // Direct reference
+                .valueDeserializer(PlutusDtdDeserializer.class)
                 .maxPollRecords(props.getMaxPollRecords())
                 .processor(consumer)
                 .failureHandler(failureHandler)
@@ -154,18 +161,24 @@ public class PlutusDtdConsumerConfig {
                 .awsStsRegion(props.getAwsStsRegion())
                 .awsStsSessionName(props.getAwsStsSessionName())
                 .processorThreadPoolName(props.getProcessorThreadPoolName())
-                .dlqConfig(ConsumerConfiguration.DlqConfiguration.<String>builder().dlqTopic("my-topic").valueSerializer(org.apache.kafka.common.serialization.StringSerializer.class).awsRoleArn("arn:aws:Iam::977098984058:role/msk-plutus-dev-access-role").awsRoleSessionName("plutus-session").awsStsRegion("ap-south-1").build())
+                .dlqConfig(
+                        ConsumerConfiguration.DlqConfiguration.<DtdGamBusinessEvent>builder()
+                                .dlqTopic("my-dlq-topic") // Change as needed
+                                .valueSerializer(org.apache.kafka.common.serialization.ByteArraySerializer.class)
+                                .awsRoleArn("arn:aws:iam::977098984058:role/msk-plutus-dev-access-role")
+                                .awsRoleSessionName("plutus-session")
+                                .awsStsRegion("ap-south-1")
+                                .build()
+                )
                 .build();
     }
-
 
     @Bean
     @Qualifier("gamConsumer")
     public GenericReactiveConsumer<DtdGamBusinessEvent> gamConsumer(
             @Qualifier("gamKafka") ConsumerConfiguration<DtdGamBusinessEvent> config,
-            MetricUtil metricUtil) {
-        System.out.println("Config: " + config);
-        System.out.println("MetricUtil: " + metricUtil);
+            MetricUtil metricUtil
+    ) {
         var consumer = new GenericReactiveConsumer<>(config, metricUtil);
         consumer.start();
         return consumer;
