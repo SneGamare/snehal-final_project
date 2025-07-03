@@ -79,3 +79,5 @@ public interface FailureHandler<T> {
             ReceiverRecord<String, T> message
     );
 }
+
+b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098
