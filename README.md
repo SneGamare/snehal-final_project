@@ -80,6 +80,125 @@ public interface FailureHandler<T> {
     );
 }
 
+
+
+package com.kotak.orchestrator.orchestrator.consumer;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * DLQ configuration to be used by FailureHandler.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DlqConfiguration<T> {
+    private String dlqTopic;
+    private Class<?> valueSerializer;
+    private String awsRoleArn;
+    private String awsRoleSessionName;
+    private String awsStsRegion;
+}
+
+
+
+package com.kotak.orchestrator.orchestrator.failurehandler;
+
+import com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.stereotype.Component;
+import reactor.kafka.receiver.ReceiverRecord;
+
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class DlqHandler<T> implements FailureHandler<T> {
+
+    private void publishMessage(
+            String bootstrapServers,
+            String topic,
+            String valueSerializer,
+            String securityProtocol,
+            String key,
+            T message,
+            String awsRoleArn,
+            String awsRoleSessionName,
+            String awsStsRegion
+    ) throws InterruptedException, ExecutionException {
+
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, "5000");
+
+        if ("AWS_MSK_IAM".equalsIgnoreCase(securityProtocol)) {
+            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+            props.put(SaslConfigs.SASL_MECHANISM, "AWS_MSK_IAM");
+
+            String jaasConfig = String.format(
+                "software.amazon.msk.auth.iam.IAMLoginModule required " +
+                "awsRoleArn=\"%s\" awsRoleSessionName=\"%s\" awsStsRegion=\"%s\";",
+                awsRoleArn,
+                awsRoleSessionName,
+                awsStsRegion
+            );
+            props.put(SaslConfigs.SASL_JAAS_CONFIG, jaasConfig);
+            props.put(
+                SaslConfigs.SASL_CLIENT_CALLBACK_HANDLER_CLASS,
+                "software.amazon.msk.auth.iam.IAMClientCallbackHandler"
+            );
+        }
+
+        try (KafkaProducer<String, T> producer = new KafkaProducer<>(props)) {
+            ProducerRecord<String, T> record = new ProducerRecord<>(topic, key, message);
+            producer.send(record).get();
+            log.info("Message published to DLQ topic: {}", topic);
+        }
+    }
+
+    @Override
+    public void handle(
+            String bootstrapServers,
+            ConsumerConfiguration.DlqConfiguration<T> dlqConfig,
+            String securityProtocol,
+            ReceiverRecord<String, T> event
+    ) {
+        try {
+            log.info("Publishing failed event to DLQ topic: {}. Event: {}", dlqConfig.getDlqTopic(), event.value());
+            publishMessage(
+                bootstrapServers,
+                dlqConfig.getDlqTopic(),
+                dlqConfig.getValueSerializer().getName(),
+                securityProtocol,
+                event.key(),
+                event.value(),
+                dlqConfig.getAwsRoleArn(),
+                dlqConfig.getAwsRoleSessionName(),
+                dlqConfig.getAwsStsRegion()
+            );
+        } catch (Exception e) {
+            log.error("Error while publishing message to DLQ topic: {}", dlqConfig.getDlqTopic(), e);
+            throw new RuntimeException("DLQ publishing failed", e);
+        }
+    }
+}
+
+
+
 b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098
 
 b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098,b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9098
