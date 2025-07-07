@@ -1,186 +1,90 @@
-package com.kotak.orchestrator.orchestrator.failurehandler;
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - release/*
+      - hotfix/*
+      - feature/*
+    exclude:
+      - none
 
-import com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.CommonClientConfigs;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.stereotype.Component;
-import reactor.kafka.receiver.ReceiverRecord;
+variables:
+  - group: ECR_NonProd
+  - name: AWS-ACCESS-KEY-ID
+    value: $[variables.AWS_ACCESS_KEY_ID]
+  - name: AWS-SECRET-ACCESS-KEY
+    value: $[variables.AWS_SECRET_ACCESS_KEY]
+  - name: AWS-DEFAULT-REGION
+    value: $[variables.AWS_DEFAULT_REGION]
+  - name: AWS-ACCOUNT-ID
+    value: $[variables.AWS_ACCOUNT_ID]
+  - name: DOCKER_REPO_NAME
+    value: 'ecr-plutus-dev-nonprod-01'
+  - name: DOCKER_REPOSITORY
+    value: '$(AWS-ACCOUNT-ID).dkr.ecr.ap-south-1.amazonaws.com/$(DOCKER_REPO_NAME)'
+  - name: DOCKER_REPO_TAG
+    value: $(Build.BuildId)
 
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: "Builder Tools/cicd-templates"
+      ref: refs/tags/v1.3.6
 
-/**
- * FailureHandler implementation to publish failed messages to DLQ.
- */
-@Slf4j
-@RequiredArgsConstructor
-@Component
-public class DlqHandler<T> implements FailureHandler<T> {
+stages:
+  - stage: Checkmarkx
+    displayName: Checkmarx Scan
+    pool:
+      name: private build
+    jobs:
+      - job:
+        displayName:
+        steps:
+          - task: DownloadSecureFile@1
+            inputs:
+              secureFile: 'CxSast_root.pem'
+          - task: checkmarx.cxsast.cx-scan-task.Application security testing@2024
+            displayName: 'Application security testing'
+            inputs:
+              projectName: '[APP-03146]Plutus - [orchestrator-service]'
+              syncMode: false
+              CheckmarxService: 'Checkmarx-connection'
+              fullTeamName: 'CxServer\APP-03146:Plutus'
+              sastCaChainFilePath: '$(Agent.TempDirectory)/CxSast_root.pem'
+              comment: 'APP-03146:Plutus:$(Build.Repository.Name):orchestrator-service:$(Build.BuildId)'
 
-    private void publishMessage(
-            String bootstrapServers,
-            String topic,
-            String valueSerializer,
-            String securityProtocol,
-            String key,
-            T message,
-            String awsRoleArn,
-            String awsRoleSessionName,
-            String awsStsRegion
-    ) throws InterruptedException, ExecutionException {
+  # Build stage
+  - template: templates/build-stage/build-java-maven.yaml@templates
+    parameters:
+      settingsFile: settings_1.xml
+      jdkVersionOption: '1.21'
+      mavenGoals: clean package
+      dockerNetwork: host
+      dockerImageDetails:
+        - dockerFilePath: '$(system.defaultworkingdirectory)'
+          dockerRepoName: 'ecr-plutus-dev-nonprod-01'
 
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, "5000");
+  # Code Quality stage
+  - template: templates/code-quality-stage/scan-java-code.yaml@templates
+    parameters:
+      sonarsources: .
+      manifestsFolder: '/kubernetes'
+      featureFilesPath: src/test/resources/feature.acceptance
+      CheckmarxServiceConnection: checkmarx-connection
+      prismaServiceConnection: default-prisma
 
-        if ("AWS_MSK_IAM".equalsIgnoreCase(securityProtocol)) {
-            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
-            props.put(SaslConfigs.SASL_MECHANISM, "AWS_MSK_IAM");
+  # Test stage
+  - template: templates/test-stage/test-java.yaml@templates
+    parameters:
+      applicationPort: 9090
+      relativeUrlsToTest: '/certify'
+      manifestFiles: 'kubernetes/deployment-uat.yaml,kubernetes/service.yaml,kubernetes/ingress.yaml'
 
-            String jaasConfig = String.format(
-                    "software.amazon.msk.auth.iam.IAMLoginModule required " +
-                            "awsRoleArn=\"%s\" awsRoleSessionName=\"%s\" awsStsRegion=\"%s\";",
-                    awsRoleArn,
-                    awsRoleSessionName,
-                    awsStsRegion
-            );
-            props.put(SaslConfigs.SASL_JAAS_CONFIG, jaasConfig);
-            props.put(
-                    SaslConfigs.SASL_CLIENT_CALLBACK_HANDLER_CLASS,
-                    "software.amazon.msk.auth.iam.IAMClientCallbackHandler"
-            );
-        }
-
-        try (KafkaProducer<String, T> producer = new KafkaProducer<>(props)) {
-            ProducerRecord<String, T> record = new ProducerRecord<>(topic, key, message);
-            producer.send(record).get();
-            log.info("✅ Message published to DLQ topic: {}", topic);
-        }
-    }
-
-    @Override
-    public void handle(
-            String bootstrapServers,
-            ConsumerConfiguration.DlqConfiguration<T> dlqConfig,
-            String securityProtocol,
-            ReceiverRecord<String, T> event
-    ) {
-        try {
-            log.warn("Publishing failed event to DLQ topic [{}]: {}", dlqConfig.getDlqTopic(), event.value());
-            publishMessage(
-                    bootstrapServers,
-                    dlqConfig.getDlqTopic(),
-                    dlqConfig.getValueSerializer().getName(),
-                    securityProtocol,
-                    event.key(),
-                    event.value(),
-                    dlqConfig.getAwsRoleArn(),
-                    dlqConfig.getAwsRoleSessionName(),
-                    dlqConfig.getAwsStsRegion()
-            );
-        } catch (Exception e) {
-            log.error("❌ Error while publishing message to DLQ topic [{}]", dlqConfig.getDlqTopic(), e);
-            throw new RuntimeException("DLQ publishing failed", e);
-        }
-    }
-}
-
-
-
-package com.kotak.orchestrator.orchestrator.config;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kotak.orchestrator.orchestrator.consumer.ConsumerConfiguration;
-import com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer;
-import com.kotak.orchestrator.orchestrator.consumer.PlutusDtdBusinessEventConsumer;
-import com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler;
-import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
-import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
-import com.kotak.orchestrator.orchestrator.serializer.PlutusDtdDeserializer;
-import com.kotak.orchestrator.orchestrator.service.ClientConfigCacheService;
-import com.kotak.orchestrator.orchestrator.utils.MetricUtil;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-/**
- * Kafka consumer configuration for Plutus DTD events.
- */
-@Configuration
-public class PlutusDtdConsumerConfig {
-
-    private final PlutusFinacleDataRepository repository;
-    private final ClientConfigCacheService clientConfigCacheService;
-
-    public PlutusDtdConsumerConfig(
-            PlutusFinacleDataRepository repository,
-            ClientConfigCacheService clientConfigCacheService,
-            ObjectMapper objectMapper
-    ) {
-        this.repository = repository;
-        this.clientConfigCacheService = clientConfigCacheService;
-    }
-
-    @Bean
-    public PlutusDtdBusinessEventConsumer plutusDtdBusinessEventConsumer() {
-        return new PlutusDtdBusinessEventConsumer(repository, clientConfigCacheService);
-    }
-
-    @Bean
-    @Qualifier("gamKafka")
-    public ConsumerConfiguration<DtdGamBusinessEvent> gamKafka(
-            PlutusDtdBusinessEventConsumer consumer,
-            DlqHandler<DtdGamBusinessEvent> failureHandler,
-            GamConsumerProperties props
-    ) {
-        return ConsumerConfiguration.<DtdGamBusinessEvent>builder()
-                .bootstrapServers(props.getBootstrapServers())
-                .groupId(props.getGroupId())
-                .topic(props.getTopic())
-                .valueDeserializer(PlutusDtdDeserializer.class)
-                .maxPollRecords(props.getMaxPollRecords())
-                .processor(consumer)
-                .failureHandler(failureHandler)
-                .deferredCommitConfig(new ConsumerConfiguration.DeferredCommitConfiguration(
-                        props.getDeferredCommit().getMaxDeferredCommits(),
-                        props.getDeferredCommit().getCommitIntervalMillis(),
-                        props.getDeferredCommit().getCommitBatchSize()
-                ))
-                .inMemoryPartitions(props.getInMemoryPartitions())
-                .securityProtocol(props.getSecurityProtocol())
-                .awsRoleArn(props.getAwsRoleArn())
-                .awsStsRegion(props.getAwsStsRegion())
-                .awsStsSessionName(props.getAwsStsSessionName())
-                .processorThreadPoolName(props.getProcessorThreadPoolName())
-                .dlqConfig(
-                        ConsumerConfiguration.DlqConfiguration.<DtdGamBusinessEvent>builder()
-                                .dlqTopic("my-dlq-topic") // Change as needed
-                                .valueSerializer(org.apache.kafka.common.serialization.ByteArraySerializer.class)
-                                .awsRoleArn("arn:aws:iam::977098984058:role/msk-plutus-dev-access-role")
-                                .awsRoleSessionName("plutus-session")
-                                .awsStsRegion("ap-south-1")
-                                .build()
-                )
-                .build();
-    }
-
-    @Bean
-    @Qualifier("gamConsumer")
-    public GenericReactiveConsumer<DtdGamBusinessEvent> gamConsumer(
-            @Qualifier("gamKafka") ConsumerConfiguration<DtdGamBusinessEvent> config,
-            MetricUtil metricUtil
-    ) {
-        var consumer = new GenericReactiveConsumer<>(config, metricUtil);
-        consumer.start();
-        return consumer;
-    }
-}
+  # Package stage
+  - template: templates/package-stage/package-java.yaml@templates
+    parameters:
+      dockerImageDetails:
+        - dockerFilePath: '$(system.defaultworkingdirectory)'
+          dockerRepoName: 'ecr-plutus-dev-nonprod-01'
