@@ -1,16 +1,27 @@
-if ("SASL_SSL".equalsIgnoreCase(securityProtocol)) {
-    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
-    props.put(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-512");
-    props.put(SaslConfigs.SASL_JAAS_CONFIG,
-        "org.apache.kafka.common.security.scram.ScramLoginModule required username=\""
-        + saslScramUsername + "\" password=\"" + saslScramPassword + "\";");
-} else if ("AWS_MSK_IAM".equalsIgnoreCase(securityProtocol)) {
-    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
-    props.put(SaslConfigs.SASL_MECHANISM, "AWS_MSK_IAM");
-    props.put("sasl.client.callback.handler.class", "software.amazon.msk.auth.iam.IAMClientCallbackHandler");
-    props.put("aws.msk.iam.role.arn", awsRoleArn);
-    props.put("aws.msk.iam.session.name", awsStsSessionName);
-    props.put("aws.msk.iam.region", awsStsRegion);
-} else if ("PLAINTEXT".equalsIgnoreCase(securityProtocol)) {
-    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
-}
+DLQ KAFKA PRODUCER CONFIGsecurity.protocol_SASL_SSL
+DLQ KAFKA PRODUCER CONFIGvalue.serializer_com.kotak.orchestrator.orchestrator.serializer.PlutusAvroSerializer
+DLQ KAFKA PRODUCER CONFIGsasl.mechanism_AWS_MSK_IAM
+DLQ KAFKA PRODUCER CONFIGmax.block.ms_5000
+DLQ KAFKA PRODUCER CONFIGacks_all
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.role.arn_arn:aws:iam::381492193153:role/role-plutus-kafka-ingestor-cross-acc-uat
+DLQ KAFKA PRODUCER CONFIGbootstrap.servers_b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9092,b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9092
+DLQ KAFKA PRODUCER CONFIGsasl.client.callback.handler.class_software.amazon.msk.auth.iam.IAMClientCallbackHandler
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.session.name_plutus-kafka-dev-session
+DLQ KAFKA PRODUCER CONFIGkey.serializer_org.apache.kafka.common.serialization.StringSerializer
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.region_ap-south-1
+DLQ KAFKA PRODUCER CONFIGsecurity.protocol_SASL_SSL
+DLQ KAFKA PRODUCER CONFIGvalue.serializer_com.kotak.orchestrator.orchestrator.serializer.PlutusAvroSerializer
+DLQ KAFKA PRODUCER CONFIGsasl.mechanism_AWS_MSK_IAM
+DLQ KAFKA PRODUCER CONFIGmax.block.ms_5000
+DLQ KAFKA PRODUCER CONFIGacks_all
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.role.arn_arn:aws:iam::381492193153:role/role-plutus-kafka-ingestor-cross-acc-uat
+DLQ KAFKA PRODUCER CONFIGbootstrap.servers_b-1.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9092,b-2.mskplutusdev01.n5cllq.c2.kafka.ap-south-1.amazonaws.com:9092
+DLQ KAFKA PRODUCER CONFIGsasl.client.callback.handler.class_software.amazon.msk.auth.iam.IAMClientCallbackHandler
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.session.name_plutus-kafka-dev-session
+DLQ KAFKA PRODUCER CONFIGkey.serializer_org.apache.kafka.common.serialization.StringSerializer
+DLQ KAFKA PRODUCER CONFIGaws.msk.iam.region_ap-south-1
+DLQ KAFKA PRODUCER CONFIGsecurity.protocol_SASL_SSL
+DLQ KAFKA PRODUCER CONFIGvalue.serializer_com.kotak.orchestrator.orchestrator.serializer.PlutusAvroSerializer
+DLQ KAFKA PRODUCER CONFIGsasl.mechanism_AWS_MSK_IAM
+DLQ KAFKA PRODUCER CONFIGmax.block.ms_5000
+DLQ KAFKA PRODUCER CONFIGacks_all
