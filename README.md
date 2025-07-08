@@ -30,7 +30,7 @@ public class DlqHandler<T> implements FailureHandler<T> {
     private void publishMessage(
             String bootstrapServer,
             String topic,
-            String serializer,
+            Class<?> valueSerializerClass,
             String securityProtocol,
             String key,
             T message,
@@ -42,10 +42,14 @@ public class DlqHandler<T> implements FailureHandler<T> {
             String awsStsRegion
     ) throws InterruptedException, ExecutionException {
 
+        if (valueSerializerClass == null) {
+            throw new IllegalArgumentException("DLQ valueSerializerClass is null. Please configure it.");
+        }
+
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass.getName());
         props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, "5000");
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
@@ -64,12 +68,16 @@ public class DlqHandler<T> implements FailureHandler<T> {
             props.put("aws.msk.iam.region", awsStsRegion);
         } else if ("PLAINTEXT".equalsIgnoreCase(securityProtocol)) {
             props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
+        } else {
+            throw new IllegalArgumentException("Unknown security protocol: " + securityProtocol);
         }
-        props.forEach((k,v)-> System.out.println("DLQ KAFKA PRODUCER CONFIG" + k + "_"+v));
+
+        props.forEach((k, v) -> System.out.println("DLQ KAFKA PRODUCER CONFIG " + k + " = " + v));
+
         try (KafkaProducer<String, T> producer = new KafkaProducer<>(props)) {
             ProducerRecord<String, T> record = new ProducerRecord<>(topic, null, key, message, headers);
             producer.send(record).get();
-            log.info("Message published to DLQ {}", topic);
+            log.info("Message published to DLQ topic: {}", topic);
         }
     }
 
@@ -77,17 +85,23 @@ public class DlqHandler<T> implements FailureHandler<T> {
     public void handle(String bootstrapServer, DlqConfiguration<T> dlqConfig, String securityProtocol,
                        ReceiverRecord<String, T> event) {
         try {
-            log.info("DlqHandler publishing event: {} to DLQ topic: {}", event.value(), dlqConfig.getDlqTopic());
+            log.info("DlqHandler publishing event to DLQ topic: {}", dlqConfig.getDlqTopic());
+
             int retryAttemptCount = getRetryAttemptCount(event.headers());
             if (retryAttemptCount < 5) {
-                log.warn("Already retried count: {}", retryAttemptCount);
                 List<Header> headers = new ArrayList<>();
-                headers.add(new RecordHeader(retryAttemptCountHeaderKey, String.valueOf(retryAttemptCount + 1).getBytes()));
+                headers.add(new RecordHeader(retryAttemptCountHeaderKey,
+                        String.valueOf(retryAttemptCount + 1).getBytes()));
+
+                // Null safety check
+                if (dlqConfig.getValueSerializer() == null) {
+                    throw new IllegalArgumentException("DLQ valueSerializer is null. Please configure it.");
+                }
 
                 publishMessage(
                         dlqConfig.getBootstrapServers(),
                         dlqConfig.getDlqTopic(),
-                        dlqConfig.getValueSerializer().getName(),
+                        dlqConfig.getValueSerializer(),
                         securityProtocol,
                         event.key(),
                         event.value(),
@@ -99,10 +113,10 @@ public class DlqHandler<T> implements FailureHandler<T> {
                         dlqConfig.getAwsStsRegion()
                 );
             } else {
-                log.warn("Retries exhausted: {} | event : {}", retryAttemptCount, event.key());
+                log.warn("Retries exhausted ({}). Skipping message with key: {}", retryAttemptCount, event.key());
             }
         } catch (Exception e) {
-            log.error("Error while publishing message to DLQ topic [{}]", dlqConfig.getDlqTopic(), e);
+            log.error("Error publishing message to DLQ [{}]", dlqConfig.getDlqTopic(), e);
             throw new RuntimeException("DLQ publishing failed", e);
         }
     }
