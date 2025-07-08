@@ -1,7 +1,5 @@
-2025-07-08T06:51:21.550Z ERROR 1 --- [s_application-1] c.k.o.o.c.GenericReactiveConsumer        : DLQ handling also failed. Message will be retried.
-
 java.lang.RuntimeException: DLQ publishing failed
-        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.handle(DlqHandler.java:98) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.handle(DlqHandler.java:104) ~[!/:0.0.1]
         at com.kotak.orchestrator.orchestrator.consumer.GenericReactiveConsumer.processRecord(GenericReactiveConsumer.java:137) ~[!/:0.0.1]
         at reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber.onNext(FluxMapFuseable.java:113) ~[reactor-core-3.6.5.jar!/:3.6.5]
         at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.runAsync(FluxPublishOn.java:446) ~[reactor-core-3.6.5.jar!/:3.6.5]
@@ -22,8 +20,8 @@ Caused by: org.apache.kafka.common.KafkaException: Failed to construct kafka pro
         at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:287) ~[kafka-clients-3.6.2.jar!/:na]
         at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:314) ~[kafka-clients-3.6.2.jar!/:na]
         at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:299) ~[kafka-clients-3.6.2.jar!/:na]
-        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.publishMessage(DlqHandler.java:63) ~[!/:0.0.1]
-        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.handle(DlqHandler.java:81) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.publishMessage(DlqHandler.java:67) ~[!/:0.0.1]
+        at com.kotak.orchestrator.orchestrator.failurehandler.DlqHandler.handle(DlqHandler.java:85) ~[!/:0.0.1]
         ... 15 common frames omitted
 Caused by: org.apache.kafka.common.KafkaException: Failed to create new NetworkClient
         at org.apache.kafka.clients.ClientUtils.createNetworkClient(ClientUtils.java:245) ~[kafka-clients-3.6.2.jar!/:na]
@@ -39,3 +37,4 @@ Caused by: java.lang.IllegalArgumentException: Could not find a 'KafkaClient' en
         at org.apache.kafka.common.network.ChannelBuilders.clientChannelBuilder(ChannelBuilders.java:81) ~[kafka-clients-3.6.2.jar!/:na]
         at org.apache.kafka.clients.ClientUtils.createChannelBuilder(ClientUtils.java:117) ~[kafka-clients-3.6.2.jar!/:na]
         at org.apache.kafka.clients.ClientUtils.createNetworkClient(ClientUtils.java:217) ~[kafka-clients-3.6.2.jar!/:na]
+        ... 23 common frames omitted
