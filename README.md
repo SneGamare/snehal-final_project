@@ -1,1 +1,1 @@
-SHOW CREATE TABLE plutus_ecollection.plutus_finacle_transaction_details;
+"raw_json"	"text"
