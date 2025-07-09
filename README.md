@@ -1,2 +1,205 @@
-and while doing get also "2025-07-09T09:24:02.189Z  INFO 1 --- [s_application-1] c.k.o.o.c.PlutusDtdBusinessEventConsumer : about to  BusinessEvent Json :{"EFFECTIVE_BAL":{"double":4.107129689E7},"FORACID":{"bytes":"06410910000417"},"ACCT_CLS_FLG":null,"ACCT_CLS_DATE":null,"ACCT_CRNCY_CODE":null,"ACCT_NAME":{"bytes":"NAME OF 197861875"},"ACCT_SHORT_NAME":null,"ACCT_OPN_DATE":null,"ACTIVE_STATUS":null,"ADHOC_LIM":null,"ALLOW_SWEEPS":null,"CIF_ID":{"bytes":"197861875"},"CLEAN_ADHOC_LIM":null,"CLEAN_SINGLE_TRAN_LIM":null,"CLEAN_EMER_ADVN":null,"CLR_BAL_AMT":{"double":4.235533331E7},"DACC_LIM":null,"DAFA_LIM":null,"DRWNG_POWER":null,"EMER_ADVN":null,"ENTITY_CRE_FLG":null,"FFD_CONTRIB_TO_ACCT":null,"ACCT_NUM":null,"FREZ_CODE":null,"FREZ_REASON_CODE":null,"FREZ_REASON_CODE_2":null,"FREZ_REASON_CODE_3":null,"FREZ_REASON_CODE_4":null,"FREZ_REASON_CODE_5":null,"FX_CLR_BAL_AMT":null,"FUTURE_OC_TOD_AMT":null,"LAST_MODIFIED_DATE":null,"LAST_TRAN_DATE_CR":null,"LAST_TRAN_DATE_DR":null,"LIEN_AMT":null,"MODE_OF_OPER_CODE":null,"NEXT_TRAN_SRL_NUM":null,"POOL_ID":null,"SANCT_LIM":null,"SCHM_TYPE":{"bytes":"CAA"},"SCHM_CODE":{"bytes":"DUMMY"},"SCHM_SUB_TYPE":{"bytes":" "},"SINGLE_TRAN_FLG":null,"SINGLE_TRAN_LIM":null,"SYSTEM_RESERVED_AMT":null,"SYSTEM_GEN_LIM":null,"SYS_BEHAVIOR_CODE":null,"UN_CLR_BAL_AMT":null,"USED_CLEAN_SINGLE_TRAN_LIM":null,"USED_OC_CLN_SINGLE_TRAN_LIM":null,"USED_SINGLE_TRAN_LIM":null,"USED_UN_CLR_OVER_DACC_AMT":null,"UTIL_FUTURE_BAL_AMT":null,"UTILISED_AMT":null,"LAST_BAL_UPDATED_DATE":{"long":1752046189000},"TRAN_DATE":{"string":"2025-07-09 00:00:00"},"TRAN_ID":{"bytes":"   M76105"},"PART_TRAN_SRL_NUM":{"bytes":"   1"},"DEL_FLG":{"bytes":"N"},"TRAN_TYPE":{"bytes":"T"},"TRAN_SUB_TYPE":{"bytes":"CI"},"PART_TRAN_TYPE":{"bytes":"C"},"GL_SUB_HEAD_CODE":{"bytes":"12021"},"ACID":{"bytes":"KM43081700"},"VALUE_DATE":{"string":"2025-07-09 00:00:00"},"TRAN_AMT":{"double":5000.0},"TRAN_PARTICULAR":{"bytes":"811:BBPS/250000000446/0949208581"},"ENTRY_USER_ID":{"bytes":"FIVUSR"},"PSTD_USER_ID":{"bytes":"FIVUSR"},"VFD_USER_ID":{"bytes":"FIVUSR"},"ENTRY_DATE":{"string":"2025-07-09 14:53:58"},"PSTD_DATE":{"string":"2025-07-09 14:53:58"},"VFD_DATE":{"string":"2025-07-09 14:53:58"},"RPT_CODE":null,"REF_NUM":{"bytes":"811BP-250000000446"},"INSTRMNT_TYPE":null,"INSTRMNT_DATE":null,"INSTRMNT_NUM":null,"INSTRMNT_ALPHA":null,"TRAN_RMKS":null,"PSTD_FLG":{"bytes":"Y"},"PRNT_ADVC_IND":{"bytes":" "},"AMT_RESERVATION_IND":{"bytes":" "},"RESERVATION_AMT":{"double":0.0},"RESTRICT_MODIFY_IND":{"bytes":" "},"LCHG_USER_ID":{"bytes":"FIVUSR"},"LCHG_TIME":{"string":"2025-07-09 14:53:58"},"RCRE_USER_ID":{"bytes":"FIVUSR"},"RCRE_TIME":{"string":"2025-07-09 14:53:58"},"CUST_ID":{"bytes":"CC121456"},"VOUCHER_PRINT_FLG":{"bytes":" "},"MODULE_ID":null,"BR_CODE":null,"FX_TRAN_AMT":{"double":0.0},"RATE_CODE":null,"RATE":{"double":1.0},"CRNCY_CODE":null,"NAVIGATION_FLG":{"bytes":" "},"TRAN_CRNCY_CODE":{"bytes":"INR"},"REF_CRNCY_CODE":{"bytes":"INR"},"REF_AMT":{"double":5000.0},"SOL_ID":{"bytes":"0641"},"BANK_CODE":null,"TREA_REF_NUM":null,"TREA_RATE":{"double":0.0},"TS_CNT":{"long":0},"GST_UPD_FLG":{"bytes":"N"},"ISO_FLG":{"bytes":"N"},"EABFAB_UPD_FLG":{"bytes":"N"},"LIFT_LIEN_FLG":{"bytes":"N"},"PROXY_POST_IND":{"bytes":"B"},"SI_SRL_NUM":null,"SI_ORG_EXEC_DATE":null,"PR_SRL_NUM":null,"SERIAL_NUM":null,"DEL_MEMO_PAD":{"bytes":"N"},"UAD_MODULE_ID":null,"UAD_MODULE_KEY":null,"REVERSAL_DATE":null,"REVERSAL_VALUE_DATE":null,"PTTM_EVENT_TYPE":null,"PROXY_ACID":null,"TOD_ENTITY_TYPE":null,"TOD_ENTITY_ID":null,"DTH_INIT_SOL_ID":{"bytes":"0001"},"REGULARIZATION_AMT":{"double":0.0},"PRINCIPAL_PORTION_AMT":{"double":0.0},"TF_ENTITY_SOL_ID":null,"TRAN_PARTICULAR_2":{"bytes":"1"},"TRAN_PARTICULAR_CODE":null,"TR_STATUS":{"bytes":" "},"SVS_TRAN_ID":null,"CRNCY_HOL_CHK_DONE_FLG":{"bytes":" "},"REFERRAL_ID":null,"PARTY_CODE":null,"GL_DATE":{"string":"2025-07-09 00:00:00"},"BKDT_TRAN_FLG":{"bytes":" "},"BANK_ID":{"bytes":"01"},"IMPL_CASH_PART_TRAN_FLG":{"bytes":" "},"PTRAN_CHRG_EXISTS_FLG":{"bytes":"N"},"MUD_POOL_BAL_BUILD_FLG":{"bytes":"N"},"GL_SEGMENT_STRING":null,"SYS_PART_TRAN_CODE":{"bytes":"PTRN00402"},"USER_PART_TRAN_CODE":null,"TRAN_FREE_CODE1":null,"TRAN_FREE_CODE2":null,"PSTD_SRL_NUM":{"long":0},"REVERSAL_STATUS":{"bytes":" "},"AVAILABLE_AMT":{"double":0.0},"ACCT_BALANCE":{"double":4.235533331E7}}
-"
+
+package com.kotak.orchestrator.orchestrator.consumer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kotak.orchestrator.orchestrator.repository.PlutusFinacleDataRepository;
+import com.kotak.orchestrator.orchestrator.entity.PlutusFinacleDataEntity;
+import com.kotak.orchestrator.orchestrator.schema.BusinessEvent;
+import com.kotak.orchestrator.orchestrator.schema.DtdGamBusinessEvent;
+import com.kotak.orchestrator.orchestrator.service.ClientConfigCacheService;
+import com.kotak.orchestrator.orchestrator.utils.CbsUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.specific.SpecificDatumWriter;
+import org.springframework.stereotype.Component;
+import reactor.kafka.receiver.ReceiverRecord;
+
+import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.kotak.orchestrator.orchestrator.utils.CbsUtils.byteBufferToStr;
+
+/**
+ * Kafka consumer for DTD/GAM business events from Finacle.
+ * Filters events based on FORACID presence in the client config cache.
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PlutusDtdBusinessEventConsumer implements MessageConsumer<DtdGamBusinessEvent> {
+
+    private final PlutusFinacleDataRepository repository;
+    private final ClientConfigCacheService clientConfigCacheService;
+    private final ObjectMapper objectMapper;
+
+
+    @Override
+    public void process(ReceiverRecord<String, DtdGamBusinessEvent> receiverRecord) {
+        BusinessEvent data = receiverRecord.value().getEvent();
+
+        if (data == null) {
+            log.warn("Received null BusinessEvent.");
+            return;
+        }
+
+        String foracid = byteBufferToStr(data.getFORACID());
+
+        // Filter based on cache
+        if (!clientConfigCacheService.isMasterAccount(foracid)) {
+            log.info("FORACID {} not found in client config, skipping record.", foracid);
+            receiverRecord.receiverOffset().acknowledge();
+            return;
+        }
+
+        try {
+            PlutusFinacleDataEntity entity = mapToEntity(data);
+            repository.save(entity);
+
+            log.info("Saved DTD Event with TRAN_ID: {}", byteBufferToStr(data.getTRANID()));
+            receiverRecord.receiverOffset().acknowledge();
+        } catch (Exception e) {
+            log.error("Error while saving DTD Event: {}", e.getMessage(), e);
+        }
+    }
+
+    private PlutusFinacleDataEntity mapToEntity(BusinessEvent data) {
+        PlutusFinacleDataEntity entity = new PlutusFinacleDataEntity();
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        entity.setTranDate(LocalDateTime.parse(data.getTRANDATE(),formatter).toLocalDate());
+        entity.setTranId(byteBufferToStr(data.getTRANID()));
+        entity.setPartTranSrlNum(byteBufferToStr(data.getPARTTRANSRLNUM()));
+        entity.setDelFlg(byteBufferToStr(data.getDELFLG()));
+        entity.setTranType(byteBufferToStr(data.getTRANTYPE()));
+        entity.setTranSubType(byteBufferToStr(data.getTRANSUBTYPE()));
+        entity.setPartTranType(byteBufferToStr(data.getPARTTRANTYPE()));
+        entity.setGlSubHeadCode(byteBufferToStr(data.getGLSUBHEADCODE()));
+        entity.setAcid(byteBufferToStr(data.getACID()));
+        entity.setValueDate(LocalDateTime.parse(data.getVALUEDATE(),formatter).toLocalDate());
+        entity.setTranAmt(CbsUtils.doubleToBigDecimal(data.getTRANAMT()));
+        entity.setTranParticular(byteBufferToStr(data.getTRANPARTICULAR()));
+        entity.setEntryDate(LocalDateTime.parse(data.getENTRYDATE(), formatter));
+        entity.setPstdDate(LocalDateTime.parse(data.getPSTDDATE(), formatter));
+        entity.setRefNum(byteBufferToStr(data.getREFNUM()));
+        entity.setInstrmntType(byteBufferToStr(data.getINSTRMNTTYPE()));
+        entity.setInstrmntDate(data.getINSTRMNTDATE() != null ? LocalDateTime.parse(data.getINSTRMNTDATE(), formatter).toLocalDate() : null);
+        entity.setInstrmntNum(byteBufferToStr(data.getINSTRMNTNUM()));
+        entity.setTranRmks(byteBufferToStr(data.getTRANRMKS()));
+        entity.setCustId(byteBufferToStr(data.getCUSTID()));
+        entity.setBrCode(byteBufferToStr(data.getBRCODE()));
+        entity.setCrncyCode(byteBufferToStr(data.getCRNCYCODE()));
+        entity.setTranCrncyCode(byteBufferToStr(data.getTRANCRNCYCODE()));
+        entity.setRefAmt(CbsUtils.doubleToBigDecimal(data.getREFAMT()));
+        entity.setSolId(byteBufferToStr(data.getSOLID()));
+        entity.setBankCode(byteBufferToStr(data.getBANKCODE()));
+        entity.setTreaRefNum(byteBufferToStr(data.getTREAREFNUM()));
+        entity.setReversalDate(data.getREVERSALDATE() != null ? LocalDateTime.parse(data.getREVERSALDATE(), formatter).toLocalDate() : null);
+        entity.setReversalValueDate(data.getREVERSALVALUEDATE() != null ? LocalDateTime.parse(data.getREVERSALVALUEDATE(), formatter).toLocalDate() : null);
+        entity.setTranParticular2(byteBufferToStr(data.getTRANFREECODE2()));
+        entity.setTranParticularCode(byteBufferToStr(data.getTRANPARTICULARCODE()));
+        entity.setTrStatus(byteBufferToStr(data.getTRSTATUS()));
+        entity.setPartyCode(byteBufferToStr(data.getPARTYCODE()));
+        entity.setGlDate(LocalDateTime.parse(data.getGLDATE(), formatter).toLocalDate());
+        entity.setBankId(byteBufferToStr(data.getBANKID()));
+        entity.setTranFreeCode1(byteBufferToStr(data.getTRANFREECODE1()));
+        entity.setTranFreeCode2(byteBufferToStr(data.getTRANFREECODE2()));
+        entity.setReversalStatus(byteBufferToStr(data.getREVERSALSTATUS()));
+        entity.setAvailableAmt(CbsUtils.doubleToBigDecimal(data.getAVAILABLEAMT()));
+        entity.setAcctBalance(CbsUtils.doubleToBigDecimal(data.getACCTBALANCE()));
+        entity.setForacid(byteBufferToStr(data.getFORACID()));
+        entity.setForacid(byteBufferToStr(data.getFORACID()));
+        entity.setAcctName(byteBufferToStr(data.getACCTNAME()));
+        entity.setAcctShortName(byteBufferToStr(data.getACCTSHORTNAME()));
+        entity.setLastTranDateCr(data.getLASTTRANDATECR() != null ? LocalDateTime.parse(data.getLASTTRANDATECR(), formatter).toLocalDate() : null);
+        entity.setReceivedAt(LocalDateTime.now());
+        String rawJson = avroToJson(data);
+        entity.setRawJson(rawJson);
+        log.info("about to  BusinessEvent Json :{}",entity.getRawJson());
+        return entity;
+    }
+
+    private String avroToJson(BusinessEvent data) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            DatumWriter<BusinessEvent> writer = new SpecificDatumWriter<>(data.getSchema());
+            Encoder encoder = EncoderFactory.get().jsonEncoder(data.getSchema(), out);
+            writer.write(data, encoder);
+            encoder.flush();
+            return out.toString("UTF-8");
+        } catch (Exception e) {
+            log.error("Failed to convert Avro to JSON", e);
+            return "{}";
+        }
+    }
+
+
+    @Override
+    public String partitionKey(DtdGamBusinessEvent message) {
+        try {
+            var acid = byteBufferToStr(message.getEvent().getACID());
+            return acid == null ? "" : acid;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+}
+
+
+
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package org.springframework.data.repository;
+
+import java.util.Optional;
+
+@NoRepositoryBean
+public interface CrudRepository<T, ID> extends Repository<T, ID> {
+    <S extends T> S save(S entity);
+
+    <S extends T> Iterable<S> saveAll(Iterable<S> entities);
+
+    Optional<T> findById(ID id);
+
+    boolean existsById(ID id);
+
+    Iterable<T> findAll();
+
+    Iterable<T> findAllById(Iterable<ID> ids);
+
+    long count();
+
+    void deleteById(ID id);
+
+    void delete(T entity);
+
+    void deleteAllById(Iterable<? extends ID> ids);
+
+    void deleteAll(Iterable<? extends T> entities);
+
+    void deleteAll();
+}
+
+
+
+
+
+@Transactional
+    public <S extends T> S save(S entity) {
+        Assert.notNull(entity, "Entity must not be null");
+        if (this.entityInformation.isNew(entity)) {
+            this.entityManager.persist(entity);
+            return entity;
+        } else {
+            return (S)this.entityManager.merge(entity);
+        }
+    }
+
+
+this saved is getting used should i write my own in my repostory 
