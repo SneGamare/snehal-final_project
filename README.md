@@ -1,49 +1,77 @@
-CREATE TABLE plutus_ecollection.plutus_finacle_transaction_details (
-    id SERIAL PRIMARY KEY,
-    tran_date DATE,
-    tran_id VARCHAR(50),
-    part_tran_srl_num INTEGER,
-    del_flg BOOLEAN,
-    tran_type VARCHAR(20),
-    tran_sub_type VARCHAR(20),
-    part_tran_type VARCHAR(20),
-    gl_sub_head_code VARCHAR(20),
-    acid VARCHAR(50),
-    value_date DATE,
-    tran_amt NUMERIC(18,2),
-    tran_particular TEXT,
-    entry_date TIMESTAMP,
-    pstd_date TIMESTAMP,
-    ref_num VARCHAR(50),
-    instrmnt_type VARCHAR(20),
-    instrmnt_date DATE,
-    instrmnt_num VARCHAR(50),
-    tran_rmks TEXT,
-    cust_id VARCHAR(50),
-    br_code VARCHAR(20),
-    crncy_code VARCHAR(10),
-    tran_crncy_code VARCHAR(10),
-    ref_amt NUMERIC(18,2),
-    sol_id VARCHAR(20),
-    bank_code VARCHAR(20),
-    trea_ref_num VARCHAR(50),
-    reversal_date DATE,
-    reversal_value_date DATE,
-    tran_particular_2 TEXT,
-    tran_particular_code VARCHAR(20),
-    tr_status VARCHAR(20),
-    party_code VARCHAR(50),
-    gl_date DATE,
-    bank_id VARCHAR(20),
-    tran_free_code1 VARCHAR(50),
-    tran_free_code2 VARCHAR(50),
-    reversal_status VARCHAR(20),
-    available_amt NUMERIC(18,2),
-    acct_balance NUMERIC(18,2),
-    foracid VARCHAR(50),
-    acct_name VARCHAR(100),
-    acct_short_name VARCHAR(50),
-    last_tran_date_cr DATE,
-    raw_json JSONB,
-    received_at TIMESTAMP
-);
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Create schema if not exists -->
+    <changeSet id="000-create-schema" author="snehal">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <schemaExists schemaName="plutus_ecollection"/>
+            </not>
+        </preConditions>
+        <createSchema schemaName="plutus_ecollection"/>
+    </changeSet>
+
+    <!-- Create table -->
+    <changeSet id="001-create-plutus-finacle-transaction-details" author="snehal">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="plutus_finacle_transaction_details" schemaName="plutus_ecollection"/>
+            </not>
+        </preConditions>
+        <createTable tableName="plutus_finacle_transaction_details" schemaName="plutus_ecollection">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tran_date" type="DATE"/>
+            <column name="tran_id" type="VARCHAR(50)"/>
+            <column name="part_tran_srl_num" type="INTEGER"/>
+            <column name="del_flg" type="BOOLEAN"/>
+            <column name="tran_type" type="VARCHAR(20)"/>
+            <column name="tran_sub_type" type="VARCHAR(20)"/>
+            <column name="part_tran_type" type="VARCHAR(20)"/>
+            <column name="gl_sub_head_code" type="VARCHAR(20)"/>
+            <column name="acid" type="VARCHAR(50)"/>
+            <column name="value_date" type="DATE"/>
+            <column name="tran_amt" type="NUMERIC(18,2)"/>
+            <column name="tran_particular" type="TEXT"/>
+            <column name="entry_date" type="TIMESTAMP"/>
+            <column name="pstd_date" type="TIMESTAMP"/>
+            <column name="ref_num" type="VARCHAR(50)"/>
+            <column name="instrmnt_type" type="VARCHAR(20)"/>
+            <column name="instrmnt_date" type="DATE"/>
+            <column name="instrmnt_num" type="VARCHAR(50)"/>
+            <column name="tran_rmks" type="TEXT"/>
+            <column name="cust_id" type="VARCHAR(50)"/>
+            <column name="br_code" type="VARCHAR(20)"/>
+            <column name="crncy_code" type="VARCHAR(10)"/>
+            <column name="tran_crncy_code" type="VARCHAR(10)"/>
+            <column name="ref_amt" type="NUMERIC(18,2)"/>
+            <column name="sol_id" type="VARCHAR(20)"/>
+            <column name="bank_code" type="VARCHAR(20)"/>
+            <column name="trea_ref_num" type="VARCHAR(50)"/>
+            <column name="reversal_date" type="DATE"/>
+            <column name="reversal_value_date" type="DATE"/>
+            <column name="tran_particular_2" type="TEXT"/>
+            <column name="tran_particular_code" type="VARCHAR(20)"/>
+            <column name="tr_status" type="VARCHAR(20)"/>
+            <column name="party_code" type="VARCHAR(50)"/>
+            <column name="gl_date" type="DATE"/>
+            <column name="bank_id" type="VARCHAR(20)"/>
+            <column name="tran_free_code1" type="VARCHAR(50)"/>
+            <column name="tran_free_code2" type="VARCHAR(50)"/>
+            <column name="reversal_status" type="VARCHAR(20)"/>
+            <column name="available_amt" type="NUMERIC(18,2)"/>
+            <column name="acct_balance" type="NUMERIC(18,2)"/>
+            <column name="foracid" type="VARCHAR(50)"/>
+            <column name="acct_name" type="VARCHAR(100)"/>
+            <column name="acct_short_name" type="VARCHAR(50)"/>
+            <column name="last_tran_date_cr" type="DATE"/>
+            <column name="raw_json" type="JSONB"/>
+            <column name="received_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
