@@ -1,51 +1,32 @@
-package com.example.transformer.service;
+package com.example.transformer.parser;
 
-import com.bazaarvoice.jolt.Chainr;
-import com.bazaarvoice.jolt.JsonUtils;
-import com.example.transformer.entity.TransformationTemplate;
-import com.example.transformer.model.TransformRequest;
-import com.example.transformer.output.AvroFormatter;
-import com.example.transformer.output.JsonFormatter;
-import com.example.transformer.output.XmlFormatter;
-import com.example.transformer.parser.InputParser;
-import com.example.transformer.parser.InputParserFactory;
-import com.example.transformer.repository.TemplateRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileStream;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericRecord;
+import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Base64;
 
-@Service
-@RequiredArgsConstructor
-public class TransformService {
+@Component("avro")
+public class AvroParser implements InputParser {
 
-    private final TemplateRepository templateRepository;
-    private final InputParserFactory parserFactory;
-    private final JsonFormatter jsonFormatter;
-    private final XmlFormatter xmlFormatter;
-    private final AvroFormatter avroFormatter;
+    @Override
+    public Map<String, Object> parse(String base64EncodedAvro) throws Exception {
+        byte[] decoded = Base64.getDecoder().decode(base64EncodedAvro);
+        try (ByteArrayInputStream in = new ByteArrayInputStream(decoded);
+             DataFileStream<GenericRecord> reader =
+                     new DataFileStream<>(in, new GenericDatumReader<>())) {
 
-    public Object process(TransformRequest request) throws Exception {
-        // 1. Fetch template
-        TransformationTemplate template = templateRepository.findById(request.getTemplateId())
-                .orElseThrow(() -> new IllegalArgumentException("Template not found: " + request.getTemplateId()));
-
-        // 2. Get input parser (json, xml, avro)
-        InputParser parser = parserFactory.getParser(request.getInputFormat());
-
-        // 3. Parse payload to map
-        Map<String, Object> inputMap = parser.parse(request.getPayload());
-
-        // 4. Apply transformation using JOLT
-        Chainr chainr = Chainr.fromSpec(JsonUtils.jsonToList(template.getTransformationSpec()));
-        Object transformed = chainr.transform(inputMap);
-
-        // 5. Format output (json, xml, avro)
-        return switch (request.getOutputFormat().toLowerCase()) {
-            case "json" -> jsonFormatter.format(transformed);
-            case "xml" -> xmlFormatter.format(transformed);
-            case "avro" -> avroFormatter.format(transformed);
-            default -> throw new IllegalArgumentException("Unsupported output format: " + request.getOutputFormat());
-        };
+            GenericRecord record = reader.next();  // read one record for now
+            Map<String, Object> result = new HashMap<>();
+            for (Schema.Field field : record.getSchema().getFields()) {
+                result.put(field.name(), record.get(field.name()));
+            }
+            return result;
+        }
     }
 }
