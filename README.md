@@ -1,49 +1,46 @@
-package com.example.transformer.output;
+package com.example.transformer.controller;
 
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.file.DataFileWriter;
-import org.springframework.stereotype.Component;
+import com.example.transformer.model.TransformRequest;
+import com.example.transformer.service.TransformService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
-import java.util.Map;
+@RestController
+@RequestMapping("/api/transform")
+@RequiredArgsConstructor
+public class TransformController {
 
-@Component
-public class AvroFormatter {
+    private final TransformService transformService;
 
-    // For simplicity, using hardcoded schema. You can pull from DB per template ID if needed.
-    private static final String HARDCODED_SCHEMA = """
-        {
-          "type": "record",
-          "name": "TransformedData",
-          "fields": [
-            {"name": "id", "type": "string"},
-            {"name": "amount", "type": "double"},
-            {"name": "currency", "type": "string"}
-          ]
+    @PostMapping
+    public ResponseEntity<?> transform(@RequestBody TransformRequest request) {
+        try {
+            Object result = transformService.process(request);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse("Invalid Request", ex.getMessage())
+            );
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().body(
+                    new ErrorResponse("Transformation Failed", ex.getMessage())
+            );
         }
-        """;
-
-    private final Schema schema = new Schema.Parser().parse(HARDCODED_SCHEMA);
-
-    public String format(Object transformed) throws Exception {
-        Map<String, Object> data = (Map<String, Object>) transformed;
-        GenericRecord record = new GenericData.Record(schema);
-        for (Schema.Field field : schema.getFields()) {
-            Object value = data.get(field.name());
-            record.put(field.name(), value);
-        }
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
-        DataFileWriter<GenericRecord> writer = new DataFileWriter<>(datumWriter);
-        writer.create(schema, outputStream);
-        writer.append(record);
-        writer.close();
-
-        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
     }
+
+    // Inner class for simple error response
+    private record ErrorResponse(String error, String message) {}
+}
+
+
+
+POST /api/transform
+Content-Type: application/json
+
+{
+  "templateId": "camt-to-json",
+  "inputFormat": "xml",
+  "outputFormat": "json",
+  "payload": "<Document><Amt>100.00</Amt><Ccy>EUR</Ccy></Document>"
 }
