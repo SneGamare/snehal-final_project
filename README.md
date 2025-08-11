@@ -198,3 +198,6 @@ curl -X POST "http://localhost:8080/transform/3" \
   -H "Content-Type: application/json" \
   -d '{"accountNumber":"1234567890","amount":"5000"}'
 
+
+FDEyMzQ1Njc4OTAINTAwMA==
+
