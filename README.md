@@ -1,10 +1,3 @@
-curl -X POST "http://localhost:8080/transform" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "templateId": 1,
-           "templateName": "Sample CAMT Template",
-           "payload": {
-               "accountNumber": "1234567890",
-               "amount": "1000.50"
-           }
-         }'
+SELECT * FROM TRANSFORMATION_TEMPLATES;
+ID  	DESCRIPTION  	INPUT_FORMAT  	OUTPUT_FORMAT  	TEMPLATE_NAME  	MAPPING_LOGIC  
+1	Sample CAMT transformation template	JSON	CAMT	Sample CAMT Template	{"accountNumber": "Acct/Id", "amount": "Bal/Amt"}
