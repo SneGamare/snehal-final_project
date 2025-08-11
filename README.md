@@ -331,3 +331,108 @@ public class TransformationService {
     }
 }
 
+
+
+
+package com.example.camel.service;
+
+import com.example.camel.entity.TemplateEntity;
+import com.example.camel.repository.TemplateRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringWriter;
+import java.util.Map;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+@Service
+public class TransformationService {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final TemplateRepository templateRepository;
+
+    public TransformationService(TemplateRepository templateRepository) {
+        this.templateRepository = templateRepository;
+    }
+
+    public String transform(Long templateId, String inputPayload) throws Exception {
+        TemplateEntity template = templateRepository.findById(templateId)
+                .orElseThrow(() -> new IllegalArgumentException("Template not found"));
+
+        if (!"JSON".equalsIgnoreCase(template.getInputFormat()) ||
+            !"CAMT".equalsIgnoreCase(template.getOutputFormat())) {
+            throw new UnsupportedOperationException("Only JSON to CAMT supported currently");
+        }
+
+        JsonNode jsonNode = objectMapper.readTree(inputPayload);
+        Map<String, String> mapping = objectMapper.readValue(template.getMappingLogic(), Map.class);
+
+        Document camtDoc = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder()
+                .newDocument();
+
+        Element root = camtDoc.createElement("CamtMessage");
+        camtDoc.appendChild(root);
+
+        for (Map.Entry<String, String> entry : mapping.entrySet()) {
+            String sourceField = entry.getKey();
+            String targetField = entry.getValue();
+
+            JsonNode valueNode = jsonNode.at("/" + sourceField);
+            String value = valueNode.isMissingNode() ? "" : valueNode.asText();
+
+            Element fieldElement = camtDoc.createElement(targetField);
+            fieldElement.setTextContent(value);
+            root.appendChild(fieldElement);
+        }
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(camtDoc), new StreamResult(writer));
+
+        return writer.toString();
+    }
+}
+
+
+
+package com.example.camel.controller;
+
+import com.example.camel.service.TransformationService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/transform")
+public class TransformController {
+
+    private final TransformationService transformationService;
+
+    public TransformController(TransformationService transformationService) {
+        this.transformationService = transformationService;
+    }
+
+    @PostMapping("/{templateId}")
+    public String transform(@PathVariable Long templateId, @RequestBody String payload) throws Exception {
+        return transformationService.transform(templateId, payload);
+    }
+}
+
+INSERT INTO templates (id, name, description, input_format, output_format, mapping_logic)
+VALUES (1, 'JSON to CAMT', 'Test mapping for CAMT message', 'JSON', 'CAMT', 
+'{"accountNumber":"AcctId", "amount":"Amt", "currency":"Ccy"}');
+
+
+
+curl -X POST "http://localhost:8080/transform/1" \
+     -H "Content-Type: application/json" \
+     -d '{"accountNumber":"123456","amount":"1000","currency":"USD"}'
+
+
