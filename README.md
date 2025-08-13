@@ -1,3 +1,11 @@
+{
+    "timestamp": "2025-08-13T12:08:23.721+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "path": "/transform/camt-to-json"
+}
+
+
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
