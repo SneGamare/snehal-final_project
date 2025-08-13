@@ -1,3 +1,42 @@
+
+package com.example.cameltransform.routes;
+
+import org.apache.camel.builder.RouteBuilder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CamtRoute extends RouteBuilder {
+    @Override
+    public void configure() {
+
+        // Bind REST to platform-http
+        restConfiguration()
+            .component("platform-http")
+            .host("0.0.0.0")
+            .port(8080);
+
+        // Define REST endpoint
+        rest("/transform")
+            .post("/camt-to-json")
+            .consumes("application/xml")
+            .produces("application/json")
+            .to("direct:camtToJson");
+
+        // Simple placeholder transformation route
+        from("direct:camtToJson")
+            .log("Received body: ${body}")
+            .setBody(constant("{\"message\":\"CAMT XML converted to JSON placeholder\"}"));
+    }
+}
+
+
+curl -X POST \
+  http://localhost:8080/transform/camt-to-json \
+  -H "Content-Type: application/xml" \
+  -d '<Document><Hello>World</Hello></Document>'
+
+
+
 {
     "timestamp": "2025-08-13T12:13:36.219+00:00",
     "status": 404,
