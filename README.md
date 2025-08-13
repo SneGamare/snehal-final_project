@@ -1,3 +1,9 @@
+
+curl -X POST http://localhost:8080/transform/camt-to-json \
+     -H "Content-Type: application/xml" \
+     -d '<Document><Hello>World</Hello></Document>'
+
+
 {
     "timestamp": "2025-08-13T12:20:48.818+00:00",
     "status": 404,
