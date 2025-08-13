@@ -1,3 +1,12 @@
+{
+    "timestamp": "2025-08-13T12:13:36.219+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "path": "/transform/camt-to-json"
+}
+
+
+
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
