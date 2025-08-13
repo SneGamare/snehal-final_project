@@ -1,4 +1,9 @@
-
+{
+    "timestamp": "2025-08-13T12:20:48.818+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "path": "/transform/camt-to-json"
+}
 package com.example.cameltransform.routes;
 
 import org.apache.camel.builder.RouteBuilder;
