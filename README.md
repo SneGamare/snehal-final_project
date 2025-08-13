@@ -1,3 +1,56 @@
+import org.apache.camel.builder.RouteBuilder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CamtToJsonRoute extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+
+        // Configure Camel's REST DSL to use platform-http
+        restConfiguration()
+            .component("platform-http")
+            .host("0.0.0.0")
+            .port(8080);
+
+        // REST endpoint
+        rest("/transform")
+            .post("/camt-to-json")
+            .consumes("application/xml")
+            .produces("application/json")
+            .to("direct:camtToJson");
+
+        // Route: transform camt XML -> JSON
+        from("direct:camtToJson")
+            .log("Received CAMT XML:\n${body}")
+            .to("xslt:classpath:camt-to-json.xsl?saxon=true")
+            .log("Transformed JSON:\n${body}");
+    }
+}
+
+
+resources/camt-to-json.xsl
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+    <xsl:output method="text" encoding="UTF-8"/>
+
+    <xsl:template match="/">
+        {
+            "message": "Converted CAMT XML to JSON (placeholder)"
+        }
+    </xsl:template>
+</xsl:stylesheet>
+
+
+
+curl -X POST \
+  http://localhost:8080/transform/camt-to-json \
+  -H "Content-Type: application/xml" \
+  -d '<Document><Test>Hello</Test></Document>'
+
+
+
 {
     "timestamp": "2025-08-13T12:08:23.721+00:00",
     "status": 404,
